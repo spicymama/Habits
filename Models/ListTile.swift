@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct ListTile: View {
-  static var shared = ListTile()
+    static var shared = ListTile()
     @State var wasTapped = true
     @State var pad = true
-    @State var progress = 25.0
-    @State private var isEditing = false
     
     var body: some View {
         ZStack {
@@ -21,11 +19,11 @@ struct ListTile: View {
                 .frame(width: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, height: self.wasTapped ? 400 : UIScreen.main.bounds.height - 90)
             
             ScrollView {
-                Text(Goal.goalArr.first!.category)
+                Text(User.goalArr.first!.category)
                     .font(.system(size: self.wasTapped ? 20 : 30))
                     .padding(.top, self.wasTapped ? 25 : 35)
-                ForEach(Goal.goalArr) { goal in
-                    VStack {
+                ForEach(User.goalArr) { goal in
+                    self.wasTapped ? VStack {
                         HStack {
                             Image(systemName: "circle")
                                 .fontWeight(.semibold)
@@ -42,28 +40,11 @@ struct ListTile: View {
                             self.pad.toggle()
                             self.wasTapped.toggle()
                         }
-                        self.wasTapped ? nil : Text("Reminders:")
-                            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 5000, alignment: .leading)
-                            .padding(.leading, 25)
-                            .padding(.bottom, 10)
-                        self.wasTapped ? nil :  VStack {
-                            Slider(
-                                
-                                value: goal.$progress,
-                                in: 0...100,
-                                onEditingChanged: { editing in
-                                    isEditing = editing
-                                
-                                }
-                            )
-                            Text("\(progress)")
-                                .foregroundColor(.white)
-                        }
-                            .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: 5000, alignment: .leading)
-                            
-                            .padding(.bottom, 10)
-                            .accentColor(.black)
-                    }
+                       
+                    } : nil
+                    
+                    self.wasTapped ? nil : goal
+                   
                 }
             }
             .frame(width: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, height: self.wasTapped ? 400 : UIScreen.main.bounds.height - 90)
