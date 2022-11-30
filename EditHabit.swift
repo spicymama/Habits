@@ -51,14 +51,20 @@ struct EditHabit: View {
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .leading)
             HStack {
                 Text("M  ")
+                    .onTapGesture {
+                        self.monHidden.toggle()
+                    }
                 self.monHidden ? nil : DatePicker("M :", selection: $monDate, displayedComponents: .hourAndMinute)
                     .frame(width: 150, height: 55)
                     .labelsHidden()
                 Button {
+                    print(self.monReminders)
                     if self.monHidden == true {
                         self.monHidden.toggle()
                     } else {
-                        self.monReminders.append(monDate)
+                        if !self.monReminders.contains(monDate) {
+                            self.monReminders.append(monDate)
+                        }
                     }
                     
                 } label: {
@@ -67,11 +73,14 @@ struct EditHabit: View {
                         .imageScale(.large)
                 }
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 35, alignment: .leading)
+            .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 35, alignment: .leading)
             .padding(.bottom, 10)
            
             HStack {
                 Text("T   ")
+                    .onTapGesture {
+                        self.tusHidden.toggle()
+                    }
                 self.tusHidden ? nil :  DatePicker("T :", selection: $tusDate, displayedComponents: .hourAndMinute)
                     .frame(width: 150, height: 55)
                     .labelsHidden()
@@ -79,7 +88,9 @@ struct EditHabit: View {
                     if self.tusHidden == true {
                         self.tusHidden.toggle()
                     } else {
-                        self.tusReminders.append(tusDate)
+                        if !self.tusReminders.contains(tusDate) {
+                            self.tusReminders.append(tusDate)
+                        }
                     }
                 } label: {
                     Image(systemName: "plus.square")
@@ -87,10 +98,13 @@ struct EditHabit: View {
                         .imageScale(.large)
                 }
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 35, alignment: .leading)
+            .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 35, alignment: .leading)
             .padding(.bottom, 10)
             HStack {
                 Text("W  ")
+                    .onTapGesture {
+                        self.wedHidden.toggle()
+                    }
                 self.wedHidden ? nil : DatePicker("W :", selection: $wedDate, displayedComponents: .hourAndMinute)
                     .frame(width: 150, height: 55)
                     .labelsHidden()
@@ -98,7 +112,9 @@ struct EditHabit: View {
                     if self.wedHidden == true {
                         self.wedHidden.toggle()
                     } else {
-                        self.wedReminders.append(wedDate)
+                        if !self.wedReminders.contains(wedDate) {
+                            self.wedReminders.append(wedDate)
+                        }
                     }
                 } label: {
                     Image(systemName: "plus.square")
@@ -106,10 +122,13 @@ struct EditHabit: View {
                         .imageScale(.large)
                 }
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 35, alignment: .leading)
+            .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 35, alignment: .leading)
             .padding(.bottom, 10)
             HStack {
                 Text("Th  ")
+                    .onTapGesture {
+                        self.thursHidden.toggle()
+                    }
                 self.thursHidden ? nil : DatePicker("Th :", selection: $thursDate, displayedComponents: .hourAndMinute)
                     .frame(width: 150, height: 55)
                     .labelsHidden()
@@ -117,7 +136,9 @@ struct EditHabit: View {
                     if self.thursHidden == true {
                         self.thursHidden.toggle()
                     } else {
-                        self.thursReminders.append(thursDate)
+                        if !self.thursReminders.contains(thursDate) {
+                            self.thursReminders.append(thursDate)
+                        }
                     }
                 } label: {
                     Image(systemName: "plus.square")
@@ -125,10 +146,13 @@ struct EditHabit: View {
                         .imageScale(.large)
                 }
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 35, alignment: .leading)
+            .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 35, alignment: .leading)
             .padding(.bottom, 10)
             HStack {
                 Text("F    ")
+                    .onTapGesture {
+                        self.friHidden.toggle()
+                    }
                 self.friHidden ? nil : DatePicker("F :", selection: $friDate, displayedComponents: .hourAndMinute)
                     .frame(width: 150, height: 55)
                     .labelsHidden()
@@ -136,7 +160,9 @@ struct EditHabit: View {
                     if self.friHidden == true {
                         self.friHidden.toggle()
                     } else {
-                        self.friReminders.append(friDate)
+                        if !self.friReminders.contains(friDate) {
+                            self.friReminders.append(friDate)
+                        }
                     }
                 } label: {
                     Image(systemName: "plus.square")
@@ -144,10 +170,13 @@ struct EditHabit: View {
                         .imageScale(.large)
                 }
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 35, alignment: .leading)
+            .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 35, alignment: .leading)
             .padding(.bottom, 10)
             HStack {
                 Text("Sat ")
+                    .onTapGesture {
+                        self.satHidden.toggle()
+                    }
                 self.satHidden ? nil : DatePicker("Sat :", selection: $satDate, displayedComponents: .hourAndMinute)
                     .frame(width: 150, height: 55)
                     .labelsHidden()
@@ -155,7 +184,9 @@ struct EditHabit: View {
                     if self.satHidden == true {
                         self.satHidden.toggle()
                     } else {
-                        self.satReminders.append(satDate)
+                        if !self.satReminders.contains(satDate) {
+                            self.satReminders.append(satDate)
+                        }
                     }
                 } label: {
                     Image(systemName: "plus.square")
@@ -163,10 +194,13 @@ struct EditHabit: View {
                         .imageScale(.large)
                 }
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 35, alignment: .leading)
+            .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 35, alignment: .leading)
             .padding(.bottom, 10)
             HStack {
                 Text("Sun")
+                    .onTapGesture {
+                        self.sunHidden.toggle()
+                    }
                 self.sunHidden ? nil : DatePicker("Sun :", selection: $sunDate, displayedComponents: .hourAndMinute)
                     .frame(width: 150, height: 55)
                     .labelsHidden()
@@ -174,7 +208,9 @@ struct EditHabit: View {
                     if self.sunHidden == true {
                         self.sunHidden.toggle()
                     } else {
-                        self.sunReminders.append(sunDate)
+                        if !self.sunReminders.contains(sunDate) {
+                            self.sunReminders.append(sunDate)
+                        }
                     }
                 } label: {
                     Image(systemName: "plus.square")
@@ -182,7 +218,7 @@ struct EditHabit: View {
                         .imageScale(.large)
                 }
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 35, alignment: .leading)
+            .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 35, alignment: .leading)
             .padding(.bottom, 10)
             HStack {
                 Text("End Date")
