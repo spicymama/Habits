@@ -26,8 +26,6 @@ struct TimePicker: View {
                             .frame(width: 200, height: 65, alignment: .leading)
                             .padding(.trailing, UIScreen.main.bounds.width / 4)
                             .foregroundColor(.gray)
-                        
-                        
                         Button {
                             if self.hidden == true {
                                 self.hidden.toggle()
@@ -40,19 +38,18 @@ struct TimePicker: View {
                             Image(systemName: "plus")
                                 .foregroundColor(.gray)
                                 .imageScale(.medium)
-                            
                         }
-                }
-                .frame(maxWidth: UIScreen.main.bounds.width - 10, maxHeight: 25, alignment: .leading)
-                .padding(.bottom, 10)
-                
-                self.hidden ? nil : DatePicker("\(name) :", selection: self.$date, displayedComponents: .hourAndMinute)
-                    .frame(width: 150, height: 15, alignment: .trailing)
-                    .labelsHidden()
+                    }
+                    .frame(maxWidth: UIScreen.main.bounds.width - 10, maxHeight: 25, alignment: .leading)
+                    .padding(.bottom, 10)
+                    
+                    self.hidden ? nil : DatePicker("\(name) :", selection: self.$date, displayedComponents: .hourAndMinute)
+                        .frame(width: 150, height: 15, alignment: .trailing)
+                        .labelsHidden()
                 }
             }
             HStack {
-                ForEach(showSelectedTimes(dates: self.reminders)) { time in
+                ForEach(showSelectedTimes(dates: self.reminders, timeStyle: .short)) { time in
                     Text(time)
                         .foregroundColor(.gray)
                         .font(.system(size: 12))
