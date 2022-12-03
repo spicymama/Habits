@@ -16,10 +16,6 @@ struct EditHabit: View {
     @State var scheduledReminderTap = true
     @State var progressTrackerTap = true
     @State var selectedTracker = ""
-  //  @State var op1Tap = false
-  //  @State var op2Tap = false
-   // @State var op3Tap = false
-   // @State var op4Tap = false
     @State var monDate = Date.now
     @State var tusDate = Date.now
     @State var wedDate = Date.now
@@ -58,32 +54,32 @@ struct EditHabit: View {
                     HStack {
                         Text("Reminders")
                             .foregroundColor(.gray)
-                            .font(.system(size: 25))
-                        Button {
-                            self.remindersTap.toggle()
-                            if self.remindersTap == true {
-                                self.dailyReminderTap = true
-                            }
-                        } label: {
-                            Image(systemName: "clock")
-                                .foregroundColor(.gray)
-                        }
+                            .font(.system(size: 35))
+                        Image(systemName: "clock")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 30))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
                     .padding(.top, 45)
+                    .onTapGesture {
+                        self.remindersTap.toggle()
+                        if self.remindersTap == true {
+                            self.dailyReminderTap = true
+                        }
+                    }
                     self.remindersTap ? nil :
                     HStack {
                         Text("Daily")
                             .foregroundColor(.gray)
-                            .font(.system(size: 18))
-                        Button {
-                            self.dailyReminderTap.toggle()
-                        } label: {
-                            Image(systemName: "clock")
-                                .foregroundColor(.gray)
-                        }
+                            .font(.system(size: 25))
+                        Image(systemName: "clock")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 24))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
+                    .onTapGesture {
+                        self.dailyReminderTap.toggle()
+                    }
                     self.dailyReminderTap ? nil :
                     Group {
                         TimePicker(date: self.$monDate, reminders: self.$monReminders, hidden: self.$monHidden, name: "Monday")
@@ -96,22 +92,25 @@ struct EditHabit: View {
                     }
                     self.remindersTap ? nil :
                     ScheduledReminders(tap: self.$scheduledReminderTap, date: self.$scheduledDate, dates: self.$scheduledReminders)
-         
-                }.animation(.easeInOut(duration: 1.0), value: self.remindersTap)
+                }
+                .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
                 HStack {
                     Text("Progress Tracker")
                         .foregroundColor(.gray)
-                        .font(.system(size: 25))
+                        .font(.system(size: 35))
                     Image(systemName: "chart.line.uptrend.xyaxis")
                         .foregroundColor(.gray)
+                        .font(.system(size: 30))
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
                 .padding(.top, 45)
+                .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
                 .onTapGesture {
                     self.progressTrackerTap.toggle()
                 }
                 VStack {
                     self.progressTrackerTap ? nil : ProgressTracker(selectedOp: self.$selectedTracker)
+                        .frame(height: UIScreen.main.bounds.height / 3)
                 }.animation(.easeInOut(duration: 1.0), value: self.progressTrackerTap)
                 Text(self.selectedTracker)
                     .foregroundColor(.gray)
@@ -121,20 +120,17 @@ struct EditHabit: View {
                     HStack {
                         Text("End Date")
                             .foregroundColor(.gray)
-                            .font(.system(size: 25))
-                        Button {
-                            self.endDateTap.toggle()
-                        } label: {
-                           Image(systemName: "calendar")
-                                .foregroundColor(.gray)
-                        }
-                        
-                        
-                      
+                            .font(.system(size: 35))
+                        Image(systemName: "calendar")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 30))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
                     .padding(.top, 45)
                     .padding(.bottom, 10)
+                    .onTapGesture {
+                        self.endDateTap.toggle()
+                    }
                     HStack {
                         self.endDateTap ? nil :  DatePicker(selection: self.$endDate) {
                             Image(systemName: "calendar")
@@ -155,13 +151,25 @@ struct EditHabit: View {
                         .foregroundColor(.gray)
                         .font(.system(size: 12))
                         .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
-                }.animation(.easeInOut(duration: 1.0), value: endDateTap)
-              
+                }
+                Button {
+                    
+                } label: {
+                    Text("Save")
+                        .font(.system(size: 20))
+                }
+                .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .bottomTrailing)
+                .padding(.bottom, 80)
+                .padding(.top, 180)
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 5000, alignment: .trailing)
+            .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: .infinity, alignment: .trailing)
             .animation(.easeInOut(duration: 1.5), value: dailyReminderTap)
+            .animation(.easeInOut(duration: 1.0), value: self.progressTrackerTap)
+            .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
+            .animation(.easeInOut(duration: 1.0), value: self.scheduledReminderTap)
+            .animation(.easeInOut(duration: 1.0), value: endDateTap)
             .padding(.top, 100)
-        }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: UIScreen.main.bounds.height, alignment: .center)
+        }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity, alignment: .center)
             .accentColor(/*@START_MENU_TOKEN@*/.gray/*@END_MENU_TOKEN@*/)
     }
     func showEndDate()-> String {

@@ -18,12 +18,15 @@ struct ProgressTracker: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Number of positive checkins before end date")
+                Text("Number of positive checkins \n before end date")
                     .foregroundColor(.gray)
-                    .font(.system(size: 16))
+                    .font(.system(size: 18))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
                 Image(systemName: self.op1Tap ? "square.fill" : "square")
                     .foregroundColor(.gray)
-            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 20, alignment: .trailing)
+                    .padding(.horizontal, 15)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 80, alignment: .trailing)
                 .onTapGesture {
                     self.op1Tap.toggle()
                     self.op2Tap = false
@@ -36,12 +39,15 @@ struct ProgressTracker: View {
                     }
                 }
             HStack {
-                Text("Percent of positive checkins before end date")
+                Text("Percent of positive checkins \n before end date")
                     .foregroundColor(.gray)
-                    .font(.system(size: 16))
+                    .font(.system(size: 18))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
                 Image(systemName: self.op2Tap ? "square.fill" : "square")
                     .foregroundColor(.gray)
-            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 20, alignment: .trailing)
+                    .padding(.horizontal, 15)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 80, alignment: .trailing)
                 .onTapGesture {
                     self.op1Tap = false
                     self.op2Tap.toggle()
@@ -54,12 +60,15 @@ struct ProgressTracker: View {
                     }
                 }
             HStack {
-                Text("Number of positive checkins total")
+                Text("Number of positive checkins \n total")
                     .foregroundColor(.gray)
-                    .font(.system(size: 16))
+                    .font(.system(size: 18))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
                Image(systemName: self.op3Tap ? "square.fill" : "square")
                     .foregroundColor(.gray)
-            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 20, alignment: .trailing)
+                    .padding(.horizontal, 15)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 80, alignment: .trailing)
                 .onTapGesture {
                     self.op1Tap = false
                     self.op2Tap = false
@@ -74,10 +83,12 @@ struct ProgressTracker: View {
             HStack {
                 Text("Manually track my progress")
                     .foregroundColor(.gray)
-                    .font(.system(size: 16))
+                    .font(.system(size: 18))
+                    .multilineTextAlignment(.center)
                Image(systemName: self.op4Tap ? "square.fill" : "square")
                     .foregroundColor(.gray)
-            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 20, alignment: .trailing)
+                    .padding(.horizontal, 15)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 60, alignment: .trailing)
                 .onTapGesture {
                     self.op1Tap = false
                     self.op2Tap = false

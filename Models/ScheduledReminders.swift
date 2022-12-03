@@ -16,14 +16,10 @@ struct ScheduledReminders: View {
             HStack {
                 Text("Scheduled Reminders")
                     .foregroundColor(.gray)
-                    .font(.system(size: 18))
-                
-                Button {
-                    self.tap.toggle()
-                } label: {
-                    Image(systemName: "calendar")
+                    .font(.system(size: 25))
+                Image(systemName: "calendar")
                         .foregroundColor(.gray)
-                }
+                        .font(.system(size: 24))
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             .onTapGesture {
@@ -34,7 +30,6 @@ struct ScheduledReminders: View {
                     Image(systemName: "calendar")
                 }
                     .accentColor(.white)
-                    //.foregroundColor(.white)
                     .labelsHidden()
                     .colorScheme(.dark)
                 self.tap ? nil : Button {
