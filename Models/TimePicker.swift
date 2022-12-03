@@ -46,6 +46,8 @@ struct TimePicker: View {
                     self.hidden ? nil : DatePicker("\(name) :", selection: self.$date, displayedComponents: .hourAndMinute)
                         .frame(width: 150, height: 15, alignment: .trailing)
                         .labelsHidden()
+                        .accentColor(.white)
+                        .colorScheme(.dark)
                 }
             }
             HStack {
@@ -65,4 +67,24 @@ struct TimePicker_Previews: PreviewProvider {
     static var previews: some View {
         TimePicker(date: EditHabit.shared.$monDate, reminders: EditHabit.shared.$monReminders, hidden: EditHabit.shared.$monHidden, name: "Monday")
     }
+}
+
+func showSelectedTimes(dates: [Date], timeStyle: DateFormatter.Style) -> [String] {
+    let timeFormatter = DateFormatter()
+    var timeArr: [String] = [""]
+    for date in dates.sorted(by: { $0.compare($1) == .orderedAscending }) {
+        timeFormatter.timeStyle = timeStyle
+        timeArr.append(timeFormatter.string(from: date))
+    }
+    return timeArr
+}
+
+func showSelectedDates(dates: [Date], dateStyle: DateFormatter.Style) -> [String] {
+    let timeFormatter = DateFormatter()
+    var dateArr: [String] = [""]
+    for date in dates.sorted(by: { $0.compare($1) == .orderedAscending }) {
+        timeFormatter.dateStyle = dateStyle
+        dateArr.append(timeFormatter.string(from: date))
+    }
+    return dateArr
 }
