@@ -9,13 +9,14 @@ import SwiftUI
 
 struct EditHabit: View {
     static var shared = EditHabit()
+    @Environment(\.dismiss) var dismiss
     @State var title = ""
     @State var endDateTap = true
+    @State var lilEndDateTap = true
     @State var remindersTap = true
     @State var dailyReminderTap = true
     @State var scheduledReminderTap = true
     @State var progressTrackerTap = true
-    @State var dateTap = true
     @State var selectedTracker = ""
     @State var monDate = Date.now
     @State var tusDate = Date.now
@@ -42,15 +43,23 @@ struct EditHabit: View {
     @State var satReminders: [Date] = []
     @State var sunReminders: [Date] = []
     @State var scheduledReminders: [Date] = []
+    @State var notes = ""
     let dateFormatter = DateFormatter()
     
     var body: some View {
         ScrollView {
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "xmark")
+            }.frame(maxWidth: UIScreen.main.bounds.width - 60, alignment: .trailing)
             VStack {
-                TextField("Title...", text: self.$title)
-                    .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .topLeading)
-                    .font(.system(size: 29))
-                    .padding(.leading, 20)
+                    TextField("Title...", text: self.$title, axis: .vertical)
+                        .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 100, maxHeight: 5000, alignment: .topLeading)
+                        .font(.system(size: 29))
+                        .foregroundColor(.gray)
+                        .padding(.leading, 20)
+              
                 VStack {
                     HStack {
                         Text("Reminders")
@@ -61,7 +70,7 @@ struct EditHabit: View {
                             .font(.system(size: 30))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-                    .padding(.top, 45)
+                    //.padding(.top, 55)
                     .onTapGesture {
                         self.remindersTap.toggle()
                         if self.remindersTap == true {
@@ -154,21 +163,38 @@ struct EditHabit: View {
                         }
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
-                    self.endDateHidden ? nil :
-                    Text(showEndDate())
-                        .foregroundColor(.gray)
-                        .font(.system(size: 12))
-                        .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
-                }
+                    HStack {
+                        self.endDateHidden ? nil :
+                        Text(showEndDate())
+                            .foregroundColor(.gray)
+                            .font(.system(size: 12))
+                            .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
+                            .onTapGesture(perform: {
+                                self.lilEndDateTap.toggle()
+                            })
+                        self.lilEndDateTap ? nil :
+                        Button {
+                            self.endDate = Date.distantPast
+                            self.endDateHidden.toggle()
+                            self.lilEndDateTap.toggle()
+                        } label: {
+                            Image(systemName: "xmark.circle")
+                                .font(.system(size: 12))
+                        }.padding(.trailing, 10)
+                    }.animation(.easeInOut, value: self.lilEndDateTap)
+                }.padding(.bottom, 20)
+                TextField("Notes...", text: self.$notes, axis: .vertical)
+                    .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 120, maxHeight: 5000, alignment: .leading)
+                    .font(.system(size: 18))
+                 .padding(.leading, 20)
                 Button {
                     
                 } label: {
                     Text("Save")
                         .font(.system(size: 20))
                 }
-                .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .bottomTrailing)
+                .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .center)
                 .padding(.bottom, 80)
-                .padding(.top, 180)
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: .infinity, alignment: .trailing)
             .animation(.easeInOut(duration: 1.5), value: dailyReminderTap)
@@ -176,7 +202,7 @@ struct EditHabit: View {
             .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
             .animation(.easeInOut(duration: 1.0), value: self.scheduledReminderTap)
             .animation(.easeInOut(duration: 1.0), value: endDateTap)
-            .padding(.top, 100)
+            .padding(.top, 50)
         }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity, alignment: .center)
             .accentColor(/*@START_MENU_TOKEN@*/.gray/*@END_MENU_TOKEN@*/)
     }

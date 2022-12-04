@@ -10,6 +10,7 @@ import SwiftUI
 struct Home: View {
 
     @State var tap = ListTile.shared.wasTapped
+    @State private var addButtonTap = false
     let categories = [("Habits to Get"), ("Habits to Quit"), ("Habits")]
     var padToggle = true
     var body: some View {
@@ -17,11 +18,13 @@ struct Home: View {
             ScrollView {
                 VStack {
                     VStack {
-                        NavigationLink {
-                            EditHabit()
+                        Button {
+                            addButtonTap = true
                         } label: {
                             Image(systemName: "plus.square")
                                 .imageScale(.large)
+                        }.fullScreenCover(isPresented: $addButtonTap) {
+                            EditHabit()
                         }
                         .frame(maxWidth: 15, maxHeight: 15, alignment: .topTrailing)
                         .padding(.leading, UIScreen.main.bounds.width - 65)

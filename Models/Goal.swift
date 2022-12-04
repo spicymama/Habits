@@ -18,7 +18,7 @@ struct Goal: View, Identifiable {
     var goodCheckins: Int = 0
     var badCheckins: Int = 0
     var notificationTimes: [Date] = [Date.now]
-    var selfNotes: String = ""
+    @State var selfNotes: String = ""
     @State var prog: Double = 0.0
     @State private var isEditing = false
 
@@ -42,7 +42,7 @@ struct Goal: View, Identifiable {
                 .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 50, alignment: .leading)
                 .padding(.leading, 25)
                 .padding(.bottom, 10)
-            VStack {
+            HStack {
                 Slider(value: self.$prog,
                     in: 0...100,
                     onEditingChanged: { editing in
@@ -51,12 +51,15 @@ struct Goal: View, Identifiable {
                 )
                 Text("\(self.prog, specifier: "%.0f") %")
                     .foregroundColor(.black)
-                    .padding(.leading, UIScreen.main.bounds.width / 2)
+                    .padding(.leading)
             }
-                .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: 50, alignment: .leading)
-                
+                .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
                 .padding(.bottom, 10)
-                .accentColor(.black)
+                .accentColor(.gray)
+            TextField("Notes:", text: self.$selfNotes, axis: .vertical)
+                .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: .infinity, alignment: .topLeading)
+                .lineLimit(100)
+                .padding(.bottom, 20)
         }
     }        
 }
