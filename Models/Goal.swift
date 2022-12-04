@@ -43,17 +43,15 @@ struct Goal: View, Identifiable {
                 .padding(.leading, 25)
                 .padding(.bottom, 10)
             VStack {
-                Slider(
-                   
-                    value: self.$prog,
+                Slider(value: self.$prog,
                     in: 0...100,
                     onEditingChanged: { editing in
                         isEditing = editing
-                      
                     }
                 )
-                Text("\(self.prog.noDecimal)")
-                    .foregroundColor(.white)
+                Text("\(self.prog, specifier: "%.0f") %")
+                    .foregroundColor(.black)
+                    .padding(.leading, UIScreen.main.bounds.width / 2)
             }
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: 50, alignment: .leading)
                 

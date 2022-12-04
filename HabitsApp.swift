@@ -14,4 +14,5 @@ struct HabitsApp: App {
             Home()
         }
     }
+    static var padEdge: Edge.Set = .leading
 }

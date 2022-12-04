@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct ListTile: View {
+struct ListTile: View, Identifiable {
     static var shared = ListTile()
+    var id = UUID()
     @State var wasTapped = true
     @State var pad = true
-    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 25, style: .continuous)
                 .foregroundColor(.gray)
-                .frame(width: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, height: self.wasTapped ? 400 : UIScreen.main.bounds.height - 90)
+                .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 90)
             
             ScrollView {
                 Text(User.goalArr.first!.category)
@@ -47,9 +47,10 @@ struct ListTile: View {
                    
                 }
             }
-            .frame(width: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, height: self.wasTapped ? 400 : UIScreen.main.bounds.height - 90)
-            .frame(minHeight: 250)
+            .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 90)
+            .frame(minHeight: 100)
             .foregroundColor(.white)
+            .padding(.bottom, 25)
             
         }
         .onTapGesture {
