@@ -12,7 +12,6 @@ struct Home: View {
     @State var tap = ListTile.shared.wasTapped
     let categories = [("Habits to Get"), ("Habits to Quit"), ("Habits")]
     var padToggle = true
-    let tiles: [(tile: ListTile, pad: Edge.Set)] = [(tile: ListTile(),pad: .leading), (tile: ListTile(),pad: .trailing), (tile: ListTile(),pad: .leading)]
     var body: some View {
         NavigationStack {
             ScrollView {

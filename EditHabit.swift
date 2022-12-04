@@ -15,6 +15,7 @@ struct EditHabit: View {
     @State var dailyReminderTap = true
     @State var scheduledReminderTap = true
     @State var progressTrackerTap = true
+    @State var dateTap = true
     @State var selectedTracker = ""
     @State var monDate = Date.now
     @State var tusDate = Date.now
@@ -82,18 +83,25 @@ struct EditHabit: View {
                     }
                     self.dailyReminderTap ? nil :
                     Group {
-                        TimePicker(date: self.$monDate, reminders: self.$monReminders, hidden: self.$monHidden, name: "Monday")
+                        TimePicker(date: self.$monDate, reminders: self.$monReminders, hidden: self.$monHidden, name: "Monday") .animation(.easeInOut, value: self.monHidden)
                         TimePicker(date: self.$tusDate, reminders: self.$tusReminders, hidden: self.$tusHidden, name: "Tuesday")
+                            .animation(.easeInOut, value: self.tusHidden)
                         TimePicker(date: self.$wedDate, reminders: self.$wedReminders, hidden: self.$wedHidden, name: "Wednesday")
+                            .animation(.easeInOut, value: self.wedHidden)
                         TimePicker(date: self.$thursDate, reminders: self.$thursReminders, hidden: self.$thursHidden, name: "Thursday")
+                            .animation(.easeInOut, value: self.thursHidden)
                         TimePicker(date: self.$friDate, reminders: self.$friReminders, hidden: self.$friHidden, name: "Friday")
+                            .animation(.easeInOut, value: self.friHidden)
                         TimePicker(date: self.$satDate, reminders: self.$satReminders, hidden: self.$satHidden, name: "Saturday")
+                            .animation(.easeInOut, value: self.satHidden)
                         TimePicker(date: self.$sunDate, reminders: self.$sunReminders, hidden: self.$sunHidden, name: "Sunday")
+                            .animation(.easeInOut, value: self.sunHidden)
                     }
                     self.remindersTap ? nil :
                     ScheduledReminders(tap: self.$scheduledReminderTap, date: self.$scheduledDate, dates: self.$scheduledReminders)
                 }
                 .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
+               
                 HStack {
                     Text("Progress Tracker")
                         .foregroundColor(.gray)

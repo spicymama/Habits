@@ -19,9 +19,17 @@ struct ListTile: View, Identifiable {
                 .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 90)
             
             ScrollView {
-                Text(User.goalArr.first!.category)
-                    .font(.system(size: self.wasTapped ? 20 : 30))
+                self.wasTapped ? nil : Button {
+                        self.wasTapped = true
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
                     .padding(.top, self.wasTapped ? 25 : 35)
+                    .padding(.leading, UIScreen.main.bounds.width / 1.5)
+                    Text(User.goalArr.first!.category)
+                        .font(.system(size: self.wasTapped ? 20 : 30))
+                        .padding(.top, self.wasTapped ? 25 : 0)
+                        
                 ForEach(User.goalArr) { goal in
                     self.wasTapped ? VStack {
                         HStack {
@@ -31,16 +39,10 @@ struct ListTile: View, Identifiable {
                             
                             Text(goal.title)
                                 .font(.system(size: self.wasTapped ? 17 : 25))
-                            
                         }
                         .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 5000, alignment: .leading)
                         .padding(.bottom, 10)
                         .padding(.leading, 10)
-                        .onTapGesture {
-                            self.pad.toggle()
-                            self.wasTapped.toggle()
-                        }
-                       
                     } : nil
                     
                     self.wasTapped ? nil : goal
@@ -55,7 +57,7 @@ struct ListTile: View, Identifiable {
         }
         .onTapGesture {
             self.pad.toggle()
-            self.wasTapped.toggle()
+            self.wasTapped = false
         }
         .animation(Animation.easeInOut(duration: 1.0), value: self.wasTapped)
         .padding(.leading, self.wasTapped ? UIScreen.main.bounds.width / 5 : 0)

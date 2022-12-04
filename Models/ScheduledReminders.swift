@@ -11,6 +11,7 @@ struct ScheduledReminders: View {
     @Binding var tap: Bool
     @Binding var date: Date
     @Binding var dates: [Date]
+    @State var dateTap = true
     var body: some View {
         VStack {
             HStack {
@@ -29,7 +30,7 @@ struct ScheduledReminders: View {
                 self.tap ? nil :  DatePicker(selection: self.$date) {
                     Image(systemName: "calendar")
                 }
-                    .accentColor(.white)
+                   // .accentColor(.white)
                     .labelsHidden()
                     .colorScheme(.dark)
                 self.tap ? nil : Button {
@@ -48,9 +49,22 @@ struct ScheduledReminders: View {
             } .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             HStack {
                 ForEach(showSelectedDates(dates: self.dates, dateStyle: .short)) { time in
+                    HStack {
                     Text(time)
                         .foregroundColor(.gray)
                         .font(.system(size: 12))
+                        .onTapGesture {
+                            self.dateTap.toggle()
+                        }
+                    self.dateTap ? nil :
+                    Button {
+                        guard let index = showDatesUnsorted(dates: dates, dateStyle: .short).firstIndex(of: time) else { return }
+                        self.dates.remove(at: index)
+                    } label: {
+                        Image(systemName: "xmark.circle")
+                            .font(.system(size: 12))
+                    }.padding(.trailing, 10)
+                }
                 }
                 .padding(.trailing, 5)
             }
