@@ -32,15 +32,13 @@ struct Home: View {
                         
                         Text("Habits")
                             .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                            .font(.system(size: 30))
+                            .font(.system(size: 35))
                             .foregroundColor(.gray)
                             .padding(.bottom, 25)
-                        
                     }
-                    
                 ListTile()
-                        
-                ListTile()
+                GoalTile(goal: User.goalArr.first!)
+                        .padding(.top, 30)
                 }
             }
         }

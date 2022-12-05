@@ -18,39 +18,44 @@ struct Goal: View, Identifiable {
     var goodCheckins: Int = 0
     var badCheckins: Int = 0
     var notificationTimes: [Date] = [Date.now]
+    var progressTracker: String = ""
     @State var selfNotes: String = ""
     @State var prog: Double = 0.0
+    @State var editGoalTap = false
     @State private var isEditing = false
 
   
     var body: some View {
         VStack {
             HStack {
-                Image(systemName: "circle")
-                    .fontWeight(.semibold)
-                    .font(.system(size: 12))
-                
                 Text(self.title)
                     .font(.system(size: 25))
-                
+                    .foregroundColor(.gray)
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 50, alignment: .leading)
             .padding(.bottom, 10)
-            .padding(.leading, 10)
-            
-            Text("Reminders:")
-                .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 50, alignment: .leading)
+            .padding(.leading, 40)
+            HStack {
+                Image(systemName: checkDay(day: 2) ? "m.circle" : "m.circle.fill")
+                Image(systemName: checkDay(day: 3) ? "t.circle" : "t.circle.fill")
+                Image(systemName: checkDay(day: 4) ? "w.circle" : "w.circle.fill")
+                Image(systemName: checkDay(day: 5) ? "t.circle" : "t.circle.fill")
+                Image(systemName: checkDay(day: 6) ? "f.circle" : "f.circle.fill")
+                Image(systemName: checkDay(day: 7) ? "s.circle" : "s.circle.fill")
+                Image(systemName: checkDay(day: 1) ? "s.circle" : "s.circle.fill")
+            }  .frame(maxWidth: UIScreen.main.bounds.width - 40, maxHeight: 50, alignment: .leading)
                 .padding(.leading, 25)
                 .padding(.bottom, 10)
+                .foregroundColor(.gray)
             HStack {
                 Slider(value: self.$prog,
                     in: 0...100,
                     onEditingChanged: { editing in
-                        isEditing = editing
-                    }
-                )
+                      isEditing = editing
+                }
+                ).allowsHitTesting(self.progressTracker == "Manually track my progress" ? true : false)
                 Text("\(self.prog, specifier: "%.0f") %")
-                    .foregroundColor(.black)
+                    .foregroundColor(.gray)
                     .padding(.leading)
             }
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
@@ -59,9 +64,31 @@ struct Goal: View, Identifiable {
             TextField("Notes:", text: self.$selfNotes, axis: .vertical)
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: .infinity, alignment: .topLeading)
                 .lineLimit(100)
-                .padding(.bottom, 20)
+                .foregroundColor(.gray)
+            Button {
+                EditHabit.shared.title = self.title
+                self.editGoalTap = true
+            } label: {
+                Image(systemName: "chevron.right.circle")
+                    .foregroundColor(.gray)
+                    .imageScale(.large)
+            }.frame(maxWidth: 20, maxHeight: 20, alignment: .topTrailing)
+            .padding(.bottom, 20)
+            .padding(.leading, UIScreen.main.bounds.width / 1.5)
+            .fullScreenCover(isPresented: self.$editGoalTap) {
+                EditHabit()
+            }
         }
-    }        
+    }
+    func checkDay(day: Int)-> Bool {
+        for i in notificationTimes {
+            print("DATE: \(i) \n DayVar: \(day) \n DayNUM: \(String(describing: i.dayNumberOfWeek()))")
+            if i.dayNumberOfWeek() == day {
+                return false
+            }
+        }
+        return true
+    }
 }
 
 struct Goal_Previews: PreviewProvider {
@@ -73,5 +100,11 @@ extension Double {
     var noDecimal: String {
         return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
     }
-}/*, Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong")*/
+}
+extension Date {
+    func dayNumberOfWeek() -> Int? {
+        return Calendar.current.dateComponents([.weekday], from: self).weekday
+    }
+}
+/*, Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong"), Goal(category: "Habits to Get", title: "Sdand up straight", dateCreated: Date.now, endDate: Date.now + 3, goodCheckins: 3, badCheckins: 2, notificationTimes: [Date.now], selfNotes: "This is not that easy"), Goal(category: "Habits to Get", title: "Workout 3 times a week", dateCreated: Date.now, endDate: Date.now + 50, goodCheckins: 9, badCheckins: 3, notificationTimes: [Date.now], selfNotes: "Gonna get so big and strong")*/
 

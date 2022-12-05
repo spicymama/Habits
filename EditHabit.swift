@@ -17,6 +17,7 @@ struct EditHabit: View {
     @State var dailyReminderTap = true
     @State var scheduledReminderTap = true
     @State var progressTrackerTap = true
+    @State var notesTap = true
     @State var selectedTracker = ""
     @State var monDate = Date.now
     @State var tusDate = Date.now
@@ -53,6 +54,7 @@ struct EditHabit: View {
             } label: {
                 Image(systemName: "xmark")
             }.frame(maxWidth: UIScreen.main.bounds.width - 60, alignment: .trailing)
+                .foregroundColor(.gray)
             VStack {
                     TextField("Title...", text: self.$title, axis: .vertical)
                         .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 100, maxHeight: 5000, alignment: .topLeading)
@@ -182,11 +184,30 @@ struct EditHabit: View {
                                 .font(.system(size: 12))
                         }.padding(.trailing, 10)
                     }.animation(.easeInOut, value: self.lilEndDateTap)
-                }.padding(.bottom, 20)
-                TextField("Notes...", text: self.$notes, axis: .vertical)
-                    .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 120, maxHeight: 5000, alignment: .leading)
-                    .font(.system(size: 18))
-                 .padding(.leading, 20)
+                }
+                HStack {
+                    Text("Notes")
+                        .foregroundColor(.gray)
+                        .font(.system(size: 35))
+                    Image(systemName: "pencil")
+                        .foregroundColor(.gray)
+                        .font(.system(size: 30))
+                }
+                .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
+                .padding(.top, 45)
+                .padding(.bottom, 20)
+                .onTapGesture {
+                    self.notesTap.toggle()
+                }
+                self.notesTap ? nil : ZStack {
+                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        .foregroundColor(Color(UIColor.systemGray5))
+                    TextField("Notes...", text: self.$notes, axis: .vertical)
+                        .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 120, maxHeight: 5000, alignment: .leading)
+                        .font(.system(size: 18))
+                        .foregroundColor(Color(UIColor.gray))
+                        .padding(.leading, 20)
+                }
                 Button {
                     
                 } label: {
@@ -195,6 +216,7 @@ struct EditHabit: View {
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .center)
                 .padding(.bottom, 80)
+                .padding(.top, 50)
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: .infinity, alignment: .trailing)
             .animation(.easeInOut(duration: 1.5), value: dailyReminderTap)
@@ -202,6 +224,7 @@ struct EditHabit: View {
             .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
             .animation(.easeInOut(duration: 1.0), value: self.scheduledReminderTap)
             .animation(.easeInOut(duration: 1.0), value: endDateTap)
+            .animation(.easeInOut(duration: 1.0), value: self.notesTap)
             .padding(.top, 50)
         }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity, alignment: .center)
             .accentColor(/*@START_MENU_TOKEN@*/.gray/*@END_MENU_TOKEN@*/)
