@@ -213,6 +213,7 @@ struct EditHabit: View {
                 } label: {
                     Text("Save")
                         .font(.system(size: 20))
+                        .foregroundColor(.gray)
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .center)
                 .padding(.bottom, 80)

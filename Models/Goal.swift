@@ -76,7 +76,7 @@ struct Goal: View, Identifiable {
             .padding(.bottom, 20)
             .padding(.leading, UIScreen.main.bounds.width / 1.5)
             .fullScreenCover(isPresented: self.$editGoalTap) {
-                EditHabit()
+                EditHabit(title: self.title, selectedTracker: self.progressTracker, endDate: self.endDate, scheduledReminders: self.notificationTimes, notes: self.selfNotes)
             }
         }
     }
