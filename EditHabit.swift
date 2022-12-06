@@ -45,6 +45,7 @@ struct EditHabit: View {
     @State var sunReminders: [Date] = []
     @State var scheduledReminders: [Date] = []
     @State var notes = ""
+    @State var category = "Category"
     let dateFormatter = DateFormatter()
     
     var body: some View {
@@ -209,7 +210,8 @@ struct EditHabit: View {
                         .padding(.leading, 20)
                 }
                 Button {
-                    
+                    createGoal(goal: Goal(category: self.category, title: self.title, dateCreated: Date.now, endDate: self.endDate, notificationTimes: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: 0.0))
+                    dismiss()
                 } label: {
                     Text("Save")
                         .font(.system(size: 20))
