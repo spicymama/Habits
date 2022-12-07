@@ -68,6 +68,7 @@ struct Goal: View, Identifiable {
             Button {
                 EditHabit.shared.title = self.title
                 self.editGoalTap = true
+                EditHabit.editGoal = true
             } label: {
                 Image(systemName: "chevron.right.circle")
                     .foregroundColor(.gray)

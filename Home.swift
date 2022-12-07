@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Home: View {
-
+    @EnvironmentObject var firestoreManager: FirestoreManager
     @State var tap = ListTile.shared.wasTapped
     @State private var addButtonTap = false
     let categories = [("Habits to Get"), ("Habits to Quit"), ("Habits")]
@@ -39,6 +39,7 @@ struct Home: View {
                 ListTile()
                 GoalTile(goal: User.goalArr.first!)
                         .padding(.top, 30)
+                 
                 }
             }
         }
@@ -48,5 +49,6 @@ struct Home: View {
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
         Home()
+            .environmentObject(FirestoreManager())
     }
 }

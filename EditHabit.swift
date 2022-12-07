@@ -46,6 +46,7 @@ struct EditHabit: View {
     @State var scheduledReminders: [Date] = []
     @State var notes = ""
     @State var category = "Category"
+    static var editGoal = false
     let dateFormatter = DateFormatter()
     
     var body: some View {
@@ -210,10 +211,13 @@ struct EditHabit: View {
                         .padding(.leading, 20)
                 }
                 Button {
+                    EditHabit.editGoal ?  updateGoal(goal: Goal(category: self.category, title: self.title, dateCreated: Date.now, endDate: self.endDate, notificationTimes: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: 0.0)) :
                     createGoal(goal: Goal(category: self.category, title: self.title, dateCreated: Date.now, endDate: self.endDate, notificationTimes: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: 0.0))
+                    
+                   
                     dismiss()
                 } label: {
-                    Text("Save")
+                    Text(EditHabit.editGoal ? "Update" : "Save")
                         .font(.system(size: 20))
                         .foregroundColor(.gray)
                 }
