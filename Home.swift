@@ -11,6 +11,7 @@ struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     @State var tap = ListTile.shared.wasTapped
     @State private var addButtonTap = false
+    @State var goalArr: [Goal] = []
     let categories = [("Habits to Get"), ("Habits to Quit"), ("Habits")]
     var padToggle = true
     var body: some View {
@@ -19,6 +20,7 @@ struct Home: View {
                 VStack {
                     VStack {
                         Button {
+                            EditHabit.editGoal = false
                             addButtonTap = true
                         } label: {
                             Image(systemName: "plus.square")
@@ -36,10 +38,16 @@ struct Home: View {
                             .foregroundColor(.gray)
                             .padding(.bottom, 25)
                     }
-                ListTile()
+                    ListTile(goalArr: User.goalArr)
                 GoalTile(goal: User.goalArr.first!)
                         .padding(.top, 30)
+                    ListTile(goalArr: self.goalArr)
+                        .padding(.top, 30)
                  
+                }
+            }.onAppear {
+                fetchAllGoals() { goal in
+                    self.goalArr.append(contentsOf: goal)
                 }
             }
         }
@@ -52,3 +60,4 @@ struct Home_Previews: PreviewProvider {
             .environmentObject(FirestoreManager())
     }
 }
+

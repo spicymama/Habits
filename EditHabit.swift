@@ -10,6 +10,9 @@ import SwiftUI
 struct EditHabit: View {
     static var shared = EditHabit()
     @Environment(\.dismiss) var dismiss
+    var id: String = ""
+    var prog: Double = 0
+    var dateCreated: Date = Date()
     @State var title = ""
     @State var endDateTap = true
     @State var lilEndDateTap = true
@@ -36,6 +39,9 @@ struct EditHabit: View {
     @State var satHidden = true
     @State var sunHidden = true
     @State var endDateHidden = true
+    
+    @State var dailyNotifs: [Date] = []
+    /*
     @State var monReminders: [Date] = []
     @State var tusReminders: [Date] = []
     @State var wedReminders: [Date] = []
@@ -43,6 +49,7 @@ struct EditHabit: View {
     @State var friReminders: [Date] = []
     @State var satReminders: [Date] = []
     @State var sunReminders: [Date] = []
+    */
     @State var scheduledReminders: [Date] = []
     @State var notes = ""
     @State var category = "Category"
@@ -96,18 +103,18 @@ struct EditHabit: View {
                     }
                     self.dailyReminderTap ? nil :
                     Group {
-                        TimePicker(date: self.$monDate, reminders: self.$monReminders, hidden: self.$monHidden, name: "Monday") .animation(.easeInOut, value: self.monHidden)
-                        TimePicker(date: self.$tusDate, reminders: self.$tusReminders, hidden: self.$tusHidden, name: "Tuesday")
+                        TimePicker(date: self.$monDate, reminders: findDay(day: 2), hidden: self.$monHidden, name: "Monday") .animation(.easeInOut, value: self.monHidden)
+                        TimePicker(date: self.$tusDate, reminders: findDay(day: 3), hidden: self.$tusHidden, name: "Tuesday")
                             .animation(.easeInOut, value: self.tusHidden)
-                        TimePicker(date: self.$wedDate, reminders: self.$wedReminders, hidden: self.$wedHidden, name: "Wednesday")
+                        TimePicker(date: self.$wedDate, reminders: findDay(day: 4), hidden: self.$wedHidden, name: "Wednesday")
                             .animation(.easeInOut, value: self.wedHidden)
-                        TimePicker(date: self.$thursDate, reminders: self.$thursReminders, hidden: self.$thursHidden, name: "Thursday")
+                        TimePicker(date: self.$thursDate, reminders: findDay(day: 5), hidden: self.$thursHidden, name: "Thursday")
                             .animation(.easeInOut, value: self.thursHidden)
-                        TimePicker(date: self.$friDate, reminders: self.$friReminders, hidden: self.$friHidden, name: "Friday")
+                        TimePicker(date: self.$friDate, reminders: findDay(day: 6), hidden: self.$friHidden, name: "Friday")
                             .animation(.easeInOut, value: self.friHidden)
-                        TimePicker(date: self.$satDate, reminders: self.$satReminders, hidden: self.$satHidden, name: "Saturday")
+                        TimePicker(date: self.$satDate, reminders: findDay(day: 7), hidden: self.$satHidden, name: "Saturday")
                             .animation(.easeInOut, value: self.satHidden)
-                        TimePicker(date: self.$sunDate, reminders: self.$sunReminders, hidden: self.$sunHidden, name: "Sunday")
+                        TimePicker(date: self.$sunDate, reminders: findDay(day: 1), hidden: self.$sunHidden, name: "Sunday")
                             .animation(.easeInOut, value: self.sunHidden)
                     }
                     self.remindersTap ? nil :
@@ -211,10 +218,10 @@ struct EditHabit: View {
                         .padding(.leading, 20)
                 }
                 Button {
-                    EditHabit.editGoal ?  updateGoal(goal: Goal(category: self.category, title: self.title, dateCreated: Date.now, endDate: self.endDate, notificationTimes: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: 0.0)) :
-                    createGoal(goal: Goal(category: self.category, title: self.title, dateCreated: Date.now, endDate: self.endDate, notificationTimes: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: 0.0))
+                    EditHabit.editGoal ?  updateGoal(goal: Goal(id: self.id, category: self.category, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)) :
+                    createGoal(goal: Goal(id: UUID().uuidString, category: self.category, title: self.title, dateCreated: Date.now, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
                     
-                   
+                    EditHabit.editGoal.toggle()
                     dismiss()
                 } label: {
                     Text(EditHabit.editGoal ? "Update" : "Save")
@@ -239,6 +246,17 @@ struct EditHabit: View {
     func showEndDate()-> String {
         dateFormatter.dateStyle = .short
         return dateFormatter.string(from: endDate)
+    }
+    func findDay(day: Int)-> [Date] {
+        //Sunday = 1
+        var dateArr: [Date] = []
+        for i in dailyNotifs {
+            print("DATE: \(i) \n DayVar: \(day) \n DayNUM: \(String(describing: i.dayNumberOfWeek()))")
+            if i.dayNumberOfWeek() == day {
+                dateArr.append(i)
+            }
+        }
+       return dateArr
     }
 }
 

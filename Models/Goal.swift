@@ -9,15 +9,15 @@ import Foundation
 import SwiftUI
 
 struct Goal: View, Identifiable {
-    
-    var id = UUID()
+    var id: String = ""
     var category: String = ""
     var title: String = ""
     var dateCreated: Date = Date.now
     var endDate: Date = Date.distantFuture
     var goodCheckins: Int = 0
     var badCheckins: Int = 0
-    var notificationTimes: [Date] = [Date.now]
+    var dailyNotifs: [Date] = [Date.now]
+    var scheduledNotifs: [Date] = [Date.now]
     var progressTracker: String = ""
     @State var selfNotes: String = ""
     @State var prog: Double = 0.0
@@ -77,12 +77,12 @@ struct Goal: View, Identifiable {
             .padding(.bottom, 20)
             .padding(.leading, UIScreen.main.bounds.width / 1.5)
             .fullScreenCover(isPresented: self.$editGoalTap) {
-                EditHabit(title: self.title, selectedTracker: self.progressTracker, endDate: self.endDate, scheduledReminders: self.notificationTimes, notes: self.selfNotes)
+                EditHabit(id: self.id, prog: self.prog, dateCreated: self.dateCreated, title: self.title, selectedTracker: self.progressTracker, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledReminders: self.scheduledNotifs, notes: self.selfNotes, category: self.category)
             }
         }
     }
     func checkDay(day: Int)-> Bool {
-        for i in notificationTimes {
+        for i in dailyNotifs {
             print("DATE: \(i) \n DayVar: \(day) \n DayNUM: \(String(describing: i.dayNumberOfWeek()))")
             if i.dayNumberOfWeek() == day {
                 return false
@@ -94,7 +94,7 @@ struct Goal: View, Identifiable {
 
 struct Goal_Previews: PreviewProvider {
     static var previews: some View {
-        Goal(category: "Category", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, notificationTimes: [Date.now, Date.distantFuture], selfNotes: "Hello", prog: 28.0)
+        Goal(category: "Category", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, scheduledNotifs: [Date.now, Date.distantFuture], selfNotes: "Hello", prog: 28.0)
     }
 }
 extension Double {

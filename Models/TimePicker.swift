@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TimePicker: View {
     @Binding var date: Date
-    @Binding var reminders: [Date]
+    @State var reminders: [Date]
     @Binding var hidden: Bool
     @State var dateTap = true
     var name: String
@@ -82,7 +82,7 @@ struct TimePicker: View {
 
 struct TimePicker_Previews: PreviewProvider {
     static var previews: some View {
-        TimePicker(date: EditHabit.shared.$monDate, reminders: EditHabit.shared.$monReminders, hidden: EditHabit.shared.$monHidden, name: "Monday")
+        TimePicker(date: EditHabit.shared.$monDate, reminders: EditHabit.shared.dailyNotifs, hidden: EditHabit.shared.$monHidden, name: "Monday")
     }
 }
 

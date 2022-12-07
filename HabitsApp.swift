@@ -23,7 +23,7 @@ struct HabitsApp: App {
 
        init() {
            FirebaseApp.configure()
-           fetchAllGoals()
+          // fetchAllGoals()
        }
     var body: some Scene {
         WindowGroup {
@@ -33,3 +33,4 @@ struct HabitsApp: App {
     }
     static var padEdge: Edge.Set = .leading
 }
+

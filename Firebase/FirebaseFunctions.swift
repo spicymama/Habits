@@ -14,22 +14,23 @@ class FirestoreManager: ObservableObject {
 }
 
 func createGoal(goal: Goal) {
+    let db = Firestore.firestore()
+    let docRef = db.collection("Goals").document(goal.id)
+    let id = docRef.documentID
     let goalData: [String : Any] = [
-       // "id" : goal.id,
+        "id" : id,
         "badCheckins" : goal.badCheckins,
         "category" : goal.category,
-       // "dailyNotifs" : goal.notificationTimes,
+        "dailyNotifs" : goal.dailyNotifs,
         "dateCreated" : goal.dateCreated,
         "endDate" : goal.endDate,
         "goodCheckins" : goal.goodCheckins,
         "prog" : goal.prog,
         "progressTracker" : goal.progressTracker,
-        "scheduledNotifs" : goal.notificationTimes,
+        "scheduledNotifs" : goal.scheduledNotifs,
         "selfNotes" : goal.selfNotes,
         "title" : goal.title
     ]
-    let db = Firestore.firestore()
-    let docRef = db.collection("Goals").document(goal.title)
     
     docRef.setData(goalData) { error in
         if let error = error {
@@ -41,22 +42,22 @@ func createGoal(goal: Goal) {
 }
 
 func updateGoal(goal: Goal) {
+    let db = Firestore.firestore()
+    let docRef = db.collection("Goals").document(goal.id)
     let goalData: [String : Any] = [
-      //  "id" : goal.id,
+        "id" : goal.id,
         "badCheckins" : goal.badCheckins,
         "category" : goal.category,
-       // "dailyNotifs" : goal.notificationTimes,
+        "dailyNotifs" : goal.dailyNotifs,
         "dateCreated" : goal.dateCreated,
         "endDate" : goal.endDate,
         "goodCheckins" : goal.goodCheckins,
         "prog" : goal.prog,
         "progressTracker" : goal.progressTracker,
-        "scheduledNotifs" : goal.notificationTimes,
+        "scheduledNotifs" : goal.scheduledNotifs,
         "selfNotes" : goal.selfNotes,
         "title" : goal.title
     ]
-    let db = Firestore.firestore()
-    let docRef = db.collection("Goals").document(goal.title)
     
     docRef.setData(goalData, merge: true) { error in
         if let error = error {
@@ -67,35 +68,41 @@ func updateGoal(goal: Goal) {
     }
 }
 
-func fetchAllGoals() {
+func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
+    var allGoals: [Goal] = []
     var goal: Goal = Goal()
     let db = Firestore.firestore()
-
+    DispatchQueue.main.async {
         db.collection("Goals").getDocuments() { (querySnapshot, error) in
-                        if let error = error {
-                                print("Error getting documents: \(error)")
-                        } else {
-                                for document in querySnapshot!.documents {
-                                        print("\(document.documentID): \(document.data())")
-                                    guard let notifs = document.data()["scheduledNotifs"] as? [Timestamp] else  { return }
-                                    guard let dateCreated = document.data()["dateCreated"] as? Timestamp else { return }
-                                    guard let endDate = document.data()["endDate"] as? Timestamp else { return }
-                                    goal.title = document.get("title") as! String
-                                    goal.dateCreated = dateCreated.dateValue()
-                                    goal.category = document.get("category") as! String
-                                    goal.selfNotes = document.get("selfNotes") as! String
-                                    goal.notificationTimes = timestampToDate(dates: notifs)
-                                    goal.progressTracker = document.get("progressTracker") as! String
-                                    goal.prog = document.get("prog") as! Double
-                                    goal.goodCheckins = document.get("goodCheckins") as! Int
-                                    goal.badCheckins = document.get("badCheckins") as! Int
-                                    goal.endDate = endDate.dateValue()
-                                  
-                                    User.goalArr.insert(goal, at: 0)
-                                    goal = Goal()
-                                }
-                        }
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID): \(document.data())")
+                    guard let notifs = document.data()["scheduledNotifs"] as? [Timestamp] else  { return }
+                    guard let dailyNotifs = document.data()["dailyNotifs"] as? [Timestamp] else { return }
+                    guard let dateCreated = document.data()["dateCreated"] as? Timestamp else { return }
+                    guard let endDate = document.data()["endDate"] as? Timestamp else { return }
+                    goal.id = document.get("id") as! String
+                    goal.title = document.get("title") as! String
+                    goal.dateCreated = dateCreated.dateValue()
+                    goal.category = document.get("category") as! String
+                    goal.selfNotes = document.get("selfNotes") as! String
+                    goal.scheduledNotifs = timestampToDate(dates: notifs)
+                    goal.dailyNotifs = timestampToDate(dates: dailyNotifs)
+                    goal.progressTracker = document.get("progressTracker") as! String
+                    goal.prog = document.get("prog") as! Double
+                    goal.goodCheckins = document.get("goodCheckins") as! Int
+                    goal.badCheckins = document.get("badCheckins") as! Int
+                    goal.endDate = endDate.dateValue()
+                    allGoals.append(goal)
+                    goal = Goal()
+                }
+                completion(allGoals)
+            }
         }
+        
+    }
     func timestampToDate(dates: [Timestamp])-> [Date] {
         var finalArr: [Date] = []
         for i in dates {

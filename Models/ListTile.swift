@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ListTile: View, Identifiable {
-    static var shared = ListTile()
+    static var shared = ListTile(goalArr: User.goalArr2)
     var id = UUID()
+    var goalArr: [Goal]
     @State var wasTapped = true
     @State var pad = true
     var body: some View {
@@ -26,12 +27,12 @@ struct ListTile: View, Identifiable {
             .frame(maxHeight: UIScreen.main.bounds.height - 150, alignment: .topTrailing)
             .zIndex(1)
             ScrollView {
-                    Text(User.goalArr.first!.category)
+                Text(goalArr.first?.category ?? "")
                         .font(.system(size: self.wasTapped ? 25 : 30))
                         .padding(.top, self.wasTapped ? 25 : 25)
                         .foregroundColor(.gray)
                         
-                ForEach(User.goalArr) { goal in
+                ForEach(goalArr) { goal in
                     self.wasTapped ? VStack {
                         HStack {
                             Image(systemName: "circle")
@@ -78,6 +79,6 @@ struct ListTile: View, Identifiable {
 
 struct ListTile_Previews: PreviewProvider {
     static var previews: some View {
-        ListTile()
+        ListTile(goalArr: User.goalArr)
     }
 }
