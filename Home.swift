@@ -22,6 +22,7 @@ struct Home: View {
                         Button {
                             EditHabit.editGoal = false
                             addButtonTap = true
+                            self.tap = true
                         } label: {
                             Image(systemName: "plus.square")
                                 .imageScale(.large)

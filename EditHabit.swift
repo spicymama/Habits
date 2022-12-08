@@ -39,17 +39,7 @@ struct EditHabit: View {
     @State var satHidden = true
     @State var sunHidden = true
     @State var endDateHidden = true
-    
     @State var dailyNotifs: [Date] = []
-    /*
-    @State var monReminders: [Date] = []
-    @State var tusReminders: [Date] = []
-    @State var wedReminders: [Date] = []
-    @State var thursReminders: [Date] = []
-    @State var friReminders: [Date] = []
-    @State var satReminders: [Date] = []
-    @State var sunReminders: [Date] = []
-    */
     @State var scheduledReminders: [Date] = []
     @State var notes = ""
     @State var category = "Category"
@@ -81,7 +71,6 @@ struct EditHabit: View {
                             .font(.system(size: 30))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-                    //.padding(.top, 55)
                     .onTapGesture {
                         self.remindersTap.toggle()
                         if self.remindersTap == true {
@@ -231,6 +220,17 @@ struct EditHabit: View {
                 .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .center)
                 .padding(.bottom, 80)
                 .padding(.top, 50)
+            EditHabit.editGoal ?
+                Button {
+                    deleteGoal(goal: Goal(id: self.id, category: self.category, title: self.title, dateCreated: Date.now, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
+                    EditHabit.editGoal.toggle()
+                    dismiss()
+                } label: {
+                    Text("Delete")
+                        .font(.system(size: 20))
+                        .foregroundColor(.red)
+                }
+                : nil
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: .infinity, alignment: .trailing)
             .animation(.easeInOut(duration: 1.5), value: dailyReminderTap)

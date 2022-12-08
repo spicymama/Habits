@@ -112,6 +112,19 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
     }
 }
 
+func deleteGoal(goal: Goal) {
+    let db = Firestore.firestore()
+    let docRef = db.collection("Goals").document(goal.id)
+    docRef.delete() { err in
+        if let err = err {
+          print("Error removing document: \(err)")
+        }
+        else {
+          print("Document successfully removed!")
+        }
+      }
+}
+
 /*
  let keys = document.data().map{$0.key}
  let values = document.data().map {$0.value}
