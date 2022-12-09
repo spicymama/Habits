@@ -36,6 +36,7 @@ func createGoal(goal: Goal) {
         if let error = error {
             print("Error writing document: \(error)")
         } else {
+            Home.shared.goalArr.append(goal)
             print("Document successfully written!")
         }
     }
@@ -58,11 +59,11 @@ func updateGoal(goal: Goal) {
         "selfNotes" : goal.selfNotes,
         "title" : goal.title
     ]
-    
     docRef.setData(goalData, merge: true) { error in
         if let error = error {
             print("Error writing document: \(error)")
         } else {
+            Home.shared.goalArr = Home.shared.goalArr.map { $0.id == goal.id ? goal : $0 }
             print("Document successfully updated!")
         }
     }
@@ -99,6 +100,7 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
                     goal = Goal()
                 }
                 completion(allGoals)
+                Home.shared.singleGoal = allGoals.first!
             }
         }
         
@@ -120,6 +122,14 @@ func deleteGoal(goal: Goal) {
           print("Error removing document: \(err)")
         }
         else {
+            for i in Home.shared.goalArr {
+                var index = 0
+                if i.id == goal.id {
+                    Home.shared.goalArr.remove(at: index)
+                }
+                index += 1
+            }
+            print(Home.shared.goalArr)
           print("Document successfully removed!")
         }
       }

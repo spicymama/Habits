@@ -65,19 +65,32 @@ struct Goal: View, Identifiable {
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: .infinity, alignment: .topLeading)
                 .lineLimit(100)
                 .foregroundColor(.gray)
-            Button {
-                EditHabit.shared.title = self.title
-                self.editGoalTap = true
-                EditHabit.editGoal = true
-            } label: {
-                Image(systemName: "chevron.right.circle")
-                    .foregroundColor(.gray)
-                    .imageScale(.large)
-            }.frame(maxWidth: 20, maxHeight: 20, alignment: .topTrailing)
-            .padding(.bottom, 20)
-            .padding(.leading, UIScreen.main.bounds.width / 1.5)
-            .fullScreenCover(isPresented: self.$editGoalTap) {
-                EditHabit(id: self.id, prog: self.prog, dateCreated: self.dateCreated, title: self.title, selectedTracker: self.progressTracker, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledReminders: self.scheduledNotifs, notes: self.selfNotes, category: self.category)
+            HStack {
+                /*
+                Button {
+                    deleteGoal(goal: self)
+                } label: {
+                    Image(systemName: "trash")
+                        .imageScale(.medium)
+                        .foregroundColor(.gray)
+                }
+                .frame(maxWidth: 20, maxHeight: 20, alignment: .topLeading)
+                    .padding(.bottom, 20)
+                 */
+                Button {
+                    EditHabit.shared.title = self.title
+                    self.editGoalTap = true
+                    EditHabit.editGoal = true
+                } label: {
+                    Image(systemName: "chevron.right.circle")
+                        .foregroundColor(.gray)
+                        .imageScale(.large)
+                }.frame(maxWidth: 20, maxHeight: 20, alignment: .topTrailing)
+                    .padding(.bottom, 20)
+                    .padding(.leading, UIScreen.main.bounds.width / 1.5)
+                    .fullScreenCover(isPresented: self.$editGoalTap) {
+                        EditHabit(id: self.id, prog: self.prog, dateCreated: self.dateCreated, title: self.title, selectedTracker: self.progressTracker, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledReminders: self.scheduledNotifs, notes: self.selfNotes, category: self.category)
+                    }
             }
         }
     }

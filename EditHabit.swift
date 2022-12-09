@@ -14,12 +14,14 @@ struct EditHabit: View {
     var prog: Double = 0
     var dateCreated: Date = Date()
     @State var title = ""
+    @State var categoryTap = true
     @State var endDateTap = true
     @State var lilEndDateTap = true
     @State var remindersTap = true
     @State var dailyReminderTap = true
     @State var scheduledReminderTap = true
     @State var progressTrackerTap = true
+    @State var addCatTap = true
     @State var notesTap = true
     @State var selectedTracker = ""
     @State var monDate = Date.now
@@ -42,7 +44,7 @@ struct EditHabit: View {
     @State var dailyNotifs: [Date] = []
     @State var scheduledReminders: [Date] = []
     @State var notes = ""
-    @State var category = "Category"
+    @State var category = ""
     static var editGoal = false
     let dateFormatter = DateFormatter()
     
@@ -56,10 +58,15 @@ struct EditHabit: View {
                 .foregroundColor(.gray)
             VStack {
                     TextField("Title...", text: self.$title, axis: .vertical)
-                        .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 100, maxHeight: 5000, alignment: .topLeading)
+                        .frame(maxWidth: UIScreen.main.bounds.width - 60, minHeight: 70, maxHeight: 5000, alignment: .leading)
                         .font(.system(size: 29))
                         .foregroundColor(.gray)
                         .padding(.leading, 20)
+                        .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color(UIColor.systemGray3), lineWidth: 2)
+                        )
+                        .padding(.bottom, 20)
               
                 VStack {
                     HStack {
@@ -110,101 +117,143 @@ struct EditHabit: View {
                     ScheduledReminders(tap: self.$scheduledReminderTap, date: self.$scheduledDate, dates: self.$scheduledReminders)
                 }
                 .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
-               
-                HStack {
-                    Text("Progress Tracker")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 35))
-                    Image(systemName: "chart.line.uptrend.xyaxis")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 30))
-                }
-                .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-                .padding(.top, 45)
-                .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
-                .onTapGesture {
-                    self.progressTrackerTap.toggle()
-                }
-                VStack {
-                    self.progressTrackerTap ? nil : ProgressTracker(selectedOp: self.$selectedTracker)
-                        .frame(height: UIScreen.main.bounds.height / 3)
-                }.animation(.easeInOut(duration: 1.0), value: self.progressTrackerTap)
-                Text(self.selectedTracker)
-                    .foregroundColor(.gray)
-                    .font(.system(size: 12))
-                    .frame(maxWidth: UIScreen.main.bounds.width - 20, alignment: .trailing)
-                VStack {
+                Group {
                     HStack {
-                        Text("End Date")
+                        Text("Progress Tracker")
                             .foregroundColor(.gray)
                             .font(.system(size: 35))
-                        Image(systemName: "calendar")
+                        Image(systemName: "chart.line.uptrend.xyaxis")
                             .foregroundColor(.gray)
                             .font(.system(size: 30))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
                     .padding(.top, 45)
-                    .padding(.bottom, 10)
+                    .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
                     .onTapGesture {
-                        self.endDateTap.toggle()
+                        self.progressTrackerTap.toggle()
+                    }
+                    VStack {
+                        self.progressTrackerTap ? nil : ProgressTracker(selectedOp: self.$selectedTracker)
+                            .frame(height: UIScreen.main.bounds.height / 3)
+                    }.animation(.easeInOut(duration: 1.0), value: self.progressTrackerTap)
+                    Text(self.selectedTracker)
+                        .foregroundColor(.gray)
+                        .font(.system(size: 12))
+                        .frame(maxWidth: UIScreen.main.bounds.width - 20, alignment: .trailing)
+                    VStack {
+                        HStack {
+                            Text("End Date")
+                                .foregroundColor(.gray)
+                                .font(.system(size: 35))
+                            Image(systemName: "calendar")
+                                .foregroundColor(.gray)
+                                .font(.system(size: 30))
+                        }
+                        .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
+                        .padding(.top, 45)
+                        .padding(.bottom, 10)
+                        .onTapGesture {
+                            self.endDateTap.toggle()
+                        }
+                        HStack {
+                            self.endDateTap ? nil :  DatePicker(selection: self.$endDate) {
+                                Image(systemName: "calendar")
+                            }.labelsHidden()
+                                .colorScheme(.dark)
+                            self.endDateTap ? nil :
+                            Button {
+                                self.endDateTap.toggle()
+                                self.endDateHidden = false
+                            } label: {
+                                Image(systemName: "plus")
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                        .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
+                        HStack {
+                            self.endDateHidden ? nil :
+                            Text(showEndDate())
+                                .foregroundColor(.gray)
+                                .font(.system(size: 12))
+                                .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
+                                .onTapGesture(perform: {
+                                    self.lilEndDateTap.toggle()
+                                })
+                            self.lilEndDateTap ? nil :
+                            Button {
+                                self.endDate = Date.distantPast
+                                self.endDateHidden.toggle()
+                                self.lilEndDateTap.toggle()
+                            } label: {
+                                Image(systemName: "xmark.circle")
+                                    .font(.system(size: 12))
+                            }.padding(.trailing, 10)
+                        }.animation(.easeInOut, value: self.lilEndDateTap)
+                    }
+                }
+                Group {
+                    HStack {
+                        Text("Category")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 35))
+                        Image(systemName: "note.text.badge.plus")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 30))
+                        
+                    }
+                    .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
+                    .padding(.top, 45)
+                    .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
+                    .onTapGesture {
+                        self.category = ""
+                        self.categoryTap.toggle()
+                    }
+                    self.categoryTap ? nil : ForEach(Home.shared.categoryArr) { cat in
+                        Text("\(cat)")
                     }
                     HStack {
-                        self.endDateTap ? nil :  DatePicker(selection: self.$endDate) {
-                            Image(systemName: "calendar")
-                        }.labelsHidden()
-                            .colorScheme(.dark)
-                        self.endDateTap ? nil :
-                        Button {
-                            self.endDateTap.toggle()
-                            self.endDateHidden = false
+                        self.categoryTap ? nil :
+                        TextField("Add New...", text: self.$category, axis: .vertical)
+                            .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 30, maxHeight: 500, alignment: .leading)
+                            .font(.system(size: 18))
+                            .foregroundColor(Color(UIColor.gray))
+                            .padding(.leading, 20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color(UIColor.systemGray3), lineWidth: 2)
+                            )
+                        self.categoryTap ? nil : Button {
+                            Home.shared.categoryArr.append(self.category)
+                            self.addCatTap = false
+                           // self.category = ""
                         } label: {
                             Image(systemName: "plus")
-                                .foregroundColor(.gray)
                         }
                     }
-                    .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
+                    self.addCatTap ? nil : Text(newCategory())
                     HStack {
-                        self.endDateHidden ? nil :
-                        Text(showEndDate())
+                        Text("Notes")
                             .foregroundColor(.gray)
-                            .font(.system(size: 12))
-                            .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
-                            .onTapGesture(perform: {
-                                self.lilEndDateTap.toggle()
-                            })
-                        self.lilEndDateTap ? nil :
-                        Button {
-                            self.endDate = Date.distantPast
-                            self.endDateHidden.toggle()
-                            self.lilEndDateTap.toggle()
-                        } label: {
-                            Image(systemName: "xmark.circle")
-                                .font(.system(size: 12))
-                        }.padding(.trailing, 10)
-                    }.animation(.easeInOut, value: self.lilEndDateTap)
-                }
-                HStack {
-                    Text("Notes")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 35))
-                    Image(systemName: "pencil")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 30))
-                }
-                .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-                .padding(.top, 45)
-                .padding(.bottom, 20)
-                .onTapGesture {
-                    self.notesTap.toggle()
-                }
-                self.notesTap ? nil : ZStack {
-                    RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .foregroundColor(Color(UIColor.systemGray5))
-                    TextField("Notes...", text: self.$notes, axis: .vertical)
-                        .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 120, maxHeight: 5000, alignment: .leading)
-                        .font(.system(size: 18))
-                        .foregroundColor(Color(UIColor.gray))
-                        .padding(.leading, 20)
+                            .font(.system(size: 35))
+                        Image(systemName: "pencil")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 30))
+                    }
+                    .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
+                    .padding(.top, 45)
+                    .padding(.bottom, 20)
+                    .onTapGesture {
+                        self.notesTap.toggle()
+                    }
+                    self.notesTap ? nil : ZStack {
+                        RoundedRectangle(cornerRadius: 15, style: .continuous)
+                            .foregroundColor(Color(UIColor.systemGray5))
+                        TextField("Notes...", text: self.$notes, axis: .vertical)
+                            .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 120, maxHeight: 5000, alignment: .leading)
+                            .font(.system(size: 18))
+                            .foregroundColor(Color(UIColor.gray))
+                            .padding(.leading, 20)
+                    }
                 }
                 Button {
                     EditHabit.editGoal ?  updateGoal(goal: Goal(id: self.id, category: self.category, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)) :
@@ -257,6 +306,11 @@ struct EditHabit: View {
             }
         }
        return dateArr
+    }
+    func newCategory()-> String{
+        let cat = self.category
+        self.category = ""
+        return cat
     }
 }
 

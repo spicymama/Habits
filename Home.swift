@@ -9,9 +9,13 @@ import SwiftUI
 
 struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
+    static var shared = Home()
+    @State var refresh = true
     @State var tap = ListTile.shared.wasTapped
     @State private var addButtonTap = false
     @State var goalArr: [Goal] = []
+    @State var categoryArr: [String] = []
+    @State var singleGoal: Goal = Goal()
     let categories = [("Habits to Get"), ("Habits to Quit"), ("Habits")]
     var padToggle = true
     var body: some View {
@@ -39,17 +43,24 @@ struct Home: View {
                             .foregroundColor(.gray)
                             .padding(.bottom, 25)
                     }
-                    ListTile(goalArr: User.goalArr)
-                GoalTile(goal: User.goalArr.first!)
+                    GoalTile(goal: User.goalArr.first!)
+                 
+                ListTile(goalArr: self.goalArr)
                         .padding(.top, 30)
-                    ListTile(goalArr: self.goalArr)
-                        .padding(.top, 30)
+                ListTile(goalArr: self.goalArr)
+                            .padding(.top, 30)
                  
                 }
             }.onAppear {
                 fetchAllGoals() { goal in
                     self.goalArr.append(contentsOf: goal)
                 }
+            }
+        }.refreshable {
+            fetchAllGoals { goal in
+                self.goalArr = []
+                self.goalArr.append(contentsOf: goal)
+                
             }
         }
     }

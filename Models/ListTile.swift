@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ListTile: View, Identifiable {
-    static var shared = ListTile(goalArr: User.goalArr2)
+    static var shared = ListTile(goalArr: User.goalArr)
     var id = UUID()
     var goalArr: [Goal]
     @State var wasTapped = true
@@ -49,18 +49,14 @@ struct ListTile: View, Identifiable {
                         .padding(.bottom, 10)
                         .padding(.leading, 10)
                     } : nil
-                    
                     self.wasTapped ? nil : goal
-                   
                 }
             }
             .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 150)
-           
             .frame(minHeight: 100)
             .foregroundColor(.white)
             .padding(.bottom, 25)
             .tint(.gray)
-            
         }
         .onTapGesture {
             self.pad.toggle()
@@ -74,7 +70,6 @@ struct ListTile: View, Identifiable {
         .padding(.leading, self.wasTapped ? UIScreen.main.bounds.width / 5 : 0)
         .padding(.bottom, 15)
     }
-    
 }
 
 struct ListTile_Previews: PreviewProvider {
