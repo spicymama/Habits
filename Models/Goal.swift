@@ -23,6 +23,7 @@ struct Goal: View, Identifiable {
     @State var prog: Double = 0.0
     @State var editGoalTap = false
     @State private var isEditing = false
+    @State var progUpdated: Int = 0
 
   
     var body: some View {
@@ -52,8 +53,13 @@ struct Goal: View, Identifiable {
                     in: 0...100,
                     onEditingChanged: { editing in
                       isEditing = editing
+                    if isEditing == false {
+                        self.progUpdated = Int(prog)
+                        updateGoal(goal: self)
+                    }
                 }
                 ).allowsHitTesting(self.progressTracker == "Manually track my progress" ? true : false)
+                    
                 Text("\(self.prog, specifier: "%.0f") %")
                     .foregroundColor(.gray)
                     .padding(.leading)
@@ -65,18 +71,6 @@ struct Goal: View, Identifiable {
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: .infinity, alignment: .topLeading)
                 .lineLimit(100)
                 .foregroundColor(.gray)
-            HStack {
-                /*
-                Button {
-                    deleteGoal(goal: self)
-                } label: {
-                    Image(systemName: "trash")
-                        .imageScale(.medium)
-                        .foregroundColor(.gray)
-                }
-                .frame(maxWidth: 20, maxHeight: 20, alignment: .topLeading)
-                    .padding(.bottom, 20)
-                 */
                 Button {
                     EditHabit.shared.title = self.title
                     self.editGoalTap = true
@@ -90,7 +84,6 @@ struct Goal: View, Identifiable {
                     .padding(.leading, UIScreen.main.bounds.width / 1.5)
                     .fullScreenCover(isPresented: self.$editGoalTap) {
                         EditHabit(id: self.id, prog: self.prog, dateCreated: self.dateCreated, title: self.title, selectedTracker: self.progressTracker, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledReminders: self.scheduledNotifs, notes: self.selfNotes, category: self.category)
-                    }
             }
         }
     }
