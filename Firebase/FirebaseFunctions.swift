@@ -10,7 +10,7 @@ import Firebase
 import SwiftUI
 
 class FirestoreManager: ObservableObject {
-    @Published var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, dailyNotifs: [Date()], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
+    @Published var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
 }
 
 func createGoal(goal: Goal) {
@@ -21,7 +21,13 @@ func createGoal(goal: Goal) {
         "id" : id,
         "badCheckins" : goal.badCheckins,
         "category" : goal.category,
-        "dailyNotifs" : goal.dailyNotifs,
+        "monNotifs" : goal.monNotifs,
+        "tusNotifs" : goal.tusNotifs,
+        "wedNotifs" : goal.wedNotifs,
+        "thursNotifs" : goal.thursNotifs,
+        "friNotifs" : goal.friNotifs,
+        "satNotifs" : goal.satNotifs,
+        "sunNotifs" : goal.sunNotifs,
         "dateCreated" : goal.dateCreated,
         "endDate" : goal.endDate,
         "goodCheckins" : goal.goodCheckins,
@@ -49,7 +55,13 @@ func updateGoal(goal: Goal) {
         "id" : goal.id,
         "badCheckins" : goal.badCheckins,
         "category" : goal.category,
-        "dailyNotifs" : goal.dailyNotifs,
+        "monNotifs" : goal.monNotifs,
+        "tusNotifs" : goal.tusNotifs,
+        "wedNotifs" : goal.wedNotifs,
+        "thursNotifs" : goal.thursNotifs,
+        "friNotifs" : goal.friNotifs,
+        "satNotifs" : goal.satNotifs,
+        "sunNotifs" : goal.sunNotifs,
         "dateCreated" : goal.dateCreated,
         "endDate" : goal.endDate,
         "goodCheckins" : goal.goodCheckins,
@@ -71,7 +83,7 @@ func updateGoal(goal: Goal) {
 
 func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
     var allGoals: [Goal] = []
-    var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, dailyNotifs: [Date()], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
+    var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
     let db = Firestore.firestore()
     DispatchQueue.main.async {
         db.collection("Goals").getDocuments() { (querySnapshot, error) in
@@ -79,9 +91,14 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
                 print("Error getting documents: \(error)")
             } else {
                 for document in querySnapshot!.documents {
-                    print("\(document.documentID): \(document.data())")
                     guard let notifs = document.data()["scheduledNotifs"] as? [Timestamp] else  { return }
-                    guard let dailyNotifs = document.data()["dailyNotifs"] as? [Timestamp] else { return }
+                    let monNotifs = document.data()["monNotifs"] as? [Timestamp] ?? []
+                    let tusNotifs = document.data()["tusNotifs"] as? [Timestamp] ?? []
+                    let wedNotifs = document.data()["wedNotifs"] as? [Timestamp] ?? []
+                    let thursNotifs = document.data()["thursNotifs"] as? [Timestamp] ?? []
+                    let friNotifs = document.data()["friNotifs"] as? [Timestamp] ?? []
+                    let satNotifs = document.data()["satNotifs"] as? [Timestamp] ?? []
+                    let sunNotifs = document.data()["sunNotifs"] as? [Timestamp] ?? []
                     guard let dateCreated = document.data()["dateCreated"] as? Timestamp else { return }
                     guard let endDate = document.data()["endDate"] as? Timestamp else { return }
                     goal.id = document.get("id") as! String
@@ -90,14 +107,23 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
                     goal.category = document.get("category") as! String
                     goal.selfNotes = document.get("selfNotes") as! String
                     goal.scheduledNotifs = timestampToDate(dates: notifs)
-                    goal.dailyNotifs = timestampToDate(dates: dailyNotifs)
+                    goal.monNotifs = timestampToDate(dates: monNotifs)
+                    goal.tusNotifs = timestampToDate(dates: tusNotifs)
+                    goal.wedNotifs = timestampToDate(dates: wedNotifs)
+                    goal.thursNotifs = timestampToDate(dates: thursNotifs)
+                    goal.friNotifs = timestampToDate(dates: friNotifs)
+                    goal.satNotifs = timestampToDate(dates: satNotifs)
+                    goal.sunNotifs = timestampToDate(dates: sunNotifs)
                     goal.progressTracker = document.get("progressTracker") as! String
                     goal.prog = document.get("prog") as! Double
                     goal.goodCheckins = document.get("goodCheckins") as! Int
                     goal.badCheckins = document.get("badCheckins") as! Int
                     goal.endDate = endDate.dateValue()
                     allGoals.append(goal)
-                    goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, dailyNotifs: [Date()], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
+                    if !Home.shared.categoryArr.contains(goal.category) {
+                        Home.shared.categoryArr.append(goal.category)
+                    }
+                    goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
                 }
                 completion(allGoals)
             }

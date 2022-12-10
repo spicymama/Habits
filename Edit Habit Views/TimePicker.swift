@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TimePicker: View {
     @Binding var date: Date
-    @State var reminders: [Date]
+   // @State var reminders: [Date]
     @Binding var hidden: Bool
     @State var dateTap = true
     @Binding var notifArr: [Date]
@@ -32,11 +32,8 @@ struct TimePicker: View {
                             if self.hidden == true {
                                 self.hidden.toggle()
                             } else {
-                                if !self.reminders.contains(date) {
-                                    self.reminders.append(date)
+                                if !self.notifArr.contains(date) {
                                     self.notifArr.append(date)
-                                    print(notifArr)
-                                    print(EditHabit.shared.dailyNotifs)
                                 }
                                 
                             }
@@ -59,7 +56,7 @@ struct TimePicker: View {
                     
             }
             HStack {
-                ForEach(showSelectedTimes(dates: self.reminders, timeStyle: .short)) { time in
+                ForEach(showSelectedTimes(dates: self.notifArr, timeStyle: .short)) { time in
                     HStack {
                         Text(time)
                             .foregroundColor(.gray)
@@ -69,8 +66,15 @@ struct TimePicker: View {
                             }
                         self.dateTap ? nil :
                         Button {
-                            guard let index = showTimesUnsorted(dates: reminders, timeStyle: .short).firstIndex(of: time) else { return }
-                            self.reminders.remove(at: index)
+                            guard let index = showTimesUnsorted(dates: self.notifArr, timeStyle: .short).firstIndex(of: time) else { return }
+                            self.notifArr.remove(at: index)
+                            for i in notifArr {
+                                var index = 0
+                                if i == (self.date) {
+                                    notifArr.remove(at: index)
+                                }
+                                index += 1
+                            }
                         } label: {
                             Image(systemName: "xmark.circle")
                                 .font(.system(size: 12))
@@ -87,7 +91,7 @@ struct TimePicker: View {
 
 struct TimePicker_Previews: PreviewProvider {
     static var previews: some View {
-        TimePicker(date: EditHabit.shared.$monDate, reminders: EditHabit.shared.dailyNotifs, hidden: EditHabit.shared.$monHidden, notifArr: EditHabit.shared.$dailyNotifs, name: "Monday")
+        TimePicker(date: EditHabit.shared.$monDate, hidden: EditHabit.shared.$monHidden, notifArr: EditHabit.shared.$monNotifs, name: "Monday")
     }
 }
 
@@ -128,4 +132,29 @@ func showDatesUnsorted(dates: [Date], dateStyle: DateFormatter.Style) -> [String
         dateArr.append(timeFormatter.string(from: date))
     }
     return dateArr
+}
+
+func assignWeekday(name: String)-> Int {
+    if name == "Sunday" {
+        return 1
+    }
+    if name == "Monday" {
+        return 2
+    }
+    if name == "Tuesday" {
+        return 3
+    }
+    if name == "Wednesday" {
+        return 4
+    }
+    if name == "Thursday" {
+        return 5
+    }
+    if name == "Friday" {
+        return 6
+    }
+    if name == "Saturday" {
+        return 7
+    }
+    return 0
 }

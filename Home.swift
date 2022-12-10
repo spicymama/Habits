@@ -16,8 +16,8 @@ struct Home: View {
     @State var goalArr: [Goal] = []
     @State var categoryArr: [String] = []
     @State var singleGoal: Goal = Goal.placeholderGoal
-    let categories = [("Habits to Get"), ("Habits to Quit"), ("Habits")]
     var padToggle = true
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -52,19 +52,20 @@ struct Home: View {
                  
                 }
             }.onAppear {
-                fetchAllGoals() { goal in
-                    self.goalArr.append(contentsOf: goal)
-                    self.singleGoal = goal[0]
+                fetchAllGoals() { goals in
+                    self.goalArr.append(contentsOf: goals)
+                    self.singleGoal = goals[0]
                 }
             }
         }.refreshable {
-            fetchAllGoals { goal in
+            fetchAllGoals { goals in
                 self.goalArr = []
-                self.goalArr.append(contentsOf: goal)
-                self.singleGoal = goal[0]
+                self.goalArr.append(contentsOf: goals)
+                self.singleGoal = goals[0]
             }
         }
     }
+   
 }
 
 struct Home_Previews: PreviewProvider {

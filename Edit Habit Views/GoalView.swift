@@ -27,13 +27,13 @@ struct GoalView: View, Identifiable {
             .padding(.bottom, 10)
             .padding(.leading, 40)
             HStack {
-                Image(systemName: checkDay(day: 2) ? "m.circle" : "m.circle.fill")
-                Image(systemName: checkDay(day: 3) ? "t.circle" : "t.circle.fill")
-                Image(systemName: checkDay(day: 4) ? "w.circle" : "w.circle.fill")
-                Image(systemName: checkDay(day: 5) ? "t.circle" : "t.circle.fill")
-                Image(systemName: checkDay(day: 6) ? "f.circle" : "f.circle.fill")
-                Image(systemName: checkDay(day: 7) ? "s.circle" : "s.circle.fill")
-                Image(systemName: checkDay(day: 1) ? "s.circle" : "s.circle.fill")
+                Image(systemName: currentGoal.monNotifs.isEmpty ? "m.circle" : "m.circle.fill")
+                Image(systemName: currentGoal.tusNotifs.isEmpty ? "t.circle" : "t.circle.fill")
+                Image(systemName: currentGoal.wedNotifs.isEmpty ? "w.circle" : "w.circle.fill")
+                Image(systemName: currentGoal.thursNotifs.isEmpty ? "t.circle" : "t.circle.fill")
+                Image(systemName: currentGoal.friNotifs.isEmpty ? "f.circle" : "f.circle.fill")
+                Image(systemName: currentGoal.satNotifs.isEmpty ? "s.circle" : "s.circle.fill")
+                Image(systemName: currentGoal.sunNotifs.isEmpty ? "s.circle" : "s.circle.fill")
             }  .frame(maxWidth: UIScreen.main.bounds.width - 40, maxHeight: 50, alignment: .leading)
                 .padding(.leading, 25)
                 .padding(.bottom, 10)
@@ -73,18 +73,9 @@ struct GoalView: View, Identifiable {
                     .padding(.bottom, 20)
                     .padding(.leading, UIScreen.main.bounds.width / 1.5)
                     .fullScreenCover(isPresented: self.$editGoalTap) {
-                        EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate, dailyNotifs: currentGoal.dailyNotifs, scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
+                        EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
             }
         }
-    }
-    func checkDay(day: Int)-> Bool {
-        for i in currentGoal.dailyNotifs {
-            print("DATE: \(i) \n DayVar: \(day) \n DayNUM: \(String(describing: i.dayNumberOfWeek()))")
-            if i.dayNumberOfWeek() == day {
-                return false
-            }
-        }
-        return true
     }
 }
 

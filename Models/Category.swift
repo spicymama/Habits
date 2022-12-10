@@ -8,17 +8,13 @@
 import SwiftUI
 
 struct Category: View {
-    @Binding var category: String
-    @Binding var tap: Bool
-    @Binding var catArr: [String]
-    @Binding var dateTap: Bool
+    var catArr: [String] = Home.shared.categoryArr
+    @State var category: String
+    @State var tap = true
+    @State var dateTap = true
     @State var selectedCat = ""
-    /*
-    @State var category: String = ""
-    @State var tap: Bool = false
-    @State var catArr: [String] = ["Cat One", "Cat Two"]
-    @State var addCatTap: Bool = true
-     */
+    @State var animate = true
+   
     var body: some View {
         VStack {
             HStack {
@@ -33,6 +29,7 @@ struct Category: View {
             .padding(.top, 45)
             .onTapGesture {
                 self.tap.toggle()
+                self.animate.toggle()
             }
             HStack {
                 self.tap ? nil :
@@ -46,19 +43,22 @@ struct Category: View {
                             .stroke(Color(UIColor.systemGray3), lineWidth: 2)
                     )
                 self.tap ? nil : Button {
+                    self.animate.toggle()
                     self.selectedCat = category
                     EditHabit.selectedCat = selectedCat
                     self.category = ""
                 } label: {
                     Image(systemName: "plus")
+                        .foregroundColor(.gray)
                 }
             }
             .padding(.top, 10)
-            self.tap ? nil : ForEach(self.$catArr) { cat in
-                Text("\(cat.wrappedValue)")
+            self.tap ? nil : ForEach(self.catArr) { cat in
+                Text(cat)
                     .foregroundColor(.gray)
                     .onTapGesture {
-                        self.selectedCat = cat.wrappedValue
+                        self.animate.toggle()
+                        self.selectedCat = cat
                         EditHabit.selectedCat = selectedCat
                     }
                     .padding(.leading, UIScreen.main.bounds.width / 2)
@@ -70,17 +70,20 @@ struct Category: View {
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
                 .onTapGesture {
                     self.dateTap.toggle()
+                    self.animate.toggle()
                 }
                 self.dateTap ? nil : Button {
                     self.selectedCat = ""
                     self.category = ""
                     self.dateTap.toggle()
+                    self.animate.toggle()
                 } label: {
                     Image(systemName: "xmark.circle")
                         .font(.system(size: 12))
+                        .foregroundColor(.gray)
                 }.padding(.trailing, 10)
-            }.animation(.easeInOut, value: self.dateTap)
-        }
+            }
+        }.animation(.easeInOut(duration: 0.5), value: self.animate)
     }
     func newCategory()-> String{
         let cat = self.category
@@ -91,6 +94,6 @@ struct Category: View {
 }
 struct Category_Previews: PreviewProvider {
     static var previews: some View {
-        Category(category: EditHabit.shared.$category, tap: EditHabit.shared.$categoryTap, catArr: Home.shared.$categoryArr, dateTap: EditHabit.shared.$catDateTap)
+        Category(category: EditHabit.shared.category)
     }
 }
