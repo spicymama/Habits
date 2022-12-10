@@ -12,6 +12,7 @@ struct TimePicker: View {
     @State var reminders: [Date]
     @Binding var hidden: Bool
     @State var dateTap = true
+    @Binding var notifArr: [Date]
     var name: String
     
     var body: some View {
@@ -33,7 +34,11 @@ struct TimePicker: View {
                             } else {
                                 if !self.reminders.contains(date) {
                                     self.reminders.append(date)
+                                    self.notifArr.append(date)
+                                    print(notifArr)
+                                    print(EditHabit.shared.dailyNotifs)
                                 }
+                                
                             }
                         } label: {
                             Image(systemName: "plus")
@@ -82,7 +87,7 @@ struct TimePicker: View {
 
 struct TimePicker_Previews: PreviewProvider {
     static var previews: some View {
-        TimePicker(date: EditHabit.shared.$monDate, reminders: EditHabit.shared.dailyNotifs, hidden: EditHabit.shared.$monHidden, name: "Monday")
+        TimePicker(date: EditHabit.shared.$monDate, reminders: EditHabit.shared.dailyNotifs, hidden: EditHabit.shared.$monHidden, notifArr: EditHabit.shared.$dailyNotifs, name: "Monday")
     }
 }
 

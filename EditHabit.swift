@@ -100,18 +100,18 @@ struct EditHabit: View {
                     }
                     self.dailyReminderTap ? nil :
                     Group {
-                        TimePicker(date: self.$monDate, reminders: findDay(day: 2), hidden: self.$monHidden, name: "Monday") .animation(.easeInOut, value: self.monHidden)
-                        TimePicker(date: self.$tusDate, reminders: findDay(day: 3), hidden: self.$tusHidden, name: "Tuesday")
+                        TimePicker(date: self.$monDate, reminders: findDay(day: 2), hidden: self.$monHidden, notifArr: self.$dailyNotifs, name: "Monday") .animation(.easeInOut, value: self.monHidden)
+                        TimePicker(date: self.$tusDate, reminders: findDay(day: 3), hidden: self.$tusHidden, notifArr: self.$dailyNotifs, name: "Tuesday")
                             .animation(.easeInOut, value: self.tusHidden)
-                        TimePicker(date: self.$wedDate, reminders: findDay(day: 4), hidden: self.$wedHidden, name: "Wednesday")
+                        TimePicker(date: self.$wedDate, reminders: findDay(day: 4), hidden: self.$wedHidden, notifArr: self.$dailyNotifs, name: "Wednesday")
                             .animation(.easeInOut, value: self.wedHidden)
-                        TimePicker(date: self.$thursDate, reminders: findDay(day: 5), hidden: self.$thursHidden, name: "Thursday")
+                        TimePicker(date: self.$thursDate, reminders: findDay(day: 5), hidden: self.$thursHidden, notifArr: self.$dailyNotifs, name: "Thursday")
                             .animation(.easeInOut, value: self.thursHidden)
-                        TimePicker(date: self.$friDate, reminders: findDay(day: 6), hidden: self.$friHidden, name: "Friday")
+                        TimePicker(date: self.$friDate, reminders: findDay(day: 6), hidden: self.$friHidden, notifArr: self.$dailyNotifs, name: "Friday")
                             .animation(.easeInOut, value: self.friHidden)
-                        TimePicker(date: self.$satDate, reminders: findDay(day: 7), hidden: self.$satHidden, name: "Saturday")
+                        TimePicker(date: self.$satDate, reminders: findDay(day: 7), hidden: self.$satHidden, notifArr: self.$dailyNotifs, name: "Saturday")
                             .animation(.easeInOut, value: self.satHidden)
-                        TimePicker(date: self.$sunDate, reminders: findDay(day: 1), hidden: self.$sunHidden, name: "Sunday")
+                        TimePicker(date: self.$sunDate, reminders: findDay(day: 1), hidden: self.$sunHidden, notifArr: self.$dailyNotifs, name: "Sunday")
                             .animation(.easeInOut, value: self.sunHidden)
                     }
                     self.remindersTap ? nil :
