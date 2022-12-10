@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ListTile: View, Identifiable {
-    static var shared = ListTile(goalArr: User.goalArr)
+    static var shared = ListTile(goalArr: Home.shared.goalArr)
     var id = UUID()
     var goalArr: [Goal]
     @State var wasTapped = true
@@ -49,7 +49,7 @@ struct ListTile: View, Identifiable {
                         .padding(.bottom, 10)
                         .padding(.leading, 10)
                     } : nil
-                    self.wasTapped ? nil : goal
+                    self.wasTapped ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes)
                 }
             }
             .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 150)
@@ -74,6 +74,6 @@ struct ListTile: View, Identifiable {
 
 struct ListTile_Previews: PreviewProvider {
     static var previews: some View {
-        ListTile(goalArr: User.goalArr)
+        ListTile(goalArr: Home.shared.goalArr)
     }
 }

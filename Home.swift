@@ -11,11 +11,11 @@ struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     static var shared = Home()
     @State var refresh = true
-    @State var tap = ListTile.shared.wasTapped
+    @State var tap = true
     @State private var addButtonTap = false
     @State var goalArr: [Goal] = []
     @State var categoryArr: [String] = []
-    @State var singleGoal: Goal = Goal()
+    @State var singleGoal: Goal = Goal.placeholderGoal
     let categories = [("Habits to Get"), ("Habits to Quit"), ("Habits")]
     var padToggle = true
     var body: some View {
@@ -43,7 +43,7 @@ struct Home: View {
                             .foregroundColor(.gray)
                             .padding(.bottom, 25)
                     }
-                    GoalTile(goal: User.goalArr.first!)
+                GoalTile(goal: self.singleGoal)
                  
                 ListTile(goalArr: self.goalArr)
                         .padding(.top, 30)
@@ -54,13 +54,14 @@ struct Home: View {
             }.onAppear {
                 fetchAllGoals() { goal in
                     self.goalArr.append(contentsOf: goal)
+                    self.singleGoal = goal[0]
                 }
             }
         }.refreshable {
             fetchAllGoals { goal in
                 self.goalArr = []
                 self.goalArr.append(contentsOf: goal)
-                
+                self.singleGoal = goal[0]
             }
         }
     }

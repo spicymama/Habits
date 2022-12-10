@@ -171,8 +171,8 @@ struct EditHabit: View {
                     }
                 }
                 Button {
-                    EditHabit.editGoal ?  updateGoal(goal: Goal(id: self.id, category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)) :
-                    createGoal(goal: Goal(id: UUID().uuidString, category: EditHabit.selectedCat, title: self.title, dateCreated: Date.now, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
+                    EditHabit.editGoal ?  updateGoal(goal: Goal(id: self.id, category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)) :
+                    createGoal(goal: Goal(id: UUID().uuidString,  category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
                     
                     EditHabit.editGoal.toggle()
                     dismiss()
@@ -186,7 +186,7 @@ struct EditHabit: View {
                 .padding(.top, 50)
             EditHabit.editGoal ?
                 Button {
-                    deleteGoal(goal: Goal(id: self.id, category: self.category, title: self.title, dateCreated: Date.now, endDate: self.endDate, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
+                    deleteGoal(goal: Goal(id: self.id, category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, dailyNotifs: self.dailyNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
                     EditHabit.editGoal.toggle()
                     dismiss()
                 } label: {

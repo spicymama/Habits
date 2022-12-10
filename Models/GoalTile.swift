@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct GoalTile: View {
-    @State var goal: Goal
+struct GoalTile: View, Identifiable {
+    var id = UUID()
+    var goal: Goal
     @State var tap = true
     var body: some View {
         ZStack {
@@ -30,7 +31,7 @@ struct GoalTile: View {
                     .foregroundColor(.gray)
                     .padding(.vertical)
 
-                self.tap ? nil : goal.frame(maxWidth: UIScreen.main.bounds.width - 20)
+                self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes).frame(maxWidth: UIScreen.main.bounds.width - 20)
             }
             .onTapGesture {
                 self.tap = false
@@ -47,6 +48,6 @@ struct GoalTile: View {
 
 struct GoalTile_Previews: PreviewProvider {
     static var previews: some View {
-        GoalTile(goal: User.goalArr[0])
+        GoalTile(goal: Goal.placeholderGoal)
     }
 }

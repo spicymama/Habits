@@ -10,7 +10,7 @@ import Firebase
 import SwiftUI
 
 class FirestoreManager: ObservableObject {
-    @Published var goal: Goal = Goal()
+    @Published var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, dailyNotifs: [Date()], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
 }
 
 func createGoal(goal: Goal) {
@@ -57,7 +57,7 @@ func updateGoal(goal: Goal) {
         "progressTracker" : goal.progressTracker,
         "scheduledNotifs" : goal.scheduledNotifs,
         "selfNotes" : goal.selfNotes,
-        "title" : goal.title
+        "title" : goal.title,
     ]
     docRef.setData(goalData, merge: true) { error in
         if let error = error {
@@ -71,7 +71,7 @@ func updateGoal(goal: Goal) {
 
 func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
     var allGoals: [Goal] = []
-    var goal: Goal = Goal()
+    var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, dailyNotifs: [Date()], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
     let db = Firestore.firestore()
     DispatchQueue.main.async {
         db.collection("Goals").getDocuments() { (querySnapshot, error) in
@@ -97,10 +97,9 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
                     goal.badCheckins = document.get("badCheckins") as! Int
                     goal.endDate = endDate.dateValue()
                     allGoals.append(goal)
-                    goal = Goal()
+                    goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, dailyNotifs: [Date()], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
                 }
                 completion(allGoals)
-                Home.shared.singleGoal = allGoals.first!
             }
         }
         
