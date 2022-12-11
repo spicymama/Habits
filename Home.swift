@@ -43,29 +43,72 @@ struct Home: View {
                             .foregroundColor(.gray)
                             .padding(.bottom, 25)
                     }
+                    /*
                 GoalTile(goal: self.singleGoal)
                  
                 ListTile(goalArr: self.goalArr)
                         .padding(.top, 30)
                 ListTile(goalArr: self.goalArr)
                             .padding(.top, 30)
+                    */
+                    ForEach(formatTiles().0) { tile in
+                        tile
+                            .padding(.top, 30)
+                    }
+                    ForEach(formatTiles().1) { tile in
+                        tile
+                            .padding(.top, 30)
+                    }
                  
                 }
             }.onAppear {
                 fetchAllGoals() { goals in
+                    self.categoryArr = []
                     self.goalArr.append(contentsOf: goals)
                     self.singleGoal = goals[0]
+                    for i in goals {
+                        if !self.categoryArr.contains(i.category) && i.category != "" {
+                            self.categoryArr.append(i.category)
+                        }
+                    }
                 }
+                self.refresh.toggle()
             }
         }.refreshable {
             fetchAllGoals { goals in
+                self.categoryArr = []
                 self.goalArr = []
                 self.goalArr.append(contentsOf: goals)
                 self.singleGoal = goals[0]
+                for i in goals {
+                    if !self.categoryArr.contains(i.category) && i.category != "" {
+                        self.categoryArr.append(i.category)
+                    }
+                }
             }
+            self.refresh.toggle()
         }
     }
-   
+    func formatTiles()-> ([GoalTile], [ListTile]) {
+        var goalTiles: [GoalTile] = []
+        var listTiles: [ListTile] = []
+        for goal in goalArr {
+            if goal.category == "" {
+                goalTiles.append(GoalTile(goal: goal))
+            }
+        }
+        for cat in categoryArr {
+            var goals: [Goal] = []
+            for goal in goalArr {
+                if goal.category == cat {
+                    goals.append(goal)
+                }
+            }
+            let list = ListTile(goalArr: goals)
+            listTiles.append(list)
+        }
+        return (goalTiles, listTiles)
+    }
 }
 
 struct Home_Previews: PreviewProvider {

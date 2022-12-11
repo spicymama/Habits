@@ -120,9 +120,6 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
                     goal.badCheckins = document.get("badCheckins") as! Int
                     goal.endDate = endDate.dateValue()
                     allGoals.append(goal)
-                    if !Home.shared.categoryArr.contains(goal.category) {
-                        Home.shared.categoryArr.append(goal.category)
-                    }
                     goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
                 }
                 completion(allGoals)
