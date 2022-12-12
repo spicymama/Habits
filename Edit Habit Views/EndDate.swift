@@ -23,7 +23,7 @@ struct EndDate: View {
                     .font(.system(size: 30))
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-            .padding(.top, 45)
+            .padding(.top, 30)
             .padding(.bottom, 10)
             .onTapGesture {
                 self.tap.toggle()

@@ -57,7 +57,7 @@ struct GoalView: View, Identifiable {
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
                 .padding(.bottom, 10)
                 .accentColor(.gray)
-            TextField("Notes:", text: self.$notes, axis: .vertical)
+            Text(self.notes)
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: .infinity, alignment: .topLeading)
                 .lineLimit(100)
                 .foregroundColor(.gray)

@@ -76,13 +76,11 @@ struct EditHabit: View {
                 VStack {
                     HStack {
                         Text("Reminders")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 35))
                         Image(systemName: "clock")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 30))
                     }
-                    .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
+                    .foregroundColor(.gray)
+                    .font(.system(size: 35))
+                    .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 55, alignment: .trailing)
                     .onTapGesture {
                         self.remindersTap.toggle()
                         if self.remindersTap == true {
@@ -92,12 +90,10 @@ struct EditHabit: View {
                     self.remindersTap ? nil :
                     HStack {
                         Text("Daily")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 25))
                         Image(systemName: "clock")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 24))
                     }
+                    .foregroundColor(.gray)
+                    .font(.system(size: 25))
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
                     .onTapGesture {
                         self.dailyReminderTap.toggle()
@@ -132,7 +128,7 @@ struct EditHabit: View {
                             .font(.system(size: 30))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-                    .padding(.top, 45)
+                    .padding(.top, 30)
                     .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
                     .onTapGesture {
                         self.progressTrackerTap.toggle()
@@ -153,14 +149,12 @@ struct EditHabit: View {
                     
                     HStack {
                         Text("Notes")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 35))
                         Image(systemName: "pencil")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 30))
                     }
+                    .foregroundColor(.gray)
+                    .font(.system(size: 35))
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-                    .padding(.top, 45)
+                    .padding(.top, 20)
                     .padding(.bottom, 20)
                     .onTapGesture {
                         self.notesTap.toggle()
@@ -187,8 +181,8 @@ struct EditHabit: View {
                         .foregroundColor(.gray)
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .center)
-                .padding(.bottom, 80)
-                .padding(.top, 50)
+                .padding(.bottom, 30)
+                .padding(.top, 30)
             EditHabit.editGoal ?
                 Button {
                     deleteGoal(goal: Goal(id: self.id, category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0,monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))

@@ -19,14 +19,12 @@ struct Category: View {
         VStack {
             HStack {
                 Text("Category")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 35))
                 Image(systemName: "note.text.badge.plus")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 30))
             }
+            .foregroundColor(.gray)
+            .font(.system(size: 35))
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-            .padding(.top, 45)
+            .padding(.top, 40)
             .onTapGesture {
                 self.tap.toggle()
                 self.animate.toggle()
@@ -42,11 +40,12 @@ struct Category: View {
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(Color(UIColor.systemGray3), lineWidth: 2)
                     )
-                self.tap ? nil : Button {
+                self.tap ? nil : self.category == "" ? nil : Button {
                     self.animate.toggle()
+                    self.tap.toggle()
                     self.selectedCat = category
-                    EditHabit.selectedCat = selectedCat
                     self.category = ""
+                    EditHabit.selectedCat = selectedCat
                 } label: {
                     Image(systemName: "plus")
                         .foregroundColor(.gray)
@@ -65,7 +64,6 @@ struct Category: View {
             }
             HStack {
            Text(self.selectedCat)
-                    .foregroundColor(.gray)
                     .font(.system(size: 14))
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
                 .onTapGesture {
@@ -80,9 +78,8 @@ struct Category: View {
                 } label: {
                     Image(systemName: "xmark.circle")
                         .font(.system(size: 12))
-                        .foregroundColor(.gray)
                 }.padding(.trailing, 10)
-            }
+            } .foregroundColor(.gray)
         }.animation(.easeInOut(duration: 0.5), value: self.animate)
     }
     func newCategory()-> String{

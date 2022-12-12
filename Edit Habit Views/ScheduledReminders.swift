@@ -16,12 +16,10 @@ struct ScheduledReminders: View {
         VStack {
             HStack {
                 Text("Scheduled Reminders")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 25))
                 Image(systemName: "calendar")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 24))
             }
+            .foregroundColor(.gray)
+            .font(.system(size: 25))
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             .onTapGesture {
                 self.tap.toggle()
@@ -30,9 +28,8 @@ struct ScheduledReminders: View {
                 self.tap ? nil :  DatePicker(selection: self.$date) {
                     Image(systemName: "calendar")
                 }
-                   // .accentColor(.white)
-                    .labelsHidden()
-                    .colorScheme(.dark)
+                .labelsHidden()
+                .colorScheme(.dark)
                 self.tap ? nil : Button {
                     if self.tap == true {
                         self.tap.toggle()
@@ -50,21 +47,21 @@ struct ScheduledReminders: View {
             HStack {
                 ForEach(showSelectedDates(dates: self.dates, dateStyle: .short)) { time in
                     HStack {
-                    Text(time)
-                        .foregroundColor(.gray)
-                        .font(.system(size: 12))
-                        .onTapGesture {
-                            self.dateTap.toggle()
-                        }
-                    self.dateTap ? nil :
-                    Button {
-                        guard let index = showDatesUnsorted(dates: dates, dateStyle: .short).firstIndex(of: time) else { return }
-                        self.dates.remove(at: index)
-                    } label: {
-                        Image(systemName: "xmark.circle")
+                        Text(time)
+                            .foregroundColor(.gray)
                             .font(.system(size: 12))
-                    }.padding(.trailing, 10)
-                }
+                            .onTapGesture {
+                                self.dateTap.toggle()
+                            }
+                        self.dateTap ? nil :
+                        Button {
+                            guard let index = showDatesUnsorted(dates: dates, dateStyle: .short).firstIndex(of: time) else { return }
+                            self.dates.remove(at: index)
+                        } label: {
+                            Image(systemName: "xmark.circle")
+                                .font(.system(size: 12))
+                        }.padding(.trailing, 10)
+                    }
                 }
                 .padding(.trailing, 5)
             }
