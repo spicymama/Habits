@@ -39,7 +39,8 @@ struct GoalTile: View, Identifiable {
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
                     .stroke(.gray, lineWidth: 2)
-            ).animation(.easeInOut(duration: 1.0), value: self.tap)
+            )
+            .animation(.easeInOut(duration: 1.0), value: self.tap)
                 .padding(.trailing, self.tap ? UIScreen.main.bounds.width / 10 : 0)
                 .padding(.bottom, 15)
         }

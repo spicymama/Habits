@@ -16,12 +16,10 @@ struct EndDate: View {
         VStack {
             HStack {
                 Text("End Date")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 35))
                 Image(systemName: "calendar")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 30))
             }
+            .foregroundColor(.gray)
+            .font(.system(size: 35))
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             .padding(.top, 30)
             .padding(.bottom, 10)
@@ -46,8 +44,6 @@ struct EndDate: View {
             HStack {
                 self.hidden ? nil :
                 Text(showEndDate())
-                    .foregroundColor(.gray)
-                    .font(.system(size: 12))
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
                     .onTapGesture(perform: {
                         self.lilTap.toggle()
@@ -59,9 +55,11 @@ struct EndDate: View {
                     self.lilTap.toggle()
                 } label: {
                     Image(systemName: "xmark.circle")
-                        .font(.system(size: 12))
                 }.padding(.trailing, 10)
-            }.animation(.easeInOut, value: self.lilTap)
+            }
+            .foregroundColor(.gray)
+            .font(.system(size: 12))
+            .animation(.easeInOut, value: self.lilTap)
         }
     }
     func showEndDate()-> String {

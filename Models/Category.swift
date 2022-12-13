@@ -19,7 +19,7 @@ struct Category: View {
         VStack {
             HStack {
                 Text("Category")
-                Image(systemName: "note.text.badge.plus")
+                Image(systemName: "list.clipboard")
             }
             .foregroundColor(.gray)
             .font(.system(size: 35))
