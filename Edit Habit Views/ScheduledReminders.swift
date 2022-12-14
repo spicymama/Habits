@@ -76,3 +76,23 @@ struct ScheduledReminders_Previews: PreviewProvider {
         ScheduledReminders(tap: EditHabit.shared.$scheduledReminderTap, date: EditHabit.shared.$scheduledDate, dates: EditHabit.shared.$scheduledReminders)
     }
 }
+
+func showSelectedDates(dates: [Date], dateStyle: DateFormatter.Style) -> [String] {
+    let timeFormatter = DateFormatter()
+    var dateArr: [String] = []
+    for date in dates.sorted(by: { $0.compare($1) == .orderedAscending }) {
+        timeFormatter.dateStyle = dateStyle
+        dateArr.append(timeFormatter.string(from: date))
+    }
+    return dateArr
+}
+
+func showDatesUnsorted(dates: [Date], dateStyle: DateFormatter.Style) -> [String] {
+    let timeFormatter = DateFormatter()
+    var dateArr: [String] = []
+    for date in dates {
+        timeFormatter.dateStyle = dateStyle
+        dateArr.append(timeFormatter.string(from: date))
+    }
+    return dateArr
+}
