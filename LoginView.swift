@@ -34,13 +34,10 @@ struct LoginView: View {
                         .padding(.leading, 20)
                         .font(.system(size: 20))
                         .textInputAutocapitalization(.never)
-                    
-                    TextField("Password", text: self.$password)
+                    SecureTextFeild(text: self.$password)
                         .padding(.vertical, 20)
                         .padding(.leading, 20)
-                        .font(.system(size: 20))
-                        .textInputAutocapitalization(.never)
-                        .privacySensitive(true)
+                  
                     
                 }.frame(maxWidth: UIScreen.main.bounds.width - 80, maxHeight: 250, alignment: .leading)
                     .overlay(
@@ -49,7 +46,19 @@ struct LoginView: View {
                     )
                     .padding(.bottom, 40)
                 Button {
-                    self.createOrLogin ? Auth.auth().createUser(withEmail: email, password: password) : Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+                    self.createOrLogin ? Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                        if (authResult != nil) {
+                            print("Successfully created account!!")
+                            Home.shared.goToLogin = false
+                            self.dismiss()
+                            UserDefaults.standard.set( authResult?.user.uid, forKey: "userID")
+                            createUser(user: User(id: (authResult?.user.uid)!, email: self.email, password: self.password))
+                        }
+                        if (error != nil) {
+                            print("Error creating account")
+                        }
+                    }
+                    : Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
                         if (authResult != nil) {
                             print("Successfully signed in!")
                             Home.shared.goToLogin = false

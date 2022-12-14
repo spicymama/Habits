@@ -81,6 +81,7 @@ struct Home: View {
                  
                 }
             }.onAppear {
+                if self.goToLogin == false {
                 fetchAllGoals() { goals in
                     self.categoryArr = []
                     self.goalArr.append(contentsOf: goals)
@@ -91,6 +92,7 @@ struct Home: View {
                         }
                     }
                 }
+            }
                 self.refresh.toggle()
             }
             .fullScreenCover(isPresented: $goToLogin) {

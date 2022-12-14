@@ -56,6 +56,8 @@ struct EditHabit: View {
     var body: some View {
         ScrollView {
             Button {
+                self.category = ""
+                self.notes = ""
                 dismiss()
             } label: {
                 Image(systemName: "xmark")
@@ -174,6 +176,8 @@ struct EditHabit: View {
                     createGoal(goal: Goal(id: UUID().uuidString,  category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
                     
                     EditHabit.editGoal.toggle()
+                    self.category = ""
+                    self.notes = ""
                     dismiss()
                 } label: {
                     Text(EditHabit.editGoal ? "Update" : "Save")
@@ -187,6 +191,8 @@ struct EditHabit: View {
                 Button {
                     deleteGoal(goal: Goal(id: self.id, category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0,monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
                     EditHabit.editGoal.toggle()
+                    self.category = ""
+                    self.notes = ""
                     dismiss()
                 } label: {
                     Text("Delete")

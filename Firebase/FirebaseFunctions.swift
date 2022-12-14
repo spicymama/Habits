@@ -12,10 +12,10 @@ import SwiftUI
 class FirestoreManager: ObservableObject {
     @Published var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
 }
-
 func createGoal(goal: Goal) {
+    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
     let db = Firestore.firestore()
-    let docRef = db.collection("Goals").document(goal.id)
+    let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     let id = docRef.documentID
     let goalData: [String : Any] = [
         "id" : id,
@@ -42,15 +42,37 @@ func createGoal(goal: Goal) {
         if let error = error {
             print("Error writing document: \(error)")
         } else {
-            Home.shared.goalArr.append(goal)
+           // Home.shared.goalArr.append(goal)
             print("Document successfully written!")
         }
     }
 }
 
-func updateGoal(goal: Goal) {
+func createUser(user: User) {
     let db = Firestore.firestore()
-    let docRef = db.collection("Goals").document(goal.id)
+    let docRef = db.collection("User").document(user.id)
+    let id = docRef.documentID
+    let userData: [String : Any] = [
+        "id" : id,
+        "email" : user.email,
+        "password" : user.password
+        ]
+    docRef.setData(userData) { error in
+        if let error = error {
+            print("Error creating user: \(error)")
+        } else {
+            print("User created successfully")
+            let defaults = UserDefaults.standard
+            defaults.set(id, forKey: "userID")
+            defaults.set(user.email, forKey: "userEmail")
+        }
+    }
+}
+
+func updateGoal(goal: Goal) {
+    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    let db = Firestore.firestore()
+    let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     let goalData: [String : Any] = [
         "id" : goal.id,
         "badCheckins" : goal.badCheckins,
@@ -82,11 +104,12 @@ func updateGoal(goal: Goal) {
 }
 
 func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
+    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
     var allGoals: [Goal] = []
     var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
     let db = Firestore.firestore()
     DispatchQueue.main.async {
-        db.collection("Goals").getDocuments() { (querySnapshot, error) in
+        db.collection("User").document(currentUser).collection("Goals").getDocuments() { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
             } else {
@@ -137,8 +160,9 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
 }
 
 func deleteGoal(goal: Goal) {
+    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
     let db = Firestore.firestore()
-    let docRef = db.collection("Goals").document(goal.id)
+    let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     docRef.delete() { err in
         if let err = err {
           print("Error removing document: \(err)")
