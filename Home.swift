@@ -15,7 +15,6 @@ struct Home: View {
     @State private var addButtonTap = false
     @State var goalArr: [Goal] = []
     @State var categoryArr: [String] = []
-    @State var singleGoal: Goal = Goal.placeholderGoal
     @State var goToLogin = true
     var padToggle = true
     
@@ -44,7 +43,7 @@ struct Home: View {
                             .foregroundColor(.gray)
                             .padding(.bottom, 25)
                     }
-                    VStack {
+                        /*
                         Button("Request Permission") {
                             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                                 if success {
@@ -54,9 +53,8 @@ struct Home: View {
                                 }
                             }
                         }
+                        */
 
-                    
-                    }
                     ForEach(formatTiles().0) { tile in
                         tile
                             .padding(.top, 30)
@@ -72,7 +70,6 @@ struct Home: View {
                 fetchAllGoals() { goals in
                     self.categoryArr = []
                     self.goalArr.append(contentsOf: goals)
-                    self.singleGoal = goals[0]
                     for i in goals {
                         if !self.categoryArr.contains(i.category) && i.category != "" {
                             self.categoryArr.append(i.category)
@@ -90,7 +87,6 @@ struct Home: View {
                 self.categoryArr = []
                 self.goalArr = []
                 self.goalArr.append(contentsOf: goals)
-                self.singleGoal = goals[0]
                 for i in goals {
                     if !self.categoryArr.contains(i.category) && i.category != "" {
                         self.categoryArr.append(i.category)

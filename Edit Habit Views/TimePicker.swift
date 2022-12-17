@@ -14,7 +14,6 @@ struct TimePicker: View {
     @State var dateTap = true
     @Binding var notifArr: [Date]
     var name: String
-    
     var body: some View {
         VStack {
             VStack {
