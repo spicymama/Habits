@@ -16,7 +16,8 @@ struct LoginView: View {
     @State var email = ""
     @State var password = ""
     @State var createOrLogin = false
-    @State var authenticated = false
+   // @State var authenticated = false
+    @State var staySignedIn = false
     
     var body: some View {
             VStack {
@@ -68,6 +69,12 @@ struct LoginView: View {
                             print("Error signing in")
                         }
                     }
+                    if staySignedIn == true {
+                        let defaults = UserDefaults.standard
+                        defaults.set(false, forKey: "goToLogin")
+                        defaults.set(self.email, forKey: "email")
+                        defaults.set(self.password, forKey: "password")
+                    }
                 } label: {
                     Text(self.createOrLogin ? "Save >" : "Sign in >")
                         .font(.system(size: 20))
@@ -81,6 +88,15 @@ struct LoginView: View {
                     Text(self.createOrLogin ? "Already have an account?\nLog in" : "Create an account")
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .center)
+                Button {
+                    staySignedIn.toggle()
+                } label: {
+                    HStack {
+                        Text("Keep me signed in")
+                        Image(systemName: staySignedIn ? "square.fill" : "square")
+                    }
+                }
+
                 
             }.frame(minHeight: UIScreen.main.bounds.height / 1.2, alignment: .top)
                 .foregroundColor(.gray)

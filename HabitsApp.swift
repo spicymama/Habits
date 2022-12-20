@@ -13,10 +13,17 @@ import FirebaseFirestore
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-      LocalNotificationManager.shared.addNotifActions()
-      UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+     // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                 print("Dispatch")
+                 AppState.shared.navigateTo = "test"
+             }
     return true
   }
+}
+class AppState: ObservableObject {
+    static let shared = AppState()
+    @Published var navigateTo : String?
 }
 
 @main

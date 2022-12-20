@@ -18,12 +18,12 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
         content.title = goal.title
         content.subtitle = "How's it Going?"
         content.sound = UNNotificationSound.default
-        content.categoryIdentifier = "progressCheck"
+       // content.categoryIdentifier = "progressCheck"
         content.userInfo = ["goalUID" : goal.id]
 
         for day in dateArr {
             for time in day {
-                let units: Set<Calendar.Component> = [.minute, .hour, .day]
+                let units: Set<Calendar.Component> = [.minute, .hour, .weekday, .timeZone]
                 let components = Calendar.current.dateComponents(units, from: time)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
                 let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
@@ -33,50 +33,41 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
             }
         }
     }
+    
+    func setScheduledNotifs(goal: Goal) {
+        let dateArr: [Date] = goal.scheduledNotifs
+        let content = UNMutableNotificationContent()
+        content.title = goal.title
+        content.subtitle = "How's it Going?"
+        content.sound = UNNotificationSound.default
+       // content.categoryIdentifier = "progressCheck"
+        content.userInfo = ["goalUID" : goal.id]
+        
+        for date in dateArr {
+            let units: Set<Calendar.Component> = [.minute, .hour, .day, .year, .timeZone]
+            let components = Calendar.current.dateComponents(units, from: date)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
-    func addNotifActions() {
-        let goodAction = UNNotificationAction(identifier: "progressCheck.goodAction", title: "Good", options: [])
-        let badAction = UNNotificationAction(identifier: "progressCheck.badAction", title: "Needs Attention", options: [])
-
-        let progressCheckCategory = UNNotificationCategory(
-            identifier: "progressCheck",
-            actions: [goodAction, badAction],
-            intentIdentifiers: [],
-            options: .customDismissAction)
-
-        UNUserNotificationCenter.current().setNotificationCategories([progressCheckCategory])
+            // add our notification request
+            UNUserNotificationCenter.current().add(request)
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        switch response.actionIdentifier {
-        case "progressCheck.goodAction":
-            guard let goalUID = response.notification.request.content.userInfo["goalUID"] as? String else { return }
-           fetchSingleGoal(id: goalUID) { goal in
-                goal.goodCheckins += 1
-                updateGoal(goal: goal)
-                print("Goal Successfully Updated!")
-            }
-        case "progressCheck.badAction":
-            guard let goalUID = response.notification.request.content.userInfo["goalUID"] as? String else { return }
-            fetchSingleGoal(id: goalUID) { goal in
-                goal.badCheckins += 1
-                updateGoal(goal: goal)
-                print("Goal Successfully Updated!")
-            }
-        default:
-            break
-        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    
+         }
         completionHandler()
     }
-    /*
+    
     /** Handle notification when the app is in foreground */
        func userNotificationCenter(_ center: UNUserNotificationCenter,
                 willPresent notification: UNNotification,
                 withCompletionHandler completionHandler:
                    @escaping (UNNotificationPresentationOptions) -> Void) {
           
-           // handle the notification here..
-           ...
+        
        }
-     */
+     
 }

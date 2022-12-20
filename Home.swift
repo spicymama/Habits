@@ -6,23 +6,44 @@
 //
 
 import SwiftUI
+import FirebaseCore
+import FirebaseAuth
+import FirebaseFirestore
 
 struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
+    @ObservedObject var appState = AppState.shared
     static var shared = Home()
     @State var refresh = true
     @State var tap = true
     @State private var addButtonTap = false
     @State var goalArr: [Goal] = []
     @State var categoryArr: [String] = []
-    @State var goToLogin = true
+    @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
+    @State var navigate = false
+    @State var notificationTap = false
     var padToggle = true
+    var pushNavigationBinding : Binding<Bool> {
+            .init { () -> Bool in
+                appState.navigateTo != nil
+            } set: { (newValue) in
+                if !newValue { appState.navigateTo = nil }
+            }
+        }
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack {
                     VStack {
+                        HStack {
+                            Button {
+                               notificationTap = true
+                            } label: {
+                                Image(systemName: "bell")
+                            }.fullScreenCover(isPresented: $notificationTap) {
+                                NotificationsView()
+                            }
                         Button {
                             EditHabit.editGoal = false
                             addButtonTap = true
@@ -36,6 +57,7 @@ struct Home: View {
                         .frame(maxWidth: 15, maxHeight: 15, alignment: .topTrailing)
                         .padding(.leading, UIScreen.main.bounds.width - 65)
                         .foregroundColor(.gray)
+                    }
                         
                         Text("Habits")
                             .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
@@ -66,7 +88,18 @@ struct Home: View {
                  
                 }
             }.onAppear {
-                if self.goToLogin == false {
+                let defaults = UserDefaults.standard
+                if defaults.bool(forKey: "goToLogin").description.isEmpty {
+                    defaults.set(true, forKey: "goToLogin")
+                }
+                if defaults.bool(forKey: "goToLogin") == false {
+                    Auth.auth().signIn(withEmail: UserDefaults.standard.value(forKey: "email") as! String, password: UserDefaults.standard.value(forKey: "password") as! String) { authResult, error in
+                        if (authResult != nil) {
+                            print("Successfully signed in!")
+                        } else {
+                            defaults.set(true, forKey: "goToLogin")
+                        }
+                    }
                 fetchAllGoals() { goals in
                     self.categoryArr = []
                     self.goalArr.append(contentsOf: goals)
@@ -95,6 +128,9 @@ struct Home: View {
             }
             self.refresh.toggle()
         }
+       
+            NavigationLink(destination: NotificationsView(), isActive: pushNavigationBinding) { EmptyView() }
+        
     }
     func formatTiles()-> ([GoalTile], [ListTile]) {
         var goalTiles: [GoalTile] = []
