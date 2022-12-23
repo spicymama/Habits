@@ -52,11 +52,11 @@ func fetchNotifs() {
         for notif in notifs {
             let goalID = notif.request.content.userInfo["goalUID"]
             fetchSingleGoal(id: goalID as! String) { goal in
-                NotificationsView.allNotifs.append(goal)
+                Home.allNotifs.append(goal)
                 print("Title: \(goal.title) \n UID: \(goal.id)")
             }
         }
     }
-    print("GOAL ARRAY: \(NotificationsView.allNotifs)")
+    print("GOAL ARRAY: \(Home.allNotifs)")
     dispatchGroup.leave()
 }

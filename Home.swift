@@ -14,6 +14,7 @@ struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     @ObservedObject var appState = AppState.shared
     static var shared = Home()
+    static var allNotifs: [Goal] = []
     @State var refresh = true
     @State var tap = true
     @State private var addButtonTap = false

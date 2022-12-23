@@ -12,7 +12,7 @@ struct NotificationsView: View {
     static let shared = NotificationsView()
     @Environment(\.dismiss) var dismiss
     @State var showNotifs = false
-    static var allNotifs: [Goal] = []
+    @State var allNotifs: [Goal] = Home.allNotifs
     var body: some View {
         ScrollView {
             VStack {
@@ -27,7 +27,7 @@ struct NotificationsView: View {
                     .font(.system(size: 35))
                     .foregroundColor(.gray)
                     .padding(.bottom, 25)
-                ForEach(NotificationsView.allNotifs) { notif in
+                ForEach(self.allNotifs) { notif in
                     NotificationBox(goal: notif)
              }
                 

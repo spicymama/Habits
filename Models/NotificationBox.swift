@@ -11,6 +11,7 @@ struct NotificationBox: View {
     var goal: Goal
     @State var thumbsUpTap = false
     @State var thumbsDownTap = false
+   // @State var wasUpdated = false
     var body: some View {
         VStack {
             Text("\(goal.title)")
@@ -23,7 +24,18 @@ struct NotificationBox: View {
             HStack {
                 Button {
                     self.thumbsDownTap.toggle()
-                    self.thumbsUpTap = false
+                    if self.thumbsUpTap == true {
+                        goal.goodCheckins -= 1
+                        self.thumbsUpTap = false
+                    }
+                    if thumbsDownTap == true {
+                        goal.badCheckins += 1
+                    }
+                    if thumbsDownTap == false {
+                        goal.badCheckins -= 1
+                    }
+                    updateGoal(goal: goal)
+                    removeSeenNotif()
                 } label: {
                     Image(systemName: self.thumbsDownTap ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                         .font(.system(size: 30))
@@ -31,7 +43,18 @@ struct NotificationBox: View {
                 .padding(.trailing, 40)
                 Button {
                     self.thumbsUpTap.toggle()
-                    self.thumbsDownTap = false
+                    if self.thumbsDownTap == true {
+                        goal.badCheckins -= 1
+                        self.thumbsDownTap = false
+                    }
+                    if thumbsUpTap == true {
+                        goal.goodCheckins += 1
+                    }
+                    if thumbsUpTap == false {
+                        goal.goodCheckins -= 1
+                    }
+                    updateGoal(goal: goal)
+                    removeSeenNotif()
                 } label: {
                     Image(systemName: self.thumbsUpTap ? "hand.thumbsup.fill" : "hand.thumbsup")
                         .font(.system(size: 30))
@@ -45,6 +68,23 @@ struct NotificationBox: View {
             RoundedRectangle(cornerRadius: 15)
                 .stroke(.gray, lineWidth: 2)
         )
+    }
+    func removeSeenNotif() {
+        var index1 = 0
+        for notif in Home.allNotifs {
+            if notif.id == goal.id {
+                Home.allNotifs.remove(at: index1)
+            }
+            index1 += 1
+        }
+        var index2 = 0
+        for notif in NotificationsView.shared.allNotifs {
+            if notif.id == goal.id {
+                NotificationsView.shared.allNotifs.remove(at: index2)
+            }
+            index2 += 1
+        }
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [goal.id])
     }
 }
 
