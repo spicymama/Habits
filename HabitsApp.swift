@@ -13,8 +13,8 @@ import FirebaseFirestore
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-      UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-      UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+     // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+     // UNUserNotificationCenter.current().removeAllDeliveredNotifications()
       fetchNotifs()
     return true
   }
@@ -61,4 +61,9 @@ func fetchNotifs() {
     }
     print("GOAL ARRAY: \(Home.allNotifs)")
     dispatchGroup.leave()
+}
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound])
+    }
 }

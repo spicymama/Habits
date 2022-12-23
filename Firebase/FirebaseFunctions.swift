@@ -212,6 +212,24 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
 }
 
 func deleteGoal(goal: Goal) {
+    let notifsArr = UNUserNotificationCenter.current()
+    notifsArr.getDeliveredNotifications { notifs in
+        for notif in notifs {
+            let notifID = notif.request.identifier
+            let goalID = notif.request.content.userInfo["goalUID"]
+            if goalID as! String == goal.id {
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notifID])
+            }
+        }
+    }
+    notifsArr.getPendingNotificationRequests { requests in
+        for request in requests {
+            let goalID = request.content.userInfo["goalUID"]
+            if goalID as! String == goal.id {
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [request.identifier])
+            }
+        }
+    }
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
@@ -232,46 +250,3 @@ func deleteGoal(goal: Goal) {
         }
       }
 }
-
-/*
- let keys = document.data().map{$0.key}
- let values = document.data().map {$0.value}
- for index in keys.indices {
-     if keys[index] == "title" {
-         goal.title = values[index] as! String
-         goal.title = document.get("title") as! String
-     }
-     if keys[index] == "badCheckins" {
-         goal.badCheckins = values[index] as! Int
-     }
-     if keys[index] == "category" {
-         goal.category = values[index] as! String
-     }
-     if keys[index] == "dailyNotifs" {
-        
-         let d = values[index]
-        // goal.notificationTimes = date
-     }
-     if keys[index] == "dateCreated" {
-         goal.dateCreated = values[index] as! Date
-     }
-     if keys[index] == "endDate" {
-         goal.endDate = values[index] as! Date
-     }
-     if keys[index] == "goodCheckins" {
-         goal.goodCheckins = values[index] as! Int
-     }
-     if keys[index] == "prog" {
-         goal.prog = values[index] as! Double
-     }
-     if keys[index] == "progressTracker" {
-         goal.progressTracker = values[index] as! String
-     }
-     if keys[index] == "scheduledNotifs" {
-         goal.notificationTimes = values[index] as! [Date]
-         
-     }
-     if keys[index] == "selfNotes" {
-         goal.selfNotes = values[index] as! String
-     }
- */

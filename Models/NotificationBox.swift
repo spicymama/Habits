@@ -75,7 +75,9 @@ struct NotificationBox: View, Identifiable {
             goalToUpdate.badCheckins = badCheckins
             updateGoal(goal: goalToUpdate)
              */
-            removeSeenNotif()
+            if self.thumbsUpTap == true || self.thumbsDownTap == true {
+                removeSeenNotif()
+            }
         }
     }
    
@@ -88,6 +90,7 @@ struct NotificationBox: View, Identifiable {
             }
             index1 += 1
         }
+        /*
         var index2 = 0
         for notif in NotificationsView.shared.allNotifs {
             if notif.listID == goal.listID {
@@ -96,6 +99,7 @@ struct NotificationBox: View, Identifiable {
             }
             index2 += 1
         }
+         */
         let notifsArr = UNUserNotificationCenter.current()
         notifsArr.getDeliveredNotifications { notifs in
             for notif in notifs {
