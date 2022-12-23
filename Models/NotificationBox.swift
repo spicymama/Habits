@@ -84,7 +84,15 @@ struct NotificationBox: View {
             }
             index2 += 1
         }
-        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [goal.id])
+        let notifsArr = UNUserNotificationCenter.current()
+        notifsArr.getDeliveredNotifications { notifs in
+            for notif in notifs {
+                let goalID = notif.request.content.userInfo["goalUID"]
+                if goalID as! String == goal.id {
+                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notif.request.identifier])
+                }
+            }
+        }
     }
 }
 
