@@ -30,6 +30,7 @@ struct Home: View {
                 if !newValue { appState.navigateTo = nil }
             }
         }
+    @State var goToNotification = false
     
     var body: some View {
         NavigationStack {
@@ -127,9 +128,12 @@ struct Home: View {
                 }
             }
             self.refresh.toggle()
+        }.fullScreenCover(isPresented: $goToNotification) {
+          
+            NotificationsView()
         }
        
-            NavigationLink(destination: NotificationsView(), isActive: pushNavigationBinding) { EmptyView() }
+         //   NavigationLink(destination: NotificationsView(), isActive: $goToNotification) { EmptyView() }
         
     }
     func formatTiles()-> ([GoalTile], [ListTile]) {

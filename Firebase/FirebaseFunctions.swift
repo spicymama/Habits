@@ -16,9 +16,9 @@ func createGoal(goal: Goal) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
-    let id = docRef.documentID
+   // let id = docRef.documentID
     let goalData: [String : Any] = [
-        "id" : id,
+        "id" : goal.id,
         "badCheckins" : goal.badCheckins,
         "category" : goal.category,
         "monNotifs" : goal.monNotifs,
@@ -28,7 +28,7 @@ func createGoal(goal: Goal) {
         "friNotifs" : goal.friNotifs,
         "satNotifs" : goal.satNotifs,
         "sunNotifs" : goal.sunNotifs,
-        "dateCreated" : goal.dateCreated,
+        "dateCreated" : Date.now,
         "endDate" : goal.endDate,
         "goodCheckins" : goal.goodCheckins,
         "prog" : goal.prog,
@@ -105,42 +105,25 @@ func updateGoal(goal: Goal) {
 
 func fetchSingleGoal(id: String, completion: @escaping (Goal) -> Void) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-    var goal: Goal = Goal(id: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
+    var goal: Goal = Goal(id: id, category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
     let db = Firestore.firestore()
+    print(id)
     DispatchQueue.main.async {
         db.collection("User").document(currentUser).collection("Goals").document(id).getDocument() { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
             } else {
                 guard let querySnapshot = querySnapshot else { return }
-                guard let notifs = querySnapshot.data()!["scheduledNotifs"] as? [Timestamp] else  { return }
-                    let monNotifs = querySnapshot.data()!["monNotifs"] as? [Timestamp] ?? []
-                    let tusNotifs = querySnapshot.data()!["tusNotifs"] as? [Timestamp] ?? []
-                    let wedNotifs = querySnapshot.data()!["wedNotifs"] as? [Timestamp] ?? []
-                    let thursNotifs = querySnapshot.data()!["thursNotifs"] as? [Timestamp] ?? []
-                    let friNotifs = querySnapshot.data()!["friNotifs"] as? [Timestamp] ?? []
-                    let satNotifs = querySnapshot.data()!["satNotifs"] as? [Timestamp] ?? []
-                    let sunNotifs = querySnapshot.data()!["sunNotifs"] as? [Timestamp] ?? []
                     guard let dateCreated = querySnapshot.data()!["dateCreated"] as? Timestamp else { return }
-                    guard let endDate = querySnapshot.data()!["endDate"] as? Timestamp else { return }
-                    goal.id = querySnapshot.get("id") as! String
+                   // let endDate = querySnapshot.data()!["endDate"] as? Timestamp ?? Timestamp(date: Date.distantFuture)
                     goal.title = querySnapshot.get("title") as! String
                     goal.dateCreated = dateCreated.dateValue()
-                    goal.category = querySnapshot.get("category") as! String
-                    goal.selfNotes = querySnapshot.get("selfNotes") as! String
-                    goal.scheduledNotifs = timestampToDate(dates: notifs)
-                    goal.monNotifs = timestampToDate(dates: monNotifs)
-                    goal.tusNotifs = timestampToDate(dates: tusNotifs)
-                    goal.wedNotifs = timestampToDate(dates: wedNotifs)
-                    goal.thursNotifs = timestampToDate(dates: thursNotifs)
-                    goal.friNotifs = timestampToDate(dates: friNotifs)
-                    goal.satNotifs = timestampToDate(dates: satNotifs)
-                    goal.sunNotifs = timestampToDate(dates: sunNotifs)
+                  //  goal.category = querySnapshot.get("category") as! String
                     goal.progressTracker = querySnapshot.get("progressTracker") as! String
                     goal.prog = querySnapshot.get("prog") as! Double
                     goal.goodCheckins = querySnapshot.get("goodCheckins") as! Int
                     goal.badCheckins = querySnapshot.get("badCheckins") as! Int
-                    goal.endDate = endDate.dateValue()
+                   // goal.endDate = endDate.dateValue()
             }
             completion(goal)
         }

@@ -56,7 +56,10 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    
+            let uid = response.notification.request.content.userInfo["goalUID"]
+            if uid != nil {
+                
+            }
          }
         completionHandler()
     }
