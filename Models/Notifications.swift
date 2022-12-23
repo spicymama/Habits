@@ -19,7 +19,6 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
         content.subtitle = "How's it Going?"
         content.sound = UNNotificationSound.default
        // content.categoryIdentifier = "progressCheck"
-        content.userInfo = ["goalUID" : goal.id]
 
         for day in dateArr {
             for time in day {
@@ -28,6 +27,7 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
                 let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
+                content.userInfo = ["goalUID" : goal.id, "listID" : UUID().uuidString]
                 // add our notification request
                 UNUserNotificationCenter.current().add(request)
             }
@@ -41,7 +41,6 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
         content.subtitle = "How's it Going?"
         content.sound = UNNotificationSound.default
        // content.categoryIdentifier = "progressCheck"
-        content.userInfo = ["goalUID" : goal.id]
         
         for date in dateArr {
             let units: Set<Calendar.Component> = [.minute, .hour, .day, .year, .timeZone]
@@ -49,6 +48,10 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
+            
+            
+            /// Last thing I did was move user info into the for loop to generate a new UUID for each notification
+            content.userInfo = ["goalUID" : goal.id, "listID" : UUID().uuidString]
             // add our notification request
             UNUserNotificationCenter.current().add(request)
         }

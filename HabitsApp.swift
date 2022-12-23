@@ -13,8 +13,8 @@ import FirebaseFirestore
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-     // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-     // UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+      UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+      UNUserNotificationCenter.current().removeAllDeliveredNotifications()
       fetchNotifs()
     return true
   }
@@ -51,8 +51,9 @@ func fetchNotifs() {
     notifsArr.getDeliveredNotifications { notifs in
         for notif in notifs {
             let goalID = notif.request.content.userInfo["goalUID"]
+            let listID = notif.request.content.userInfo["listID"]
             fetchSingleGoal(id: goalID as! String) { goal in
-                goal.listID = UUID().uuidString
+                goal.listID = listID as! String
                 Home.allNotifs.append(goal)
                 print("Title: \(goal.title) \n UID: \(goal.id)")
             }

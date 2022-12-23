@@ -28,7 +28,7 @@ struct NotificationsView: View {
                     .foregroundColor(.gray)
                     .padding(.bottom, 25)
                 ForEach(self.allNotifs, id: \.listID) { notif in
-                    NotificationBox(id: UUID(), title: notif.title, goodCheckins: notif.goodCheckins, badCheckins: notif.badCheckins)
+                    NotificationBox(id: UUID(), goal: notif)
              }
                 
                // NotificationBox(goal: Goal.placeholderGoal)
