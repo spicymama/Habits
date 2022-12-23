@@ -11,6 +11,7 @@ import SwiftUI
 class Goal: Identifiable, ObservableObject {
     
     var id: String = ""
+    var listID: String = ""
     var category: String = ""
     var title: String = ""
     var dateCreated: Date = Date()
@@ -29,8 +30,9 @@ class Goal: Identifiable, ObservableObject {
     var selfNotes: String = ""
     var prog: Double = 0.0
 
-    init(id: String, category: String, title: String, dateCreated: Date, endDate: Date, goodCheckins: Int, badCheckins: Int, monNotifs: [Date], tusNotifs: [Date], wedNotifs: [Date], thursNotifs: [Date], friNotifs: [Date], satNotifs: [Date], sunNotifs: [Date], scheduledNotifs: [Date], progressTracker: String, selfNotes: String, prog: Double) {
+    init(id: String, listID: String, category: String, title: String, dateCreated: Date, endDate: Date, goodCheckins: Int, badCheckins: Int, monNotifs: [Date], tusNotifs: [Date], wedNotifs: [Date], thursNotifs: [Date], friNotifs: [Date], satNotifs: [Date], sunNotifs: [Date], scheduledNotifs: [Date], progressTracker: String, selfNotes: String, prog: Double) {
         self.id = id
+        self.listID = listID
         self.category = category
         self.title = title
         self.dateCreated = dateCreated
@@ -50,5 +52,5 @@ class Goal: Identifiable, ObservableObject {
         self.prog = prog
     }
     
-    static var placeholderGoal = Goal(id: "", category: "Category", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, monNotifs: [], tusNotifs: [Date.now], wedNotifs: [Date()], thursNotifs: [], friNotifs: [Date.now], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "Manually track my progress", selfNotes: "Here are some notes", prog: 50.0)
+    static var placeholderGoal = Goal(id: "", listID: "", category: "Category", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, monNotifs: [], tusNotifs: [Date.now], wedNotifs: [Date()], thursNotifs: [], friNotifs: [Date.now], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "Manually track my progress", selfNotes: "Here are some notes", prog: 50.0)
 }

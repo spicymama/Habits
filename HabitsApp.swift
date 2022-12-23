@@ -52,6 +52,7 @@ func fetchNotifs() {
         for notif in notifs {
             let goalID = notif.request.content.userInfo["goalUID"]
             fetchSingleGoal(id: goalID as! String) { goal in
+                goal.listID = UUID().uuidString
                 Home.allNotifs.append(goal)
                 print("Title: \(goal.title) \n UID: \(goal.id)")
             }

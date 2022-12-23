@@ -23,6 +23,7 @@ struct Home: View {
     @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
     @State var navigate = false
     @State var notificationTap = false
+    //@State var newNotifications: Bool = Home.allNotifs.count > 0
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
             .init { () -> Bool in
@@ -42,8 +43,11 @@ struct Home: View {
                             Button {
                                notificationTap = true
                             } label: {
-                                Image(systemName: "bell")
-                            }.fullScreenCover(isPresented: $notificationTap) {
+                                Image(systemName: Home.allNotifs.count > 0 ? "bell.badge" : "bell")
+                            }
+                            .imageScale(.large)
+                            .foregroundColor(.gray)
+                            .fullScreenCover(isPresented: $notificationTap) {
                                 NotificationsView()
                             }
                         Button {
