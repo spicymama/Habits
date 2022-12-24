@@ -12,16 +12,29 @@ struct NotificationBox: View, Identifiable {
     var goal: Goal = Goal.placeholderGoal
     @State var thumbsUpTap = false
     @State var thumbsDownTap = false
+    @State var notifDate = ""
+    @State var notifTime = ""
     var body: some View {
         VStack {
-            Text("\(goal.title)")
-                .font(.system(size: 25))
-                .padding(.bottom)
-                .padding(.top, 10)
+            HStack {
+               
+                Text("\(goal.title)")
+                    .font(.system(size: 25))
+                    .padding(.bottom)
+                    .padding(.top, 10)
+            }
             Text("How hare things going? So far, \(goal.goodCheckins) of your \(goal.goodCheckins + goal.badCheckins) checkins have been positive. You got this!")
                 .padding(.horizontal)
                 .padding(.bottom)
             HStack {
+                VStack {
+                    Text(self.notifDate)
+                        .font(.system(size: 10))
+                    Text(self.notifTime)
+                        .font(.system(size: 10))
+                        .bold()
+                }
+                .frame(maxWidth: UIScreen.main.bounds.width / 2.5, alignment: .leading)
                 Button {
                     self.thumbsDownTap.toggle()
                     if self.thumbsUpTap == true {
@@ -34,13 +47,11 @@ struct NotificationBox: View, Identifiable {
                     if thumbsDownTap == false {
                         goal.badCheckins -= 1
                     }
-                    updateGoal(goal: self.goal)
-                   // removeSeenNotif()
                 } label: {
                     Image(systemName: self.thumbsDownTap ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                         .font(.system(size: 30))
                 }
-                .padding(.trailing, 40)
+                .padding(.trailing, 30)
                 Button {
                     self.thumbsUpTap.toggle()
                     if self.thumbsDownTap == true {
@@ -53,13 +64,11 @@ struct NotificationBox: View, Identifiable {
                     if thumbsUpTap == false {
                         goal.goodCheckins -= 1
                     }
-                    updateGoal(goal: self.goal)
-                    //removeSeenNotif()
                 } label: {
                     Image(systemName: self.thumbsUpTap ? "hand.thumbsup.fill" : "hand.thumbsup")
                         .font(.system(size: 30))
                 }
-                .padding(.leading, 40)
+                .padding(.leading, 30)
             }
             .padding(.bottom)
         }
@@ -69,15 +78,12 @@ struct NotificationBox: View, Identifiable {
                 .stroke(.gray, lineWidth: 2)
         )
         .onDisappear {
-            /*
-            var goalToUpdate = goal
-            goalToUpdate.goodCheckins = goodCheckins
-            goalToUpdate.badCheckins = badCheckins
-            updateGoal(goal: goalToUpdate)
-             */
             if self.thumbsUpTap == true || self.thumbsDownTap == true {
+                updateGoal(goal: self.goal)
                 removeSeenNotif()
             }
+        }.onAppear {
+            getNotifDate()
         }
     }
    
@@ -90,16 +96,6 @@ struct NotificationBox: View, Identifiable {
             }
             index1 += 1
         }
-        /*
-        var index2 = 0
-        for notif in NotificationsView.shared.allNotifs {
-            if notif.listID == goal.listID {
-                NotificationsView.shared.allNotifs.remove(at: index2)
-                break
-            }
-            index2 += 1
-        }
-         */
         let notifsArr = UNUserNotificationCenter.current()
         notifsArr.getDeliveredNotifications { notifs in
             for notif in notifs {
@@ -107,6 +103,22 @@ struct NotificationBox: View, Identifiable {
                 if listID as! String == goal.listID {
                     UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notif.request.identifier])
                     break
+                }
+            }
+        }
+    }
+    func getNotifDate() {
+        let notifsArr = UNUserNotificationCenter.current()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        let timeFormatter = DateFormatter()
+        timeFormatter.timeStyle = .short
+        notifsArr.getDeliveredNotifications { notifs in
+            for notif in notifs {
+                let listID = notif.request.content.userInfo["listID"] as! String
+                if listID == goal.listID {
+                    self.notifDate = dateFormatter.string(from: notif.date)
+                    self.notifTime = timeFormatter.string(from: notif.date)
                 }
             }
         }
