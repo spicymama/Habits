@@ -18,8 +18,6 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
         content.title = goal.title
         content.subtitle = "How's it Going?"
         content.sound = UNNotificationSound.default
-       // content.categoryIdentifier = "progressCheck"
-
         for day in dateArr {
             for time in day {
                 content.userInfo = ["goalUID" : goal.id, "listID" : UUID().uuidString]
@@ -27,8 +25,6 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
                 let components = Calendar.current.dateComponents(units, from: time)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
                 let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
-                // add our notification request
                 UNUserNotificationCenter.current().add(request)
             }
         }
@@ -40,15 +36,12 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
         content.title = goal.title
         content.subtitle = "How's it Going?"
         content.sound = UNNotificationSound.default
-       // content.categoryIdentifier = "progressCheck"
-        
         for date in dateArr {
             content.userInfo = ["goalUID" : goal.id, "listID" : UUID().uuidString]
             let units: Set<Calendar.Component> = [.minute, .hour, .day, .year, .timeZone]
             let components = Calendar.current.dateComponents(units, from: date)
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            // add our notification request
             UNUserNotificationCenter.current().add(request)
         }
     }
@@ -62,8 +55,4 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
          }
         completionHandler()
     }
-    
-    /** Handle notification when the app is in foreground */
-    
-     
 }

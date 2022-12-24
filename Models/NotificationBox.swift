@@ -17,7 +17,7 @@ struct NotificationBox: View, Identifiable {
     var body: some View {
         VStack {
             HStack {
-               
+                
                 Text("\(goal.title)")
                     .font(.system(size: 25))
                     .padding(.bottom)
@@ -86,6 +86,7 @@ struct NotificationBox: View, Identifiable {
             getNotifDate()
         }
     }
+    
    
     func removeSeenNotif() {
         var index1 = 0

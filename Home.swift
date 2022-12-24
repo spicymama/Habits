@@ -16,14 +16,13 @@ struct Home: View {
     static var shared = Home()
     static var allNotifs: [Goal] = []
     @State var refresh = true
-    @State var tap = true
+    //@State var tap = true
     @State private var addButtonTap = false
     @State var goalArr: [Goal] = []
     @State var categoryArr: [String] = []
     @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
-    @State var navigate = false
     @State var notificationTap = false
-    //@State var newNotifications: Bool = Home.allNotifs.count > 0
+    @State var newNotifs = false
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
             .init { () -> Bool in
@@ -32,8 +31,6 @@ struct Home: View {
                 if !newValue { appState.navigateTo = nil }
             }
         }
-    @State var goToNotification = false
-    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -43,7 +40,7 @@ struct Home: View {
                             Button {
                                notificationTap = true
                             } label: {
-                                Image(systemName: Home.allNotifs.count > 0 ? "bell.badge" : "bell")
+                                Image(systemName: newNotifs ? "bell.badge" : "bell")
                             }
                             .imageScale(.large)
                             .foregroundColor(.gray)
@@ -53,7 +50,7 @@ struct Home: View {
                         Button {
                             EditHabit.editGoal = false
                             addButtonTap = true
-                            self.tap = true
+                           // self.tap = true
                         } label: {
                             Image(systemName: "plus.square")
                                 .imageScale(.large)
@@ -116,6 +113,13 @@ struct Home: View {
                     }
                 }
             }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    if !Home.allNotifs.isEmpty {
+                        self.newNotifs = true
+                    } else {
+                        self.newNotifs = false
+                    }
+                }
                 self.refresh.toggle()
             }
             .fullScreenCover(isPresented: $goToLogin) {
@@ -132,9 +136,14 @@ struct Home: View {
                     }
                 }
             }
+            if !Home.allNotifs.isEmpty {
+                self.newNotifs = true
+            } else {
+                self.newNotifs = false
+            }
             self.refresh.toggle()
-        }.fullScreenCover(isPresented: $goToNotification) {
-          
+        }
+        .fullScreenCover(isPresented: pushNavigationBinding) {
             NotificationsView()
         }
        

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TimePicker: View {
     @Binding var date: Date
-   // @State var reminders: [Date]
     @Binding var hidden: Bool
     @State var dateTap = true
     @Binding var notifArr: [Date]

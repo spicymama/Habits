@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
+import UserNotifications
 
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
@@ -19,8 +20,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     return true
   }
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void ) {
-        Home.shared.goToNotification = true
+        fetchNotifs()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            print("Dispatch")
+            AppState.shared.navigateTo = "notifications"
+        }
     }
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+           UNUserNotificationCenter.current().delegate = self
+           return true
+       }
 }
 class AppState: ObservableObject {
     static let shared = AppState()
@@ -29,7 +38,7 @@ class AppState: ObservableObject {
 
 @main
 struct HabitsApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var firestoreManager = FirestoreManager()
 
        init() {
@@ -54,14 +63,17 @@ func fetchNotifs() {
             let listID = notif.request.content.userInfo["listID"]
             fetchSingleGoal(id: goalID as! String) { goal in
                 goal.listID = listID as! String
-                Home.allNotifs.append(goal)
-                print("Title: \(goal.title) \n UID: \(goal.id)")
+                if !Home.allNotifs.contains(goal) {
+                    Home.allNotifs.append(goal)
+                    print("Title: \(goal.title) \n UID: \(goal.id)")
+                }
             }
         }
     }
     print("GOAL ARRAY: \(Home.allNotifs)")
     dispatchGroup.leave()
 }
+
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound])

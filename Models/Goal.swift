@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class Goal: Identifiable, ObservableObject {
+class Goal: Identifiable, ObservableObject, Equatable {
     
     var id: String = ""
     var listID: String = ""
@@ -53,4 +53,9 @@ class Goal: Identifiable, ObservableObject {
     }
     
     static var placeholderGoal = Goal(id: "", listID: "", category: "Category", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, monNotifs: [], tusNotifs: [Date.now], wedNotifs: [Date()], thursNotifs: [], friNotifs: [Date.now], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "Manually track my progress", selfNotes: "Here are some notes", prog: 50.0)
+    
+    static func == (lhs: Goal, rhs: Goal) -> Bool {
+        return lhs.listID == rhs.listID && lhs.id == rhs.id
+    }
 }
+

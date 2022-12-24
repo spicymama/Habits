@@ -9,7 +9,7 @@ import SwiftUI
 import UserNotifications
 
 struct NotificationsView: View {
-    static let shared = NotificationsView()
+    static var shared = NotificationsView()
     @Environment(\.dismiss) var dismiss
     @State var showNotifs = false
     @State var allNotifs: [Goal] = Home.allNotifs
@@ -29,31 +29,10 @@ struct NotificationsView: View {
                     .padding(.bottom, 25)
                 ForEach(self.allNotifs, id: \.listID) { notif in
                     NotificationBox(id: UUID(), goal: notif)
-             }
-                
-               // NotificationBox(goal: Goal.placeholderGoal)
+                }
             }
         }.frame(maxHeight: .infinity, alignment: .top)
     }
-    /*
-    func fetchNotifs() {
-        let notifsArr = UNUserNotificationCenter.current()
-        notifsArr.getDeliveredNotifications { notifs in
-            for notif in notifs {
-                let goalID = notif.request.content.userInfo["goalUID"]
-                print("GOAL ID: \(String(describing: goalID))")
-                fetchSingleGoal(id: goalID as! String) { goal in
-                    self.allNotifs.append(goal)
-                    print("Title: \(goal.title) \n UID: \(goal.id)")
-                }
-            }
-        }
-        print("GOAL ARRAY: \(self.allNotifs)")
-        if self.allNotifs.count > 0 {
-            self.showNotifs.toggle()
-        }
-    }
-    */
 }
 
 struct NotificationsView_Previews: PreviewProvider {
