@@ -172,15 +172,9 @@ struct EditHabit: View {
                     }
                 }
                 Button {
-                    EditHabit.editGoal ?  updateGoal(goal: Goal(id: self.id, listID: "", category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)) :
-                    createGoal(goal: Goal(id: self.id, listID: "",  category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
-              
-                    LocalNotificationManager.shared.setDailyNotifs(goal: Goal(id: self.id, listID: "", category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
-                    /* 
-                    for date in scheduledReminders {
-                        notificationManager.scheduleNotification(sendDate: date, goal: Goal(id: UUID().uuidString,  category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog), weekday: 0)
-                    }
-                    */
+                    EditHabit.editGoal ? update()
+                    :
+                    create()
                     EditHabit.editGoal.toggle()
                     self.category = ""
                     self.notes = ""
@@ -195,7 +189,7 @@ struct EditHabit: View {
                 .padding(.top, 30)
             EditHabit.editGoal ?
                 Button {
-                    deleteGoal(goal: Goal(id: self.id, listID: "", category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0,monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog))
+                    deleteGoal(goal: currentGoal())
                     EditHabit.editGoal.toggle()
                     self.category = ""
                     self.notes = ""
@@ -204,6 +198,7 @@ struct EditHabit: View {
                     Text("Delete")
                         .font(.system(size: 20))
                         .foregroundColor(.red)
+                        .padding(.bottom, 80)
                 }
                 : nil
             }
@@ -218,6 +213,24 @@ struct EditHabit: View {
         }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity, alignment: .center)
             .accentColor(/*@START_MENU_TOKEN@*/.gray/*@END_MENU_TOKEN@*/)
     }
+    func currentGoal()-> Goal {
+        let goal = Goal(id: self.id, listID: "", category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)
+        return goal
+    }
+    
+    func update() {
+        updateGoal(goal: currentGoal())
+        LocalNotificationManager.shared.clearNotifsForUpdate(goal: currentGoal())
+        LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
+        LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
+    }
+
+    func create() {
+        createGoal(goal: currentGoal())
+        LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
+        LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
+    }
+
    
 }
 
@@ -230,4 +243,3 @@ struct EditHabit_Previews: PreviewProvider {
 extension String: Identifiable {
     public var id: String { self }
 }
-

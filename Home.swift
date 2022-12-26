@@ -23,6 +23,7 @@ struct Home: View {
     @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
     @State var notificationTap = false
     @State var newNotifs = false
+    @State var settingsTap = false
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
             .init { () -> Bool in
@@ -38,11 +39,24 @@ struct Home: View {
                     VStack {
                         HStack {
                             Button {
+                               settingsTap = true
+                            } label: {
+                                Image(systemName: "gearshape")
+                                    .imageScale(.large)
+                            }
+                            .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
+                            .foregroundColor(.gray)
+                            .padding(.trailing)
+                            .fullScreenCover(isPresented: $settingsTap) {
+                                Settings()
+                            }
+                            Button {
                                notificationTap = true
                             } label: {
                                 Image(systemName: newNotifs ? "bell.badge" : "bell")
+                                    .imageScale(.large)
                             }
-                            .imageScale(.large)
+                            .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
                             .foregroundColor(.gray)
                             .fullScreenCover(isPresented: $notificationTap) {
                                 NotificationsView()
@@ -58,7 +72,7 @@ struct Home: View {
                             EditHabit()
                         }
                         .frame(maxWidth: 15, maxHeight: 15, alignment: .topTrailing)
-                        .padding(.leading, UIScreen.main.bounds.width - 65)
+                        .padding(.leading, UIScreen.main.bounds.width - 85)
                         .foregroundColor(.gray)
                     }
                         

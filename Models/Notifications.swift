@@ -37,12 +37,26 @@ class LocalNotificationManager: NSObject, UNUserNotificationCenterDelegate {
         content.subtitle = "How's it Going?"
         content.sound = UNNotificationSound.default
         for date in dateArr {
-            content.userInfo = ["goalUID" : goal.id, "listID" : UUID().uuidString]
-            let units: Set<Calendar.Component> = [.minute, .hour, .day, .year, .timeZone]
-            let components = Calendar.current.dateComponents(units, from: date)
-            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request)
+            if date > Date.now {
+                content.userInfo = ["goalUID" : goal.id, "listID" : UUID().uuidString]
+                let units: Set<Calendar.Component> = [.minute, .hour, .day, .year, .timeZone]
+                let components = Calendar.current.dateComponents(units, from: date)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request)
+            }
+        }
+    }
+    
+    func clearNotifsForUpdate(goal: Goal) {
+        let notifsArr = UNUserNotificationCenter.current()
+        notifsArr.getPendingNotificationRequests { requests in
+            for request in requests {
+                let goalID = request.content.userInfo["goalUID"]
+                if goalID as! String == goal.id {
+                    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [request.identifier])
+                }
+            }
         }
     }
     
