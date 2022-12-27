@@ -47,6 +47,7 @@ struct EditHabit: View {
     @State var satNotifs: [Date] = []
     @State var sunNotifs: [Date] = []
     @State var scheduledReminders: [Date] = []
+    @State var goodcheckinGoal = 0
     @State var notes = ""
     @State var category = ""
     static var selectedCat = ""
@@ -136,7 +137,7 @@ struct EditHabit: View {
                         self.progressTrackerTap.toggle()
                     }
                     VStack {
-                        self.progressTrackerTap ? nil : ProgressTracker(selectedOp: self.$selectedTracker)
+                        self.progressTrackerTap ? nil : ProgressTracker(goodcheckinGoal: self.$goodcheckinGoal, selectedOp: self.$selectedTracker)
                             .frame(height: UIScreen.main.bounds.height / 3)
                     }.animation(.easeInOut(duration: 1.0), value: self.progressTrackerTap)
                     Text(self.selectedTracker)
@@ -214,7 +215,7 @@ struct EditHabit: View {
             .accentColor(/*@START_MENU_TOKEN@*/.gray/*@END_MENU_TOKEN@*/)
     }
     func currentGoal()-> Goal {
-        let goal = Goal(id: self.id, listID: "", category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)
+        let goal = Goal(id: self.id, listID: "", category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: self.goodcheckinGoal, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)
         return goal
     }
     

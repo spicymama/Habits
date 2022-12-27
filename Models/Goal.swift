@@ -18,6 +18,7 @@ class Goal: Identifiable, ObservableObject, Equatable {
     var endDate: Date = Date()
     var goodCheckins: Int = 0
     var badCheckins: Int = 0
+    var goodCheckinGoal: Int = 0
     var monNotifs: [Date] = []
     var tusNotifs: [Date] = []
     var wedNotifs: [Date] = []
@@ -30,7 +31,7 @@ class Goal: Identifiable, ObservableObject, Equatable {
     var selfNotes: String = ""
     var prog: Double = 0.0
 
-    init(id: String, listID: String, category: String, title: String, dateCreated: Date, endDate: Date, goodCheckins: Int, badCheckins: Int, monNotifs: [Date], tusNotifs: [Date], wedNotifs: [Date], thursNotifs: [Date], friNotifs: [Date], satNotifs: [Date], sunNotifs: [Date], scheduledNotifs: [Date], progressTracker: String, selfNotes: String, prog: Double) {
+    init(id: String, listID: String, category: String, title: String, dateCreated: Date, endDate: Date, goodCheckins: Int, badCheckins: Int, goodCheckinGoal: Int, monNotifs: [Date], tusNotifs: [Date], wedNotifs: [Date], thursNotifs: [Date], friNotifs: [Date], satNotifs: [Date], sunNotifs: [Date], scheduledNotifs: [Date], progressTracker: String, selfNotes: String, prog: Double) {
         self.id = id
         self.listID = listID
         self.category = category
@@ -39,6 +40,7 @@ class Goal: Identifiable, ObservableObject, Equatable {
         self.endDate = endDate
         self.goodCheckins = goodCheckins
         self.badCheckins = badCheckins
+        self.goodCheckinGoal = goodCheckinGoal
         self.monNotifs = monNotifs
         self.tusNotifs = tusNotifs
         self.wedNotifs = wedNotifs
@@ -52,7 +54,7 @@ class Goal: Identifiable, ObservableObject, Equatable {
         self.prog = prog
     }
     
-    static var placeholderGoal = Goal(id: "", listID: "", category: "Category", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, monNotifs: [], tusNotifs: [Date.now], wedNotifs: [Date()], thursNotifs: [], friNotifs: [Date.now], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "Manually track my progress", selfNotes: "Here are some notes", prog: 50.0)
+    static var placeholderGoal = Goal(id: "", listID: "", category: "Category", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0, monNotifs: [], tusNotifs: [Date.now], wedNotifs: [Date()], thursNotifs: [], friNotifs: [Date.now], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "Manually track my progress", selfNotes: "Here are some notes", prog: 50.0)
     
     static func == (lhs: Goal, rhs: Goal) -> Bool {
         return lhs.listID == rhs.listID && lhs.id == rhs.id

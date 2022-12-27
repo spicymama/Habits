@@ -48,7 +48,7 @@ struct GoalView: View, Identifiable {
                         updateGoal(goal: currentGoal)
                     }
                 }
-                ).allowsHitTesting(currentGoal.progressTracker == "Manually track my progress" ? true : false)
+                ).allowsHitTesting(currentGoal.progressTracker == "3" ? true : false)
                     
                 Text("\(self.prog, specifier: "%.0f") %")
                     .foregroundColor(.gray)
@@ -93,4 +93,23 @@ extension Date {
     func dayNumberOfWeek() -> Int? {
         return Calendar.current.dateComponents([.weekday], from: self).weekday
     }
+}
+
+func calculateProgress(goal: Goal)-> Double {
+    var prog = 0.0
+    //3 = Manually track
+    if goal.progressTracker == "3" {
+        prog = goal.prog
+    }
+    //1 = Number of good checkins before end date
+    if goal.progressTracker == "1" {
+        
+    }
+    // 2 = total good checkins
+    if goal.progressTracker == "2" {
+        
+    }
+    
+    
+    return 0.0
 }
