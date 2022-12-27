@@ -12,6 +12,7 @@ struct EndDate: View {
     @Binding var tap: Bool
     @Binding var lilTap: Bool
     @Binding var hidden: Bool
+    @Binding var needEndDate: Bool
     var body: some View {
         VStack {
             HStack {
@@ -31,6 +32,10 @@ struct EndDate: View {
                     Image(systemName: "calendar")
                 }.labelsHidden()
                     .colorScheme(.dark)
+                    .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(self.needEndDate ? .red : .clear, lineWidth: 2)
+                    )
                 self.tap ? nil :
                 Button {
                     self.tap.toggle()
@@ -72,6 +77,6 @@ struct EndDate: View {
 
 struct EndDate_Previews: PreviewProvider {
     static var previews: some View {
-        EndDate(date: EditHabit.shared.$endDate, tap: EditHabit.shared.$endDateTap, lilTap: EditHabit.shared.$lilEndDateTap, hidden: EditHabit.shared.$endDateHidden)
+        EndDate(date: EditHabit.shared.$endDate, tap: EditHabit.shared.$endDateTap, lilTap: EditHabit.shared.$lilEndDateTap, hidden: EditHabit.shared.$endDateHidden, needEndDate: EditHabit.shared.$needEndDate)
     }
 }

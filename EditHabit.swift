@@ -50,6 +50,10 @@ struct EditHabit: View {
     @State var goodcheckinGoal = 0
     @State var notes = ""
     @State var category = ""
+    @State var needTitle = false
+    @State var needTracker = false
+    @State var needCheckinGoal = false
+    @State var needEndDate = false
     static var selectedCat = ""
     static var editGoal = false
     let dateFormatter = DateFormatter()
@@ -65,17 +69,17 @@ struct EditHabit: View {
             }.frame(maxWidth: UIScreen.main.bounds.width - 60, alignment: .trailing)
                 .foregroundColor(.gray)
             VStack {
-                    TextField("Title...", text: self.$title, axis: .vertical)
-                        .frame(maxWidth: UIScreen.main.bounds.width - 60, minHeight: 70, maxHeight: 5000, alignment: .leading)
-                        .font(.system(size: 29))
-                        .foregroundColor(.gray)
-                        .padding(.leading, 20)
-                        .overlay(
+                TextField("Title...", text: self.$title, axis: .vertical)
+                    .frame(maxWidth: UIScreen.main.bounds.width - 60, minHeight: 70, maxHeight: 5000, alignment: .leading)
+                    .font(.system(size: 29))
+                    .foregroundColor(.gray)
+                    .padding(.leading, 20)
+                    .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color(UIColor.systemGray3), lineWidth: 2)
-                        )
-                        .padding(.bottom, 20)
-              
+                            .stroke(self.needTitle ? .red : Color(UIColor.systemGray3), lineWidth: 2)
+                    )
+                    .padding(.bottom, 20)
+                
                 VStack {
                     HStack {
                         Text("Reminders")
@@ -137,14 +141,16 @@ struct EditHabit: View {
                         self.progressTrackerTap.toggle()
                     }
                     VStack {
-                        self.progressTrackerTap ? nil : ProgressTracker(goodcheckinGoal: self.$goodcheckinGoal, selectedOp: self.$selectedTracker)
-                            .frame(height: UIScreen.main.bounds.height / 3)
+                        self.progressTrackerTap ? nil : ProgressTracker(goodcheckinGoal: self.$goodcheckinGoal, selectedOp: self.$selectedTracker, needCheckinGoal: self.$needCheckinGoal)
+                            .frame(height: UIScreen.main.bounds.height / 4)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(self.needTracker ? .red : .clear, lineWidth: 2)
+                            )
+                        
                     }.animation(.easeInOut(duration: 1.0), value: self.progressTrackerTap)
-                    Text(self.selectedTracker)
-                        .foregroundColor(.gray)
-                        .font(.system(size: 12))
-                        .frame(maxWidth: UIScreen.main.bounds.width - 20, alignment: .trailing)
-                    EndDate(date: self.$endDate, tap: self.$endDateTap, lilTap: self.$lilEndDateTap, hidden: self.$endDateHidden)
+                    EndDate(date: self.$endDate, tap: self.$endDateTap, lilTap: self.$lilEndDateTap, hidden: self.$endDateHidden, needEndDate: self.$needEndDate)
+                    
                 }
                 Group {
                     
@@ -173,13 +179,12 @@ struct EditHabit: View {
                     }
                 }
                 Button {
-                    EditHabit.editGoal ? update()
-                    :
-                    create()
-                    EditHabit.editGoal.toggle()
-                    self.category = ""
-                    self.notes = ""
-                    dismiss()
+                    if checkRequiredFields() == true {
+                        EditHabit.editGoal ? update() : create()
+                        self.category = ""
+                        self.notes = ""
+                        dismiss()
+                    }
                 } label: {
                     Text(EditHabit.editGoal ? "Update" : "Save")
                         .font(.system(size: 20))
@@ -188,10 +193,9 @@ struct EditHabit: View {
                 .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .center)
                 .padding(.bottom, EditHabit.editGoal ? 30 : 80)
                 .padding(.top, 30)
-            EditHabit.editGoal ?
+                EditHabit.editGoal ?
                 Button {
                     deleteGoal(goal: currentGoal())
-                    EditHabit.editGoal.toggle()
                     self.category = ""
                     self.notes = ""
                     dismiss()
@@ -224,15 +228,52 @@ struct EditHabit: View {
         LocalNotificationManager.shared.clearNotifsForUpdate(goal: currentGoal())
         LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
         LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
+        EditHabit.editGoal = false
     }
-
+    
     func create() {
         createGoal(goal: currentGoal())
         LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
         LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
+        EditHabit.editGoal = false
     }
-
-   
+    
+    func checkRequiredFields()-> Bool {
+        var returnBool = true
+        self.needTitle = false
+        self.needTracker = false
+        self.needEndDate = false
+        self.needCheckinGoal = false
+        if self.title == "" {
+            self.needTitle = true
+            returnBool = false
+        }
+        if self.selectedTracker == "" {
+            self.needTracker = true
+            self.progressTrackerTap = false
+            returnBool = false
+        }
+        if self.selectedTracker == "1" {
+            if self.endDate <= Date.now {
+                self.needEndDate = true
+                self.endDateTap = false
+                returnBool = false
+            }
+            if self.goodcheckinGoal == 0 {
+                self.progressTrackerTap = false
+                self.needCheckinGoal = true
+                returnBool = false
+            }
+        }
+        if self.selectedTracker == "2" {
+            if self.goodcheckinGoal == 0 {
+                self.progressTrackerTap = false
+                self.needCheckinGoal = true
+                returnBool = false
+            }
+        }
+        return returnBool
+    }
 }
 
 struct EditHabit_Previews: PreviewProvider {

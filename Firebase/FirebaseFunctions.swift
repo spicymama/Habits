@@ -249,4 +249,5 @@ func deleteGoal(goal: Goal) {
           print("Document successfully removed!")
         }
       }
+    EditHabit.editGoal = false
 }
