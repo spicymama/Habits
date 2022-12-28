@@ -58,12 +58,23 @@ struct Settings: View {
                 .foregroundColor(foregroundColor)
                 .tint(accentColor)
                 Button {
+                    let defaults = UserDefaults.standard
+                    defaults.set(fontSize, forKey: "fontSize")
+                    defaults.set(backgroundColor, forKey: "backgroundColor")
+                    defaults.set(foregroundColor, forKey: "foregroundColor")
+                    defaults.set(accentColor, forKey: "accentColor")
+                } label: {
+                    Text("Save")
+                        .foregroundColor(foregroundColor)
+                        .font(.system(size: 23))
+                }.padding(.top, 80)
+                Button {
                     logoutUser()
                     self.dismiss()
                 } label: {
                     Text("Sign Out")
                         .foregroundColor(.red)
-                }.padding(.top, 100)
+                }.padding(.top, 40)
                 
             }
         }
