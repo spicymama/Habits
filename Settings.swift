@@ -12,6 +12,9 @@ import FirebaseFirestore
 
 struct Settings: View {
     @Environment(\.dismiss) var dismiss
+    @State var backgroundColor = Color.white
+    @State var foregroundColor = Color.gray
+    @State var accentColor = Color.gray
     var body: some View {
         ScrollView {
             Button {
@@ -20,22 +23,39 @@ struct Settings: View {
                 Image(systemName: "xmark")
             }.frame(maxWidth: UIScreen.main.bounds.width - 60, alignment: .trailing)
                 .foregroundColor(.gray)
+            
             VStack {
                 Text("Settings")
                     .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
                     .font(.system(size: 35))
-                    .foregroundColor(.gray)
+                    .foregroundColor(foregroundColor)
                     .padding(.bottom, 25)
+                
+                VStack {
+                    SquareColorPicker(colorValue: $backgroundColor, title: "Choose background color")
+                   SquareColorPicker(colorValue: $foregroundColor, title: "Choose foreground color")
+                    SquareColorPicker(colorValue: $accentColor, title: "Choose accent color")
+                    
+                        
+                }
+                .frame(maxWidth: UIScreen.main.bounds.width / 1.2, alignment: .center)
+                .padding()
+                .foregroundColor(foregroundColor)
+                .tint(accentColor)
+                
                 Button {
                     logoutUser()
                     self.dismiss()
                 } label: {
                     Text("Sign Out")
                         .foregroundColor(.red)
-                }
+                }.padding(.top, 100)
                 
             }
         }
+        .frame(width: UIScreen.main.bounds.width)
+        .background(backgroundColor)
+        .tint(accentColor)
     }
 }
 

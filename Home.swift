@@ -16,7 +16,6 @@ struct Home: View {
     static var shared = Home()
     static var allNotifs: [Goal] = []
     @State var refresh = true
-    //@State var tap = true
     @State private var addButtonTap = false
     @State var goalArr: [Goal] = []
     @State var categoryArr: [String] = []
@@ -24,6 +23,7 @@ struct Home: View {
     @State var notificationTap = false
     @State var newNotifs = false
     @State var settingsTap = false
+    @State var color = Color.gray
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
             .init { () -> Bool in
@@ -64,7 +64,6 @@ struct Home: View {
                         Button {
                             EditHabit.editGoal = false
                             addButtonTap = true
-                           // self.tap = true
                         } label: {
                             Image(systemName: "plus.square")
                                 .imageScale(.large)
@@ -117,16 +116,9 @@ struct Home: View {
                             defaults.set(true, forKey: "goToLogin")
                         }
                     }
-                fetchAllGoals() { goals in
-                    self.categoryArr = []
-                    self.goalArr.append(contentsOf: goals)
-                    for i in goals {
-                        if !self.categoryArr.contains(i.category) && i.category != "" {
-                            self.categoryArr.append(i.category)
-                        }
-                    }
-                }
+                fetchForRefresh()
             }
+                /*
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     if !Home.allNotifs.isEmpty {
                         self.newNotifs = true
@@ -134,35 +126,17 @@ struct Home: View {
                         self.newNotifs = false
                     }
                 }
-                self.refresh.toggle()
+                 */
             }
             .fullScreenCover(isPresented: $goToLogin) {
                 LoginView()
             }
         }.refreshable {
-            fetchAllGoals { goals in
-                self.categoryArr = []
-                self.goalArr = []
-                self.goalArr.append(contentsOf: goals)
-                for i in goals {
-                    if !self.categoryArr.contains(i.category) && i.category != "" {
-                        self.categoryArr.append(i.category)
-                    }
-                }
-            }
-            if !Home.allNotifs.isEmpty {
-                self.newNotifs = true
-            } else {
-                self.newNotifs = false
-            }
-            self.refresh.toggle()
+            fetchForRefresh()
         }
         .fullScreenCover(isPresented: pushNavigationBinding) {
             NotificationsView()
         }
-       
-         //   NavigationLink(destination: NotificationsView(), isActive: $goToNotification) { EmptyView() }
-        
     }
     func formatTiles()-> ([GoalTile], [ListTile]) {
         var goalTiles: [GoalTile] = []
@@ -184,6 +158,23 @@ struct Home: View {
         }
         return (goalTiles, listTiles)
     }
+    func fetchForRefresh() {
+        fetchAllGoals { goals in
+            self.categoryArr = []
+            self.goalArr = []
+            self.goalArr.append(contentsOf: goals)
+            for i in goals {
+                if !self.categoryArr.contains(i.category) && i.category != "" {
+                    self.categoryArr.append(i.category)
+                }
+            }
+        }
+        if !Home.allNotifs.isEmpty {
+            self.newNotifs = true
+        } else {
+            self.newNotifs = false
+        }
+    }
 }
 
 struct Home_Previews: PreviewProvider {
@@ -192,4 +183,3 @@ struct Home_Previews: PreviewProvider {
             .environmentObject(FirestoreManager())
     }
 }
-

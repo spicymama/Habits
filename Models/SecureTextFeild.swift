@@ -12,18 +12,19 @@ struct SecureTextFeild: View {
         @FocusState var focus2: Bool
         @State var showPassword: Bool = false
         @Binding var text: String
+    var placeholder: String
 
     var body: some View {
             HStack {
                 ZStack(alignment: .trailing) {
-                    TextField("Password:", text: $text)
+                    TextField(placeholder, text: $text)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .textContentType(.password)
                         .font(.system(size: 20))
                         .focused($focus1)
                         .opacity(showPassword ? 1 : 0)
-                    SecureField("Password:", text: $text)
+                    SecureField(placeholder, text: $text)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .textContentType(.password)

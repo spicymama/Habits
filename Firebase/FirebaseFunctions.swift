@@ -16,7 +16,6 @@ func createGoal(goal: Goal) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
-   // let id = docRef.documentID
     let goalData: [String : Any] = [
         "id" : goal.id,
         "badCheckins" : goal.badCheckins,
@@ -31,6 +30,7 @@ func createGoal(goal: Goal) {
         "dateCreated" : Date.now,
         "endDate" : goal.endDate,
         "goodCheckins" : goal.goodCheckins,
+        "goodCheckinGoal" : goal.goodCheckinGoal,
         "prog" : goal.prog,
         "progressTracker" : goal.progressTracker,
         "scheduledNotifs" : goal.scheduledNotifs,
@@ -42,7 +42,6 @@ func createGoal(goal: Goal) {
         if let error = error {
             print("Error writing document: \(error)")
         } else {
-           // Home.shared.goalArr.append(goal)
             print("Document successfully written!")
         }
     }
@@ -73,6 +72,8 @@ func updateGoal(goal: Goal) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
+    let progress = calculateProg(tracker: goal.progressTracker, goodCheckinGoal: goal.goodCheckinGoal, goodCheckins: goal.goodCheckins, prog: goal.prog)
+    goal.prog = progress
     let goalData: [String : Any] = [
         "id" : goal.id,
         "badCheckins" : goal.badCheckins,
@@ -87,6 +88,7 @@ func updateGoal(goal: Goal) {
         "dateCreated" : goal.dateCreated,
         "endDate" : goal.endDate,
         "goodCheckins" : goal.goodCheckins,
+        "goodCheckinGoal" : goal.goodCheckinGoal,
         "prog" : goal.prog,
         "progressTracker" : goal.progressTracker,
         "scheduledNotifs" : goal.scheduledNotifs,
@@ -105,7 +107,7 @@ func updateGoal(goal: Goal) {
 
 func fetchSingleGoal(id: String, completion: @escaping (Goal) -> Void) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-    var goal: Goal = Goal(id: id, listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
+    let goal: Goal = Goal(id: id, listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
     let db = Firestore.firestore()
     print(id)
     DispatchQueue.main.async {
@@ -140,8 +142,11 @@ func fetchSingleGoal(id: String, completion: @escaping (Goal) -> Void) {
                 goal.progressTracker = querySnapshot.get("progressTracker") as! String
                 goal.prog = querySnapshot.get("prog") as! Double
                 goal.goodCheckins = querySnapshot.get("goodCheckins") as! Int
+                goal.goodCheckinGoal = querySnapshot.get("goodCheckinGoal") as! Int
                 goal.badCheckins = querySnapshot.get("badCheckins") as! Int
                 goal.endDate = endDate.dateValue()
+                let progress = calculateProg(tracker: goal.progressTracker, goodCheckinGoal: goal.goodCheckinGoal, goodCheckins: goal.goodCheckins, prog: goal.prog)
+                goal.prog = progress
             }
             completion(goal)
         }
@@ -193,7 +198,10 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
                     goal.prog = document.get("prog") as! Double
                     goal.goodCheckins = document.get("goodCheckins") as! Int
                     goal.badCheckins = document.get("badCheckins") as! Int
+                    goal.goodCheckinGoal = document.get("goodCheckinGoal") as! Int
                     goal.endDate = endDate.dateValue()
+                    let progress = calculateProg(tracker: goal.progressTracker, goodCheckinGoal: goal.goodCheckinGoal, goodCheckins: goal.goodCheckins, prog: goal.prog)
+                    goal.prog = progress
                     allGoals.append(goal)
                     goal = Goal(id: "", listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
                 }
@@ -250,4 +258,15 @@ func deleteGoal(goal: Goal) {
         }
       }
     EditHabit.editGoal = false
+}
+
+func calculateProg(tracker: String, goodCheckinGoal: Int, goodCheckins: Int, prog: Double)-> Double {
+    var progToSend = 0.0
+    if tracker == "3" {
+        progToSend = prog
+    }
+    if tracker == "2" || tracker == "1" {
+        progToSend = (Double(goodCheckins) / Double(goodCheckinGoal)) * 100.0
+    }
+    return progToSend
 }

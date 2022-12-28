@@ -15,6 +15,8 @@ struct GoalView: View, Identifiable {
     @State var progUpdated: Int = 0
     @State var prog: Double
     @State var notes = ""
+    @State var thumbsUpTap = false
+    @State var thumbsDownTap = false
 
     var body: some View {
         VStack {
@@ -40,41 +42,82 @@ struct GoalView: View, Identifiable {
                 .foregroundColor(.gray)
             HStack {
                 Slider(value: self.$prog,
-                    in: 0...100,
-                    onEditingChanged: { editing in
-                      isEditing = editing
+                       in: 0...100,
+                       onEditingChanged: { editing in
+                    isEditing = editing
                     if isEditing == false {
                         currentGoal.prog = self.prog
                         updateGoal(goal: currentGoal)
                     }
                 }
                 ).allowsHitTesting(currentGoal.progressTracker == "3" ? true : false)
-                    
+                
                 Text("\(self.prog, specifier: "%.0f") %")
                     .foregroundColor(.gray)
                     .padding(.leading)
             }
-                .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
-                .padding(.bottom, 10)
-                .accentColor(.gray)
+            .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
+            .padding(.bottom, 10)
+            .accentColor(.gray)
             Text(self.notes)
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: .infinity, alignment: .topLeading)
                 .lineLimit(100)
                 .foregroundColor(.gray)
-                Button {
-                    EditHabit.shared.title = currentGoal.title
-                    self.editGoalTap = true
-                    EditHabit.editGoal = true
+            HStack {
+                currentGoal.progressTracker == "1" || currentGoal.progressTracker == "2" ? Button {
+                    self.thumbsDownTap.toggle()
+                    if self.thumbsUpTap == true {
+                        currentGoal.goodCheckins -= 1
+                        self.thumbsUpTap = false
+                    }
+                    if thumbsDownTap == true {
+                        currentGoal.badCheckins += 1
+                    }
+                    if thumbsDownTap == false {
+                        currentGoal.badCheckins -= 1
+                    }
+                    self.prog = (Double(currentGoal.goodCheckins) / Double(currentGoal.goodCheckinGoal)) * 100.0
+                    updateGoal(goal: currentGoal)
                 } label: {
-                    Image(systemName: "chevron.right.circle")
-                        .foregroundColor(.gray)
-                        .imageScale(.large)
-                }.frame(maxWidth: 20, maxHeight: 20, alignment: .topTrailing)
-                    .padding(.bottom, 20)
-                    .padding(.leading, UIScreen.main.bounds.width / 1.5)
-                    .fullScreenCover(isPresented: self.$editGoalTap) {
-                        EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
-            }
+                    Image(systemName: self.thumbsDownTap ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                        .font(.system(size: 30))
+                }
+                .padding(.trailing, 20)
+                .padding(.bottom, 20) : nil
+                currentGoal.progressTracker == "1" || currentGoal.progressTracker == "2" ? Button {
+                    self.thumbsUpTap.toggle()
+                    if self.thumbsDownTap == true {
+                        currentGoal.badCheckins -= 1
+                        self.thumbsDownTap = false
+                    }
+                    if thumbsUpTap == true {
+                        currentGoal.goodCheckins += 1
+                    }
+                    if thumbsUpTap == false {
+                        currentGoal.goodCheckins -= 1
+                    }
+                    self.prog = (Double(currentGoal.goodCheckins) / Double(currentGoal.goodCheckinGoal)) * 100.0
+                    updateGoal(goal: currentGoal)
+                } label: {
+                    Image(systemName: self.thumbsUpTap ? "hand.thumbsup.fill" : "hand.thumbsup")
+                        .font(.system(size: 30))
+                }
+                .padding(.leading, 20)
+                .padding(.bottom, 20) : nil
+            Button {
+                EditHabit.shared.title = currentGoal.title
+                self.editGoalTap = true
+                EditHabit.editGoal = true
+            } label: {
+                Image(systemName: "chevron.right.circle")
+                    .imageScale(.large)
+            }.frame(maxWidth: 20, maxHeight: 20, alignment: .trailing)
+                .padding(.bottom, 20)
+                .padding(.leading, 80)
+                .fullScreenCover(isPresented: self.$editGoalTap) {
+                    EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
+                }
+        }.foregroundColor(.gray)
         }
     }
 }
