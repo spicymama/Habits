@@ -15,6 +15,8 @@ struct Settings: View {
     @State var backgroundColor = Color.white
     @State var foregroundColor = Color.gray
     @State var accentColor = Color.gray
+    @State var fontSize = 12.0
+    @State private var isEditing = false
     var body: some View {
         ScrollView {
             Button {
@@ -35,14 +37,26 @@ struct Settings: View {
                     SquareColorPicker(colorValue: $backgroundColor, title: "Choose background color")
                    SquareColorPicker(colorValue: $foregroundColor, title: "Choose foreground color")
                     SquareColorPicker(colorValue: $accentColor, title: "Choose accent color")
-                    
-                        
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width / 1.2, alignment: .center)
                 .padding()
                 .foregroundColor(foregroundColor)
                 .tint(accentColor)
-                
+                VStack {
+                    Text("Font Size")
+                        .font(.system(size: fontSize))
+                        
+                    Slider(value: self.$fontSize,
+                           in: 12...40,
+                           onEditingChanged: { editing in
+                        isEditing = editing
+                        
+                    })
+                    .frame(maxWidth: UIScreen.main.bounds.width / 1.2, alignment: .center)
+                }
+                .padding()
+                .foregroundColor(foregroundColor)
+                .tint(accentColor)
                 Button {
                     logoutUser()
                     self.dismiss()
