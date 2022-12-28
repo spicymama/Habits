@@ -14,15 +14,16 @@ struct SquareColorPicker: View {
     var body: some View {
         HStack {
             Text(title)
-                .frame(width: UIScreen.main.bounds.width - 130, alignment: .center)
+                .frame(maxWidth: UIScreen.main.bounds.width - 130, alignment: .center)
             colorValue
                 .frame(width: 30, height: 30, alignment: .leading)
                 .cornerRadius(10.0)
-                .overlay(RoundedRectangle(cornerRadius: 8.0).stroke(Color.white, style: StrokeStyle(lineWidth: 5)))
+                .overlay(RoundedRectangle(cornerRadius: 8.0).stroke(Color.white, style: StrokeStyle(lineWidth: 1)))
                 .padding(10)
-                .background(AngularGradient(gradient: Gradient(colors: [colorValue, .white, colorValue]), center:.center).cornerRadius(15.0))
+                .background(.white)
+                .cornerRadius(15.0)
                 .overlay(ColorPicker("", selection: $colorValue).labelsHidden().opacity(0.015))
-                .shadow(radius: 0.0)
+                .shadow(radius: 1.0)
         }
     }
 }

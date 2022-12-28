@@ -81,18 +81,6 @@ struct Home: View {
                             .foregroundColor(.gray)
                             .padding(.bottom, 25)
                     }
-                        /*
-                        Button("Request Permission") {
-                            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                                if success {
-                                    print("All set!")
-                                } else if let error = error {
-                                    print(error.localizedDescription)
-                                }
-                            }
-                        }
-                        */
-
                     ForEach(formatTiles().0) { tile in
                         tile
                             .padding(.top, 30)
@@ -101,7 +89,6 @@ struct Home: View {
                         tile
                             .padding(.top, 30)
                     }
-                 
                 }
             }.onAppear {
                 let defaults = UserDefaults.standard
