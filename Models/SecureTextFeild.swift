@@ -21,23 +21,23 @@ struct SecureTextFeild: View {
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .textContentType(.password)
-                        .font(.system(size: 20))
+                        .font(.system(size: Home.fontSize))
                         .focused($focus1)
                         .opacity(showPassword ? 1 : 0)
                     SecureField(placeholder, text: $text)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .textContentType(.password)
-                        .font(.system(size: 20))
+                        .font(.system(size: Home.fontSize))
                         .focused($focus2)
                         .opacity(showPassword ? 0 : 1)
                     Button(action: {
                         showPassword.toggle()
                         if showPassword { focus1 = true } else { focus2 = true }
                     }, label: {
-                        Image(systemName: self.showPassword ? "eye.fill" : "eye.slash.fill" ).font(.system(size: 16, weight: .regular))
+                        Image(systemName: self.showPassword ? "eye.fill" : "eye.slash.fill" ).font(.system(size: Home.fontSize, weight: .regular))
                             .padding()
-                            .foregroundColor(.gray)
+                            .foregroundColor(Home.foregroundColor)
                     })
             }
         }

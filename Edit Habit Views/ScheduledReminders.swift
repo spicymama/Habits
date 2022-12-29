@@ -18,8 +18,8 @@ struct ScheduledReminders: View {
                 Text("Scheduled Reminders")
                 Image(systemName: "calendar")
             }
-            .foregroundColor(.gray)
-            .font(.system(size: 25))
+            .foregroundColor(Home.foregroundColor)
+            .font(.system(size: Home.fontSize))
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             .onTapGesture {
                 self.tap.toggle()
@@ -40,7 +40,7 @@ struct ScheduledReminders: View {
                     }
                 } label: {
                     Image(systemName: "plus")
-                        .foregroundColor(.gray)
+                        .foregroundColor(Home.foregroundColor)
                         .imageScale(.medium)
                 }
             } .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
@@ -48,8 +48,8 @@ struct ScheduledReminders: View {
                 ForEach(showSelectedDates(dates: self.dates, dateStyle: .short)) { time in
                     HStack {
                         Text(time)
-                            .foregroundColor(.gray)
-                            .font(.system(size: 12))
+                            .foregroundColor(Home.foregroundColor)
+                            .font(.system(size: Home.fontSize))
                             .onTapGesture {
                                 self.dateTap.toggle()
                             }
@@ -59,7 +59,7 @@ struct ScheduledReminders: View {
                             self.dates.remove(at: index)
                         } label: {
                             Image(systemName: "xmark.circle")
-                                .font(.system(size: 12))
+                                .font(.system(size: Home.fontSize))
                         }.padding(.trailing, 10)
                     }
                 }

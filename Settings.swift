@@ -10,12 +10,13 @@ import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
 import UserNotifications
+import UIKit
 
 struct Settings: View {
     @Environment(\.dismiss) var dismiss
-    @State var backgroundColor = Color.white
-    @State var foregroundColor = Color.gray
-    @State var accentColor = Color.gray
+    @State var backgroundColor = Home.backgroundColor
+    @State var foregroundColor = Home.foregroundColor
+    @State var accentColor = Home.accentColor
     @State var fontSize = 15.0
     @State var headerFontSize = 35.0
     @State var titleFontSize = 25.0
@@ -33,7 +34,7 @@ struct Settings: View {
             } label: {
                 Image(systemName: "xmark")
             }.frame(maxWidth: UIScreen.main.bounds.width - 60, alignment: .trailing)
-                .foregroundColor(.gray)
+                .foregroundColor(accentColor)
             
             VStack {
                 Text("Settings")
@@ -48,12 +49,12 @@ struct Settings: View {
                     } label: {
                         Image(systemName: "xmark.circle")
                             .imageScale(.large)
-                            .foregroundColor(Color(UIColor.systemGray4))
+                            .foregroundColor(accentColor)
                     }
                     .padding(.leading, UIScreen.main.bounds.width / 1.6) : nil
                 Text("Choose Display Colors")
                     .foregroundColor(foregroundColor)
-                    .font(.system(size: 25))
+                    .font(.system(size: titleFontSize))
                     .frame(maxWidth: UIScreen.main.bounds.width / 1.2, maxHeight: .infinity)
                     
                     .onTapGesture {
@@ -172,9 +173,9 @@ struct Settings: View {
                     defaults.set(fontSize, forKey: "fontSize")
                     defaults.set(headerFontSize, forKey: "headerFontSize")
                     defaults.set(titleFontSize, forKey: "titleFontSize")
-                    defaults.set(backgroundColor, forKey: "backgroundColor")
-                    defaults.set(foregroundColor, forKey: "foregroundColor")
-                    defaults.set(accentColor, forKey: "accentColor")
+                    defaults.set(UIColor(backgroundColor), forKey: "backgroundColor")
+                    defaults.set(UIColor(foregroundColor), forKey: "foregroundColor")
+                    defaults.set(UIColor(accentColor), forKey: "accentColor")
                     if notifsAuthorized() == false && self.notifsAllowed == true {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                             if success {
@@ -184,6 +185,7 @@ struct Settings: View {
                             }
                         }
                     }
+                    self.dismiss()
                 } label: {
                     Text("Save Changes")
                         .foregroundColor(foregroundColor)
@@ -232,4 +234,25 @@ func notifsAuthorized()-> Bool {
        }
     })
     return returnBool
+}
+
+extension UserDefaults {
+    func color(forKey key: String) -> UIColor? {
+        guard let colorData = data(forKey: key) else { return nil }
+        do {
+            return try NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: colorData)
+        } catch let error {
+            print("color error \(error.localizedDescription)")
+            return nil
+        }
+    }
+    func set(_ value: UIColor?, forKey key: String) {
+        guard let color = value else { return }
+        do {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: color, requiringSecureCoding: false)
+            set(data, forKey: key)
+        } catch let error {
+            print("error color key data not saved \(error.localizedDescription)")
+        }
+    }
 }

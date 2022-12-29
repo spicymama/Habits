@@ -19,8 +19,8 @@ struct EndDate: View {
                 Text("End Date")
                 Image(systemName: "calendar")
             }
-            .foregroundColor(.gray)
-            .font(.system(size: 35))
+            .foregroundColor(Home.foregroundColor)
+            .font(.system(size: Home.titleFontSize))
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             .padding(.top, 30)
             .padding(.bottom, 10)
@@ -32,6 +32,7 @@ struct EndDate: View {
                     Image(systemName: "calendar")
                 }.labelsHidden()
                     .colorScheme(.dark)
+                    .tint(Home.accentColor)
                     .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(self.needEndDate ? .red : .clear, lineWidth: 2)
@@ -42,7 +43,7 @@ struct EndDate: View {
                     self.hidden = false
                 } label: {
                     Image(systemName: "plus")
-                        .foregroundColor(.gray)
+                        .foregroundColor(Home.foregroundColor)
                 }
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
@@ -60,10 +61,11 @@ struct EndDate: View {
                     self.lilTap.toggle()
                 } label: {
                     Image(systemName: "xmark.circle")
+                        .foregroundColor(Home.accentColor)
                 }.padding(.trailing, 10)
             }
-            .foregroundColor(.gray)
-            .font(.system(size: 12))
+            .foregroundColor(Home.foregroundColor)
+            .font(.system(size: Home.fontSize))
             .animation(.easeInOut, value: self.lilTap)
         }
     }

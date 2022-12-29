@@ -24,17 +24,17 @@ struct LoginView: View {
             VStack {
                 Text("Habits")
                     .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                    .font(.system(size: 35))
+                    .font(.system(size: Home.headerFontSize))
                     .padding(.bottom, 25)
                 
                 VStack {
                     Text(self.createOrLogin ? "Create Account" : "User Login")
-                        .font(.system(size: 22))
+                        .font(.system(size: Home.fontSize))
                     
                     TextField("Email:", text: self.$email)
                         .padding(.vertical, 20)
                         .padding(.leading, 20)
-                        .font(.system(size: 20))
+                        .font(.system(size: Home.fontSize))
                         .textInputAutocapitalization(.never)
                     SecureTextFeild(text: self.$password, placeholder: "Password:")
                         .padding(.vertical, self.createOrLogin ? 0 : 20)
@@ -52,7 +52,7 @@ struct LoginView: View {
                checkFields()
                 } label: {
                     Text(self.createOrLogin ? "Save >" : "Sign in >")
-                        .font(.system(size: 20))
+                        .font(.system(size: Home.fontSize))
                 }
                 .padding(.leading, UIScreen.main.bounds.width / 2)
                 .padding(.bottom, 40)
@@ -72,7 +72,7 @@ struct LoginView: View {
                     }
                 }
             }.frame(minHeight: UIScreen.main.bounds.height / 1.2, alignment: .top)
-                .foregroundColor(.gray)
+            .foregroundColor(Home.foregroundColor)
                 .animation(.easeInOut, value: self.createOrLogin)
     }
     func checkFields() {

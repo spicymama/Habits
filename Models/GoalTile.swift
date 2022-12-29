@@ -18,7 +18,7 @@ struct GoalTile: View, Identifiable {
             } label: {
                 Image(systemName: "xmark.circle")
                     .imageScale(.large)
-                    .foregroundColor(Color(UIColor.systemGray4))
+                    .foregroundColor(Home.accentColor)
             }
             .padding(.leading, UIScreen.main.bounds.width / 1.3)
             .padding(.top, 10)
@@ -27,8 +27,8 @@ struct GoalTile: View, Identifiable {
             ScrollView {
                 Text("\(goal.title)")
                     .frame(maxWidth: UIScreen.main.bounds.width - 100, maxHeight: 75)
-                    .font(.system(size: 28))
-                    .foregroundColor(.gray)
+                    .font(.system(size: Home.titleFontSize))
+                    .foregroundColor(Home.foregroundColor)
                     .padding(.vertical)
 
                 self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes).frame(maxWidth: UIScreen.main.bounds.width - 20)

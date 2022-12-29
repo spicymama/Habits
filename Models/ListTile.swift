@@ -20,7 +20,7 @@ struct ListTile: View, Identifiable {
             } label: {
                 Image(systemName: "xmark.circle")
                     .imageScale(.large)
-                    .foregroundColor(Color(UIColor.systemGray4))
+                    .foregroundColor(Home.accentColor)
             }
             .padding(.leading, UIScreen.main.bounds.width / 1.3)
             .padding(.top, 10)
@@ -28,21 +28,21 @@ struct ListTile: View, Identifiable {
             .zIndex(1)
             ScrollView {
                 Text(goalArr.first?.category ?? "")
-                        .font(.system(size: self.wasTapped ? 25 : 30))
-                        .padding(.top, self.wasTapped ? 25 : 25)
-                        .foregroundColor(.gray)
+                    .font(.system(size: self.wasTapped ? Home.titleFontSize : Home.titleFontSize + 5))
+                        .padding(.top, 25)
+                        .foregroundColor(Home.foregroundColor)
                         
                 ForEach(goalArr) { goal in
                     self.wasTapped ? VStack {
                         HStack {
                             Image(systemName: "circle")
                                 .fontWeight(.semibold)
-                                .font(.system(size: self.wasTapped ? 8 : 12))
-                                .foregroundColor(.gray)
+                                .font(.system(size: self.wasTapped ? Home.fontSize - 4 : Home.fontSize))
+                                .foregroundColor(Home.accentColor)
                             
                             Text(goal.title)
-                                .font(.system(size: self.wasTapped ? 17 : 25))
-                                .foregroundColor(.gray)
+                                .font(.system(size: self.wasTapped ? Home.fontSize : Home.fontSize + 5))
+                                .foregroundColor(Home.foregroundColor)
                                 
                         }
                         .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 5000, alignment: .leading)
@@ -54,7 +54,7 @@ struct ListTile: View, Identifiable {
             }
             .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 150)
             .frame(minHeight: 100)
-            .foregroundColor(.white)
+            .foregroundColor(Home.foregroundColor)
             .padding(.bottom, 25)
             .tint(.gray)
         }

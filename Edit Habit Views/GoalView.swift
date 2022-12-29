@@ -22,8 +22,8 @@ struct GoalView: View, Identifiable {
         VStack {
             HStack {
                 Text(currentGoal.title)
-                    .font(.system(size: 25))
-                    .foregroundColor(.gray)
+                    .font(.system(size: Home.titleFontSize))
+                    .foregroundColor(Home.foregroundColor)
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 50, alignment: .leading)
             .padding(.bottom, 10)
@@ -39,7 +39,7 @@ struct GoalView: View, Identifiable {
             }  .frame(maxWidth: UIScreen.main.bounds.width - 40, maxHeight: 50, alignment: .leading)
                 .padding(.leading, 25)
                 .padding(.bottom, 10)
-                .foregroundColor(.gray)
+                .foregroundColor(Home.foregroundColor)
             HStack {
                 Slider(value: self.$prog,
                        in: 0...100,
@@ -53,7 +53,7 @@ struct GoalView: View, Identifiable {
                 ).allowsHitTesting(currentGoal.progressTracker == "3" ? true : false)
                 
                 Text("\(self.prog, specifier: "%.0f") %")
-                    .foregroundColor(.gray)
+                    .foregroundColor(Home.accentColor)
                     .padding(.leading)
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
@@ -62,7 +62,7 @@ struct GoalView: View, Identifiable {
             Text(self.notes)
                 .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: .infinity, alignment: .topLeading)
                 .lineLimit(100)
-                .foregroundColor(.gray)
+                .foregroundColor(Home.foregroundColor)
             HStack {
                 currentGoal.progressTracker == "1" || currentGoal.progressTracker == "2" ? Button {
                     self.thumbsDownTap.toggle()
@@ -117,7 +117,7 @@ struct GoalView: View, Identifiable {
                 .fullScreenCover(isPresented: self.$editGoalTap) {
                     EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
                 }
-        }.foregroundColor(.gray)
+        }.foregroundColor(Home.foregroundColor)
         }
     }
 }

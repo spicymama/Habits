@@ -19,7 +19,7 @@ struct NotificationBox: View, Identifiable {
             HStack {
                 
                 Text("\(goal.title)")
-                    .font(.system(size: 25))
+                    .font(.system(size: Home.titleFontSize))
                     .padding(.bottom)
                     .padding(.top, 10)
             }
@@ -29,9 +29,9 @@ struct NotificationBox: View, Identifiable {
             HStack {
                 VStack {
                     Text(self.notifDate)
-                        .font(.system(size: 10))
+                        .font(.system(size: Home.fontSize - 2))
                     Text(self.notifTime)
-                        .font(.system(size: 10))
+                        .font(.system(size: Home.fontSize - 2))
                         .bold()
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width / 2.5, alignment: .leading)
@@ -72,7 +72,7 @@ struct NotificationBox: View, Identifiable {
             }
             .padding(.bottom)
         }
-        .foregroundColor(.gray)
+        .foregroundColor(Home.foregroundColor)
         .overlay(
             RoundedRectangle(cornerRadius: 15)
                 .stroke(.gray, lineWidth: 2)

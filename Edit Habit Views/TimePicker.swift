@@ -22,10 +22,10 @@ struct TimePicker: View {
                             .onTapGesture {
                                 self.hidden.toggle()
                             }
-                            .font(.system(size: 30))
+                            .font(.system(size: Home.titleFontSize))
                             .frame(width: 200, height: 65, alignment: .leading)
                             .padding(.trailing, UIScreen.main.bounds.width / 4)
-                            .foregroundColor(.gray)
+                            .foregroundColor(Home.foregroundColor)
                         Button {
                             if self.hidden == true {
                                 self.hidden.toggle()
@@ -37,7 +37,7 @@ struct TimePicker: View {
                             }
                         } label: {
                             Image(systemName: "plus")
-                                .foregroundColor(.gray)
+                                .foregroundColor(Home.foregroundColor)
                                 .imageScale(.medium)
                         }
                     }
@@ -48,7 +48,7 @@ struct TimePicker: View {
                         DatePicker("\(name) :", selection: self.$date, displayedComponents: .hourAndMinute)
                         .frame(width: 150, height: 15, alignment: .trailing)
                         .labelsHidden()
-                        .accentColor(.white)
+                        .tint(Home.accentColor)
                         .colorScheme(.dark)
                 }
                     
@@ -57,8 +57,8 @@ struct TimePicker: View {
                 ForEach(showSelectedTimes(dates: self.notifArr, timeStyle: .short)) { time in
                     HStack {
                         Text(time)
-                            .foregroundColor(.gray)
-                            .font(.system(size: 12))
+                            .foregroundColor(Home.foregroundColor)
+                            .font(.system(size: Home.fontSize))
                             .onTapGesture {
                                 self.dateTap.toggle()
                             }
@@ -75,7 +75,7 @@ struct TimePicker: View {
                             }
                         } label: {
                             Image(systemName: "xmark.circle")
-                                .font(.system(size: 12))
+                                .font(.system(size: Home.fontSize))
                         }.padding(.trailing, 10)
                     }
                 }

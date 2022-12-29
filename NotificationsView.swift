@@ -21,17 +21,18 @@ struct NotificationsView: View {
                 } label: {
                     Image(systemName: "xmark")
                 }.frame(maxWidth: UIScreen.main.bounds.width - 60, alignment: .trailing)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Home.accentColor)
                 Text("Reminders")
                     .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                    .font(.system(size: 35))
-                    .foregroundColor(.gray)
+                    .font(.system(size: Home.headerFontSize))
+                    .foregroundColor(Home.foregroundColor)
                     .padding(.bottom, 25)
                 ForEach(self.allNotifs, id: \.listID) { notif in
                     NotificationBox(id: UUID(), goal: notif)
                 }
             }
-        }.frame(maxHeight: .infinity, alignment: .top)
+        }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Home.backgroundColor)
     }
 }
 
