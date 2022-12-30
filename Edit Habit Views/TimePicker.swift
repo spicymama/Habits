@@ -53,36 +53,29 @@ struct TimePicker: View {
                 }
                     
             }
-            HStack {
-                ForEach(showSelectedTimes(dates: self.notifArr, timeStyle: .short)) { time in
-                    HStack {
-                        Text(time)
-                            .foregroundColor(Home.foregroundColor)
-                            .font(.system(size: Home.fontSize))
-                            .onTapGesture {
-                                self.dateTap.toggle()
-                            }
-                        self.dateTap ? nil :
-                        Button {
-                            guard let index = showTimesUnsorted(dates: self.notifArr, timeStyle: .short).firstIndex(of: time) else { return }
-                            self.notifArr.remove(at: index)
-                            for i in notifArr {
-                                var index = 0
-                                if i == (self.date) {
-                                    notifArr.remove(at: index)
-                                }
-                                index += 1
-                            }
-                        } label: {
-                            Image(systemName: "xmark.circle")
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(showSelectedTimes(dates: self.notifArr, timeStyle: .short)) { time in
+                        HStack {
+                            Text(time)
+                                .foregroundColor(Home.foregroundColor)
                                 .font(.system(size: Home.fontSize))
-                        }.padding(.trailing, 10)
+                                .onTapGesture {
+                                    self.dateTap.toggle()
+                                }
+                            self.dateTap ? nil :
+                            Button {
+                                guard let index = showTimesUnsorted(dates: self.notifArr, timeStyle: .short).firstIndex(of: time) else { return }
+                                self.notifArr.remove(at: index)
+                            } label: {
+                                Image(systemName: "xmark.circle")
+                                    .font(.system(size: Home.fontSize))
+                            }.padding(.trailing, 10)
+                        }
                     }
-                }
-                .padding(.trailing, 5)
-            }
-            .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 20, alignment: .leading)
-            
+                    .padding(.trailing, 5)
+                }.frame(maxWidth: .infinity, maxHeight: 20, alignment: .leading)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 25, alignment: .leading)
         }
     }
 }

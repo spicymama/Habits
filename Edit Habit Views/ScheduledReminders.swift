@@ -43,31 +43,30 @@ struct ScheduledReminders: View {
                         .foregroundColor(Home.foregroundColor)
                         .imageScale(.medium)
                 }
-            } .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-            HStack {
-                ForEach(showSelectedDates(dates: self.dates, dateStyle: .short)) { time in
-                    HStack {
-                        Text(time)
-                            .foregroundColor(Home.foregroundColor)
-                            .font(.system(size: Home.fontSize))
-                            .onTapGesture {
-                                self.dateTap.toggle()
-                            }
-                        self.dateTap ? nil :
-                        Button {
-                            guard let index = showDatesUnsorted(dates: dates, dateStyle: .short).firstIndex(of: time) else { return }
-                            self.dates.remove(at: index)
-                        } label: {
-                            Image(systemName: "xmark.circle")
+            }.frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(showSelectedDates(dates: self.dates, dateStyle: .short)) { time in
+                        HStack {
+                            Text(time)
+                                .foregroundColor(Home.foregroundColor)
                                 .font(.system(size: Home.fontSize))
-                        }.padding(.trailing, 10)
-                    }
-                }
-                .padding(.trailing, 5)
-            }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, alignment: .trailing)
-        }
-        .animation(.easeInOut(duration: 1.0), value: tap)
+                                .onTapGesture {
+                                    self.dateTap.toggle()
+                                }
+                            self.dateTap ? nil :
+                            Button {
+                                guard let index = showDatesUnsorted(dates: dates, dateStyle: .short).firstIndex(of: time) else { return }
+                                self.dates.remove(at: index)
+                            } label: {
+                                Image(systemName: "xmark.circle")
+                                    .font(.system(size: Home.fontSize))
+                            }.padding(.trailing, 10)
+                        }
+                    }.padding(.trailing, 5)
+                }.frame(maxWidth: .infinity, alignment: .trailing)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 20, alignment: .trailing)
+        }.animation(.easeInOut(duration: 1.0), value: tap)
     }
 }
 
