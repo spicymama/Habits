@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GoalTile: View, Identifiable {
+    static var shared = GoalTile(goal: Goal.placeholderGoal)
     var id = UUID()
     var goal: Goal
     @State var tap = true

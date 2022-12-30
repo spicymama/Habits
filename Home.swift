@@ -12,6 +12,7 @@ import FirebaseFirestore
 
 struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
+    @Environment(\.refresh) var refresh
     @ObservedObject var appState = AppState.shared
     static var fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
     static var headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
@@ -21,7 +22,7 @@ struct Home: View {
     static var accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .orange)
     static var shared = Home()
     static var allNotifs: [Goal] = []
-    @State var refresh = true
+   // @State var refresh = true
     @State private var addButtonTap = false
     @State var goalArr: [Goal] = []
     @State var categoryArr: [String] = []
@@ -53,7 +54,7 @@ struct Home: View {
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
                             .foregroundColor(Home.foregroundColor)
                             .padding(.trailing)
-                            .fullScreenCover(isPresented: $settingsTap) {
+                            .fullScreenCover(isPresented: $settingsTap, onDismiss: fetchForRefresh) {
                                 Settings()
                             }
                             Button {
@@ -64,7 +65,7 @@ struct Home: View {
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
                             .foregroundColor(Home.foregroundColor)
-                            .fullScreenCover(isPresented: $notificationTap) {
+                            .fullScreenCover(isPresented: $notificationTap, onDismiss: fetchForRefresh) {
                                 NotificationsView()
                             }
                             Button {
@@ -73,7 +74,7 @@ struct Home: View {
                             } label: {
                                 Image(systemName: "plus.square")
                                     .imageScale(.large)
-                            }.fullScreenCover(isPresented: $addButtonTap) {
+                            }.fullScreenCover(isPresented: $addButtonTap, onDismiss: fetchForRefresh) {
                                 EditHabit()
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topTrailing)
@@ -113,6 +114,7 @@ struct Home: View {
                     }
                 fetchForRefresh()
                 }
+            
             }
             .fullScreenCover(isPresented: $goToLogin) {
                 LoginView()

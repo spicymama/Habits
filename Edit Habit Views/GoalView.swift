@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GoalView: View, Identifiable {
+    @Environment(\.refresh) var refresh
     var id = UUID()
     var currentGoal: Goal
     @State var editGoalTap = false
