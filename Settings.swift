@@ -26,6 +26,7 @@ struct Settings: View {
     @State var colorTap = false
     @State var fontTap = false
     @State var showSaveButton = false
+    @State var goToLogin = false
     @State var notifsAllowed = notifsAuthorized()
     var body: some View {
         ScrollView {
@@ -74,7 +75,7 @@ struct Settings: View {
                 .tint(accentColor)
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(.gray, lineWidth: 2)
+                        .stroke(Home.foregroundColor, lineWidth: 2)
                 )
                 .animation(.easeInOut(duration: 1), value: self.colorTap)
                 VStack {
@@ -147,7 +148,7 @@ struct Settings: View {
                 .tint(accentColor)
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(.gray, lineWidth: 2)
+                        .stroke(Home.foregroundColor, lineWidth: 2)
                 )
                 .padding(.top, 25)
                 .animation(.easeInOut(duration: 1), value: self.colorTap)
@@ -193,13 +194,15 @@ struct Settings: View {
                 }.padding() : nil
                 Button {
                     logoutUser()
-                    self.dismiss()
+                    self.goToLogin = true
                 } label: {
                     Text("Sign Out")
                         .foregroundColor(.red)
                         .font(.system(size: fontSize))
                 }.padding(.top, 20)
-                
+            }
+            .fullScreenCover(isPresented: self.$goToLogin) {
+                LoginView()
             }
         }
         .frame(width: UIScreen.main.bounds.width)

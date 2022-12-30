@@ -100,6 +100,9 @@ func updateGoal(goal: Goal) {
             print("Error writing document: \(error)")
         } else {
             Home.shared.goalArr = Home.shared.goalArr.map { $0.id == goal.id ? goal : $0 }
+            LocalNotificationManager.shared.clearNotifsForUpdate(goal: goal)
+            LocalNotificationManager.shared.setDailyNotifs(goal: goal)
+            LocalNotificationManager.shared.setScheduledNotifs(goal: goal)
             print("Document successfully updated!")
         }
     }

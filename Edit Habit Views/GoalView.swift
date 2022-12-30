@@ -84,6 +84,7 @@ struct GoalView: View, Identifiable {
                         .font(.system(size: 30))
                 }
                 .padding(.trailing, 20)
+                .padding(.leading, 20)
                 .padding(.bottom, 20) : nil
                 currentGoal.progressTracker == "1" || currentGoal.progressTracker == "2" ? Button {
                     self.thumbsUpTap.toggle()
@@ -114,7 +115,7 @@ struct GoalView: View, Identifiable {
                     .imageScale(.large)
             }.frame(maxWidth: 20, maxHeight: 20, alignment: .trailing)
                 .padding(.bottom, 20)
-                .padding(.leading, 80)
+                .padding(.leading, currentGoal.progressTracker == "3" ? 240 : 80)
                 .fullScreenCover(isPresented: self.$editGoalTap) {
                     EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
                 }
@@ -137,23 +138,4 @@ extension Date {
     func dayNumberOfWeek() -> Int? {
         return Calendar.current.dateComponents([.weekday], from: self).weekday
     }
-}
-
-func calculateProgress(goal: Goal)-> Double {
-    var prog = 0.0
-    //3 = Manually track
-    if goal.progressTracker == "3" {
-        prog = goal.prog
-    }
-    //1 = Number of good checkins before end date
-    if goal.progressTracker == "1" {
-        
-    }
-    // 2 = total good checkins
-    if goal.progressTracker == "2" {
-        
-    }
-    
-    
-    return 0.0
 }

@@ -64,7 +64,7 @@ struct ListTile: View, Identifiable {
         }
         .overlay(
         RoundedRectangle(cornerRadius: 15)
-            .stroke(.gray, lineWidth: 2)
+            .stroke(Home.foregroundColor, lineWidth: 2)
         )
         .animation(Animation.easeInOut(duration: 1.0), value: self.wasTapped)
         .padding(.leading, self.wasTapped ? UIScreen.main.bounds.width / 5 : 0)

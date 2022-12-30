@@ -75,7 +75,7 @@ struct NotificationBox: View, Identifiable {
         .foregroundColor(Home.foregroundColor)
         .overlay(
             RoundedRectangle(cornerRadius: 15)
-                .stroke(.gray, lineWidth: 2)
+                .stroke(Home.foregroundColor, lineWidth: 2)
         )
         .onDisappear {
             if self.thumbsUpTap == true || self.thumbsDownTap == true {

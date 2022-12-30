@@ -78,7 +78,7 @@ struct EditHabit: View {
                     .padding(.leading, 20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(self.needTitle ? .red : Home.accentColor, lineWidth: 2)
+                            .stroke(self.needTitle ? .red : Home.foregroundColor, lineWidth: 2)
                     )
                     .padding(.bottom, 20)
                 
@@ -228,9 +228,6 @@ struct EditHabit: View {
     
     func update() {
         updateGoal(goal: currentGoal())
-        LocalNotificationManager.shared.clearNotifsForUpdate(goal: currentGoal())
-        LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
-        LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
         EditHabit.editGoal = false
     }
     

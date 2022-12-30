@@ -49,7 +49,6 @@ struct TimePicker: View {
                         .frame(width: 150, height: 15, alignment: .trailing)
                         .labelsHidden()
                         .tint(Home.accentColor)
-                        .colorScheme(.dark)
                 }
                     
             }

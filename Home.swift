@@ -22,7 +22,6 @@ struct Home: View {
     static var accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .orange)
     static var shared = Home()
     static var allNotifs: [Goal] = []
-   // @State var refresh = true
     @State private var addButtonTap = false
     @State var goalArr: [Goal] = []
     @State var categoryArr: [String] = []
@@ -31,6 +30,10 @@ struct Home: View {
     @State var newNotifs = false
     @State var settingsTap = false
     @State var color = Color.gray
+    @State var goalTiles: [GoalTile] = []
+    @State var doneGoalTiles: [GoalTile] = []
+    @State var listTiles: [ListTile] = []
+    @State var doneListTiles: [ListTile] = []
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
             .init { () -> Bool in
@@ -52,8 +55,9 @@ struct Home: View {
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
-                            .foregroundColor(Home.foregroundColor)
+                            .foregroundColor(Home.accentColor)
                             .padding(.trailing)
+                            .padding(.leading, 30)
                             .fullScreenCover(isPresented: $settingsTap, onDismiss: fetchForRefresh) {
                                 Settings()
                             }
@@ -64,7 +68,7 @@ struct Home: View {
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
-                            .foregroundColor(Home.foregroundColor)
+                            .foregroundColor(Home.accentColor)
                             .fullScreenCover(isPresented: $notificationTap, onDismiss: fetchForRefresh) {
                                 NotificationsView()
                             }
@@ -78,8 +82,8 @@ struct Home: View {
                                 EditHabit()
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topTrailing)
-                            .padding(.leading, UIScreen.main.bounds.width - 85)
-                            .foregroundColor(Home.foregroundColor)
+                            .padding(.leading, UIScreen.main.bounds.width - 135)
+                            .foregroundColor(Home.accentColor)
                         }
                         
                         Text("Habits")
@@ -88,18 +92,31 @@ struct Home: View {
                             .foregroundColor(Home.foregroundColor)
                             .padding(.bottom, 25)
                     }
-                    ForEach(formatTiles().0) { tile in
+                    ForEach(self.goalTiles) { tile in
                         tile
-                            .padding(.top, 30)
+                            .padding(.top, 20)
                     }
-                    ForEach(formatTiles().1) { tile in
+                    ForEach(self.listTiles) { tile in
                         tile
-                            .padding(.top, 30)
+                            .padding(.top, 20)
+                    }
+                    !self.doneGoalTiles.isEmpty || !self.doneListTiles.isEmpty ? Text("History")
+                        .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
+                        .font(.system(size: Home.headerFontSize))
+                        .foregroundColor(Home.foregroundColor)
+                        .padding(.top, 50): nil
+                    ForEach(self.doneGoalTiles) { tile in
+                        tile
+                            .padding(.top, 20)
+                    }
+                    ForEach(self.doneListTiles) { tile in
+                        tile
+                            .padding(.top, 20)
                     }
                 }
             }.frame(maxWidth: .infinity)
             .background(Home.backgroundColor)
-            .onAppear {
+            .onAppear() {
                 let defaults = UserDefaults.standard
                 if defaults.bool(forKey: "goToLogin").description.isEmpty {
                     defaults.set(true, forKey: "goToLogin")
@@ -114,7 +131,6 @@ struct Home: View {
                     }
                 fetchForRefresh()
                 }
-            
             }
             .fullScreenCover(isPresented: $goToLogin) {
                 LoginView()
@@ -126,25 +142,40 @@ struct Home: View {
             NotificationsView()
         }
     }
-    func formatTiles()-> ([GoalTile], [ListTile]) {
-        var goalTiles: [GoalTile] = []
-        var listTiles: [ListTile] = []
+    func formatTiles()-> () {
+        self.goalTiles = []
+        self.listTiles = []
+        self.doneGoalTiles = []
+        self.doneListTiles = []
         for goal in goalArr {
             if goal.category == "" {
-                goalTiles.append(GoalTile(goal: goal))
+                if goal.endDate < Date.now || goal.prog >= 100.0 {
+                    self.doneGoalTiles.append(GoalTile(goal: goal))
+                  //  self.doneGoals = true
+                } else {
+                    self.goalTiles.append(GoalTile(goal: goal))
+                }
             }
         }
         for cat in categoryArr {
             var goals: [Goal] = []
+            var doneCount = 0
             for goal in goalArr {
                 if goal.category == cat {
                     goals.append(goal)
                 }
+                if goal.endDate < Date.now || goal.prog >= 100.0 {
+                    doneCount += 1
+                }
             }
             let list = ListTile(goalArr: goals)
-            listTiles.append(list)
+            if doneCount == goals.count {
+                self.doneListTiles.append(list)
+               // self.doneGoals = true
+            } else {
+                self.listTiles.append(list)
+            }
         }
-        return (goalTiles, listTiles)
     }
     func fetchForRefresh() {
         fetchAllGoals { goals in
@@ -162,6 +193,7 @@ struct Home: View {
         } else {
             self.newNotifs = false
         }
+        formatTiles()
     }
 }
 

@@ -29,7 +29,7 @@ struct ScheduledReminders: View {
                     Image(systemName: "calendar")
                 }
                 .labelsHidden()
-                .colorScheme(.dark)
+                .tint(Home.accentColor)
                 self.tap ? nil : Button {
                     if self.tap == true {
                         self.tap.toggle()
