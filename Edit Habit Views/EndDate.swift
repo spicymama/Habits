@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct EndDate: View {
+    @ObservedObject var prefs = DisplayPreferences()
     @Binding var date: Date
     @Binding var tap: Bool
     @Binding var lilTap: Bool
@@ -19,8 +20,8 @@ struct EndDate: View {
                 Text("End Date")
                 Image(systemName: "calendar")
             }
-            .foregroundColor(Home.foregroundColor)
-            .font(.system(size: Home.titleFontSize))
+            .foregroundColor(prefs.foregroundColor)
+            .font(.system(size: prefs.titleFontSize))
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             .padding(.top, 30)
             .padding(.bottom, 10)
@@ -32,7 +33,7 @@ struct EndDate: View {
                     Image(systemName: "calendar")
                 }.labelsHidden()
                     .colorScheme(.dark)
-                    .tint(Home.accentColor)
+                    .tint(prefs.accentColor)
                     .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(self.needEndDate ? .red : .clear, lineWidth: 2)
@@ -43,7 +44,7 @@ struct EndDate: View {
                     self.hidden = false
                 } label: {
                     Image(systemName: "plus")
-                        .foregroundColor(Home.foregroundColor)
+                        .foregroundColor(prefs.foregroundColor)
                 }
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
@@ -61,11 +62,11 @@ struct EndDate: View {
                     self.lilTap.toggle()
                 } label: {
                     Image(systemName: "xmark.circle")
-                        .foregroundColor(Home.accentColor)
+                        .foregroundColor(prefs.accentColor)
                 }.padding(.trailing, 10)
             }
-            .foregroundColor(Home.foregroundColor)
-            .font(.system(size: Home.fontSize))
+            .foregroundColor(prefs.foregroundColor)
+            .font(.system(size: prefs.fontSize))
             .animation(.easeInOut, value: self.lilTap)
         }
     }

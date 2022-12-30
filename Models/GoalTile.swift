@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GoalTile: View, Identifiable {
     static var shared = GoalTile(goal: Goal.placeholderGoal)
+    @ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
     var goal: Goal
     @State var tap = true
@@ -19,7 +20,7 @@ struct GoalTile: View, Identifiable {
             } label: {
                 Image(systemName: "xmark.circle")
                     .imageScale(.large)
-                    .foregroundColor(Home.accentColor)
+                    .foregroundColor(prefs.accentColor)
             }
             .padding(.leading, UIScreen.main.bounds.width / 1.3)
             .padding(.top, 10)
@@ -28,8 +29,8 @@ struct GoalTile: View, Identifiable {
             ScrollView {
                 Text("\(goal.title)")
                     .frame(maxWidth: UIScreen.main.bounds.width - 100, maxHeight: 75)
-                    .font(.system(size: Home.titleFontSize))
-                    .foregroundColor(Home.foregroundColor)
+                    .font(.system(size: prefs.titleFontSize))
+                    .foregroundColor(prefs.foregroundColor)
                     .padding(.vertical)
 
                 self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes).frame(maxWidth: UIScreen.main.bounds.width - 20)
@@ -39,7 +40,7 @@ struct GoalTile: View, Identifiable {
             }
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
-                    .stroke(Home.foregroundColor, lineWidth: 2)
+                    .stroke(prefs.foregroundColor, lineWidth: 2)
             )
             .animation(.easeInOut(duration: 1.0), value: self.tap)
                 .padding(.trailing, self.tap ? UIScreen.main.bounds.width / 10 : 0)

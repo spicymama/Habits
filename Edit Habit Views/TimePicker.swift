@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TimePicker: View {
+    @ObservedObject var prefs = DisplayPreferences()
     @Binding var date: Date
     @Binding var hidden: Bool
     @State var dateTap = true
@@ -22,10 +23,10 @@ struct TimePicker: View {
                             .onTapGesture {
                                 self.hidden.toggle()
                             }
-                            .font(.system(size: Home.titleFontSize))
+                            .font(.system(size: prefs.titleFontSize))
                             .frame(width: 200, height: 65, alignment: .leading)
                             .padding(.trailing, UIScreen.main.bounds.width / 4)
-                            .foregroundColor(Home.foregroundColor)
+                            .foregroundColor(prefs.foregroundColor)
                         Button {
                             if self.hidden == true {
                                 self.hidden.toggle()
@@ -37,7 +38,7 @@ struct TimePicker: View {
                             }
                         } label: {
                             Image(systemName: "plus")
-                                .foregroundColor(Home.foregroundColor)
+                                .foregroundColor(prefs.foregroundColor)
                                 .imageScale(.medium)
                         }
                     }
@@ -48,7 +49,7 @@ struct TimePicker: View {
                         DatePicker("\(name) :", selection: self.$date, displayedComponents: .hourAndMinute)
                         .frame(width: 150, height: 15, alignment: .trailing)
                         .labelsHidden()
-                        .tint(Home.accentColor)
+                        .tint(prefs.accentColor)
                 }
                     
             }
@@ -57,8 +58,8 @@ struct TimePicker: View {
                     ForEach(showSelectedTimes(dates: self.notifArr, timeStyle: .short)) { time in
                         HStack {
                             Text(time)
-                                .foregroundColor(Home.foregroundColor)
-                                .font(.system(size: Home.fontSize))
+                                .foregroundColor(prefs.foregroundColor)
+                                .font(.system(size: prefs.fontSize))
                                 .onTapGesture {
                                     self.dateTap.toggle()
                                 }
@@ -68,7 +69,7 @@ struct TimePicker: View {
                                 self.notifArr.remove(at: index)
                             } label: {
                                 Image(systemName: "xmark.circle")
-                                    .font(.system(size: Home.fontSize))
+                                    .font(.system(size: prefs.fontSize))
                             }.padding(.trailing, 10)
                         }
                     }

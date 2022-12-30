@@ -10,6 +10,7 @@ import SwiftUI
 struct EditHabit: View {
     static var shared = EditHabit()
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var prefs = DisplayPreferences()
     var id: String = UUID().uuidString
     var prog: Double = 0
     var dateCreated: Date = Date()
@@ -67,18 +68,18 @@ struct EditHabit: View {
             } label: {
                 Image(systemName: "xmark")
             }.frame(maxWidth: UIScreen.main.bounds.width - 60, alignment: .trailing)
-                .foregroundColor(Home.accentColor)
+                .foregroundColor(prefs.accentColor)
                 .padding(.top)
             VStack {
                 TextField("Title...", text: self.$title, axis: .vertical)
                     .frame(maxWidth: UIScreen.main.bounds.width - 60, minHeight: 70, maxHeight: 5000, alignment: .leading)
-                    .font(.system(size: Home.headerFontSize))
-                    .foregroundColor(Home.foregroundColor)
-                    .background(Home.backgroundColor)
+                    .font(.system(size: prefs.headerFontSize))
+                    .foregroundColor(prefs.foregroundColor)
+                    .background(prefs.backgroundColor)
                     .padding(.leading, 20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(self.needTitle ? .red : Home.foregroundColor, lineWidth: 2)
+                            .stroke(self.needTitle ? .red : prefs.foregroundColor, lineWidth: 2)
                     )
                     .padding(.bottom, 20)
                 
@@ -87,8 +88,8 @@ struct EditHabit: View {
                         Text("Reminders")
                         Image(systemName: "clock")
                     }
-                    .foregroundColor(Home.foregroundColor)
-                    .font(.system(size: Home.titleFontSize))
+                    .foregroundColor(prefs.foregroundColor)
+                    .font(.system(size: prefs.titleFontSize))
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 55, alignment: .trailing)
                     .onTapGesture {
                         self.remindersTap.toggle()
@@ -101,8 +102,8 @@ struct EditHabit: View {
                         Text("Daily")
                         Image(systemName: "clock")
                     }
-                    .foregroundColor(Home.foregroundColor)
-                    .font(.system(size: Home.fontSize))
+                    .foregroundColor(prefs.foregroundColor)
+                    .font(.system(size: prefs.fontSize))
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
                     .onTapGesture {
                         self.dailyReminderTap.toggle()
@@ -130,11 +131,11 @@ struct EditHabit: View {
                 Group {
                     HStack {
                         Text("Progress Tracker")
-                            .foregroundColor(Home.foregroundColor)
-                            .font(.system(size: Home.titleFontSize))
+                            .foregroundColor(prefs.foregroundColor)
+                            .font(.system(size: prefs.titleFontSize))
                         Image(systemName: "chart.line.uptrend.xyaxis")
-                            .foregroundColor(Home.foregroundColor)
-                            .font(.system(size: Home.titleFontSize))
+                            .foregroundColor(prefs.foregroundColor)
+                            .font(.system(size: prefs.titleFontSize))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
                     .padding(.top, 30)
@@ -162,8 +163,8 @@ struct EditHabit: View {
                         Text("Notes")
                         Image(systemName: "pencil")
                     }
-                    .foregroundColor(Home.foregroundColor)
-                    .font(.system(size: Home.titleFontSize))
+                    .foregroundColor(prefs.foregroundColor)
+                    .font(.system(size: prefs.titleFontSize))
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
                     .padding(.top, 20)
                     .padding(.bottom, 20)
@@ -172,11 +173,11 @@ struct EditHabit: View {
                     }
                     self.notesTap ? nil : ZStack {
                         RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .foregroundColor(Home.accentColor)
+                            .foregroundColor(prefs.accentColor)
                         TextField("Notes...", text: self.$notes, axis: .vertical)
                             .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 120, maxHeight: 5000, alignment: .leading)
-                            .font(.system(size: Home.fontSize))
-                            .foregroundColor(Home.foregroundColor)
+                            .font(.system(size: prefs.fontSize))
+                            .foregroundColor(prefs.foregroundColor)
                             .padding(.leading, 20)
                     }
                 }
@@ -189,8 +190,8 @@ struct EditHabit: View {
                     }
                 } label: {
                     Text(EditHabit.editGoal ? "Update" : "Save")
-                        .font(.system(size: Home.fontSize))
-                        .foregroundColor(Home.foregroundColor)
+                        .font(.system(size: prefs.fontSize))
+                        .foregroundColor(prefs.foregroundColor)
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width - 120, alignment: .center)
                 .padding(.bottom, EditHabit.editGoal ? 30 : 80)
@@ -203,7 +204,7 @@ struct EditHabit: View {
                     dismiss()
                 } label: {
                     Text("Delete")
-                        .font(.system(size: Home.fontSize))
+                        .font(.system(size: prefs.fontSize))
                         .foregroundColor(.red)
                         .padding(.bottom, 80)
                 }
@@ -218,8 +219,8 @@ struct EditHabit: View {
             .animation(.easeInOut(duration: 0.5), value: self.notesTap)
             .padding(.top, 50)
         }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .accentColor(Home.accentColor)
-            .background(Home.backgroundColor)
+            .accentColor(prefs.accentColor)
+            .background(prefs.backgroundColor)
     }
     func currentGoal()-> Goal {
         let goal = Goal(id: self.id, listID: "", category: EditHabit.selectedCat, title: self.title, dateCreated: self.dateCreated, endDate: self.endDate, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: self.goodcheckinGoal, monNotifs: self.monNotifs, tusNotifs: self.tusNotifs, wedNotifs: self.wedNotifs, thursNotifs: self.thursNotifs, friNotifs: self.friNotifs, satNotifs: self.satNotifs, sunNotifs: self.sunNotifs, scheduledNotifs: self.scheduledReminders, progressTracker: self.selectedTracker, selfNotes: self.notes, prog: self.prog)

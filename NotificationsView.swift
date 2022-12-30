@@ -10,6 +10,7 @@ import UserNotifications
 
 struct NotificationsView: View {
     static var shared = NotificationsView()
+    @ObservedObject var prefs = DisplayPreferences()
     @Environment(\.dismiss) var dismiss
     @State var showNotifs = false
     @State var allNotifs: [Goal] = Home.allNotifs
@@ -21,18 +22,18 @@ struct NotificationsView: View {
                 } label: {
                     Image(systemName: "xmark")
                 }.frame(maxWidth: UIScreen.main.bounds.width - 60, alignment: .trailing)
-                    .foregroundColor(Home.accentColor)
+                    .foregroundColor(prefs.accentColor)
                 Text("Reminders")
                     .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                    .font(.system(size: Home.headerFontSize))
-                    .foregroundColor(Home.foregroundColor)
+                    .font(.system(size: prefs.headerFontSize))
+                    .foregroundColor(prefs.foregroundColor)
                     .padding(.bottom, 25)
                 ForEach(self.allNotifs, id: \.listID) { notif in
                     NotificationBox(id: UUID(), goal: notif)
                 }
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Home.backgroundColor)
+            .background(prefs.backgroundColor)
     }
 }
 

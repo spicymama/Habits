@@ -14,12 +14,7 @@ struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     @Environment(\.refresh) var refresh
     @ObservedObject var appState = AppState.shared
-    static var fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
-    static var headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
-    static var titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0
-    static var backgroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "backgroundColor") ?? .white)
-    static var foregroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "foregroundColor") ?? .gray)
-    static var accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .orange)
+    @ObservedObject var prefs = DisplayPreferences()
     static var shared = Home()
     static var allNotifs: [Goal] = []
     @State private var addButtonTap = false
@@ -55,7 +50,7 @@ struct Home: View {
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
-                            .foregroundColor(Home.accentColor)
+                            .foregroundColor(prefs.accentColor)
                             .padding(.trailing)
                             .padding(.leading, 30)
                             .fullScreenCover(isPresented: $settingsTap, onDismiss: fetchForRefresh) {
@@ -68,7 +63,7 @@ struct Home: View {
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
-                            .foregroundColor(Home.accentColor)
+                            .foregroundColor(prefs.accentColor)
                             .fullScreenCover(isPresented: $notificationTap, onDismiss: fetchForRefresh) {
                                 NotificationsView()
                             }
@@ -83,13 +78,13 @@ struct Home: View {
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topTrailing)
                             .padding(.leading, UIScreen.main.bounds.width - 135)
-                            .foregroundColor(Home.accentColor)
+                            .foregroundColor(prefs.accentColor)
                         }
                         
                         Text("Habits")
                             .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                            .font(.system(size: Home.headerFontSize))
-                            .foregroundColor(Home.foregroundColor)
+                            .font(.system(size: prefs.headerFontSize))
+                            .foregroundColor(prefs.foregroundColor)
                             .padding(.bottom, 25)
                     }
                     ForEach(self.goalTiles) { tile in
@@ -102,8 +97,8 @@ struct Home: View {
                     }
                     !self.doneGoalTiles.isEmpty || !self.doneListTiles.isEmpty ? Text("History")
                         .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                        .font(.system(size: Home.headerFontSize))
-                        .foregroundColor(Home.foregroundColor)
+                        .font(.system(size: prefs.headerFontSize))
+                        .foregroundColor(prefs.foregroundColor)
                         .padding(.top, 50): nil
                     ForEach(self.doneGoalTiles) { tile in
                         tile
@@ -115,7 +110,7 @@ struct Home: View {
                     }
                 }
             }.frame(maxWidth: .infinity)
-            .background(Home.backgroundColor)
+            .background(prefs.backgroundColor)
             .onAppear() {
                 let defaults = UserDefaults.standard
                 if defaults.bool(forKey: "goToLogin").description.isEmpty {
@@ -151,7 +146,6 @@ struct Home: View {
             if goal.category == "" {
                 if goal.endDate < Date.now || goal.prog >= 100.0 {
                     self.doneGoalTiles.append(GoalTile(goal: goal))
-                  //  self.doneGoals = true
                 } else {
                     self.goalTiles.append(GoalTile(goal: goal))
                 }
@@ -171,7 +165,6 @@ struct Home: View {
             let list = ListTile(goalArr: goals)
             if doneCount == goals.count {
                 self.doneListTiles.append(list)
-               // self.doneGoals = true
             } else {
                 self.listTiles.append(list)
             }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ScheduledReminders: View {
+    @ObservedObject var prefs = DisplayPreferences()
     @Binding var tap: Bool
     @Binding var date: Date
     @Binding var dates: [Date]
@@ -18,8 +19,8 @@ struct ScheduledReminders: View {
                 Text("Scheduled Reminders")
                 Image(systemName: "calendar")
             }
-            .foregroundColor(Home.foregroundColor)
-            .font(.system(size: Home.fontSize))
+            .foregroundColor(prefs.foregroundColor)
+            .font(.system(size: prefs.fontSize))
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             .onTapGesture {
                 self.tap.toggle()
@@ -29,7 +30,7 @@ struct ScheduledReminders: View {
                     Image(systemName: "calendar")
                 }
                 .labelsHidden()
-                .tint(Home.accentColor)
+                .tint(prefs.accentColor)
                 self.tap ? nil : Button {
                     if self.tap == true {
                         self.tap.toggle()
@@ -40,7 +41,7 @@ struct ScheduledReminders: View {
                     }
                 } label: {
                     Image(systemName: "plus")
-                        .foregroundColor(Home.foregroundColor)
+                        .foregroundColor(prefs.foregroundColor)
                         .imageScale(.medium)
                 }
             }.frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
@@ -49,8 +50,8 @@ struct ScheduledReminders: View {
                     ForEach(showSelectedDates(dates: self.dates, dateStyle: .short)) { time in
                         HStack {
                             Text(time)
-                                .foregroundColor(Home.foregroundColor)
-                                .font(.system(size: Home.fontSize))
+                                .foregroundColor(prefs.foregroundColor)
+                                .font(.system(size: prefs.fontSize))
                                 .onTapGesture {
                                     self.dateTap.toggle()
                                 }
@@ -60,7 +61,7 @@ struct ScheduledReminders: View {
                                 self.dates.remove(at: index)
                             } label: {
                                 Image(systemName: "xmark.circle")
-                                    .font(.system(size: Home.fontSize))
+                                    .font(.system(size: prefs.fontSize))
                             }.padding(.trailing, 10)
                         }
                     }.padding(.trailing, 5)

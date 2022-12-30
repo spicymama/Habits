@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProgressTracker: View {
-    
+    @ObservedObject var prefs = DisplayPreferences()
     @State var op1Tap = false
     @State var op2Tap = false
     @State var op3Tap = false
@@ -26,12 +26,12 @@ struct ProgressTracker: View {
            // Text("Checkin Goal: \(goodcheckinGoal)")
             HStack {
                 Text("Number of positive checkins \n before end date")
-                    .foregroundColor(Home.foregroundColor)
-                    .font(.system(size: Home.fontSize))
+                    .foregroundColor(prefs.foregroundColor)
+                    .font(.system(size: prefs.fontSize))
                     .multilineTextAlignment(.center)
                     .lineLimit(3)
                 Image(systemName: self.op1selected ? "square.fill" : "square")
-                    .foregroundColor(Home.foregroundColor)
+                    .foregroundColor(prefs.foregroundColor)
                     .padding(.horizontal, 15)
             }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 60, alignment: .trailing)
                 .onTapGesture {
@@ -52,7 +52,7 @@ struct ProgressTracker: View {
                     }
             }
             .frame(width: 175)
-            .foregroundColor(Home.foregroundColor)
+            .foregroundColor(prefs.foregroundColor)
             .overlay(
             RoundedRectangle(cornerRadius: 10)
                 .stroke(self.needCheckinGoal ? .red : .clear, lineWidth: 2)
@@ -61,12 +61,12 @@ struct ProgressTracker: View {
             .padding(.leading, 150) : nil
             HStack {
                 Text("Number of positive checkins \n total")
-                    .foregroundColor(Home.foregroundColor)
-                    .font(.system(size: Home.fontSize))
+                    .foregroundColor(prefs.foregroundColor)
+                    .font(.system(size: prefs.fontSize))
                     .multilineTextAlignment(.center)
                     .lineLimit(3)
                 Image(systemName: self.op2selected ? "square.fill" : "square")
-                    .foregroundColor(Home.foregroundColor)
+                    .foregroundColor(prefs.foregroundColor)
                     .padding(.horizontal, 15)
             }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 60, alignment: .trailing)
                 .onTapGesture {
@@ -86,7 +86,7 @@ struct ProgressTracker: View {
                         self.goodcheckinGoal = newValue
                     }
             }
-            .foregroundColor(Home.foregroundColor)
+            .foregroundColor(prefs.foregroundColor)
             .frame(width: 175)
             .overlay(
             RoundedRectangle(cornerRadius: 10)
@@ -96,11 +96,11 @@ struct ProgressTracker: View {
             .padding(.leading, 150) : nil
             HStack {
                 Text("Manually track my progress")
-                    .foregroundColor(Home.foregroundColor)
-                    .font(.system(size: Home.fontSize))
+                    .foregroundColor(prefs.foregroundColor)
+                    .font(.system(size: prefs.fontSize))
                     .multilineTextAlignment(.center)
                Image(systemName: self.op3selected ? "square.fill" : "square")
-                    .foregroundColor(Home.foregroundColor)
+                    .foregroundColor(prefs.foregroundColor)
                     .padding(.horizontal, 15)
             }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 40, alignment: .trailing)
                 .onTapGesture {

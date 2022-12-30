@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Category: View {
     var catArr: [String] = Home.shared.categoryArr
+    @ObservedObject var prefs = DisplayPreferences()
     @State var category: String
     @State var tap = true
     @State var dateTap = true
@@ -21,8 +22,8 @@ struct Category: View {
                 Text("Category")
                 Image(systemName: "list.clipboard")
             }
-            .foregroundColor(Home.foregroundColor)
-            .font(.system(size: Home.titleFontSize))
+            .foregroundColor(prefs.foregroundColor)
+            .font(.system(size: prefs.titleFontSize))
             .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
             .padding(.top, 40)
             .onTapGesture {
@@ -33,12 +34,12 @@ struct Category: View {
                 self.tap ? nil :
                 TextField("Add New...", text: self.$category, axis: .vertical)
                     .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 30, maxHeight: 40, alignment: .leading)
-                    .font(.system(size: Home.fontSize))
-                    .foregroundColor(Home.foregroundColor)
+                    .font(.system(size: prefs.fontSize))
+                    .foregroundColor(prefs.foregroundColor)
                     .padding(.leading, 20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(Home.accentColor, lineWidth: 2)
+                            .stroke(prefs.accentColor, lineWidth: 2)
                     )
                 self.tap ? nil : self.category == "" ? nil : Button {
                     self.animate.toggle()
@@ -48,13 +49,13 @@ struct Category: View {
                     EditHabit.selectedCat = selectedCat
                 } label: {
                     Image(systemName: "plus")
-                        .foregroundColor(Home.foregroundColor)
+                        .foregroundColor(prefs.foregroundColor)
                 }
             }
             .padding(.top, 10)
             self.tap ? nil : ForEach(self.catArr) { cat in
                 Text(cat)
-                    .foregroundColor(Home.foregroundColor)
+                    .foregroundColor(prefs.foregroundColor)
                     .onTapGesture {
                         self.animate.toggle()
                         self.selectedCat = cat
@@ -64,7 +65,7 @@ struct Category: View {
             }
             HStack {
            Text(self.selectedCat)
-                    .font(.system(size: Home.fontSize))
+                    .font(.system(size: prefs.fontSize))
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
                 .onTapGesture {
                     self.dateTap.toggle()
@@ -77,9 +78,9 @@ struct Category: View {
                     self.animate.toggle()
                 } label: {
                     Image(systemName: "xmark.circle")
-                        .font(.system(size: Home.fontSize))
+                        .font(.system(size: prefs.fontSize))
                 }.padding(.trailing, 10)
-            } .foregroundColor(Home.foregroundColor)
+            } .foregroundColor(prefs.foregroundColor)
         }.animation(.easeInOut(duration: 0.5), value: self.animate)
     }
     func newCategory()-> String{

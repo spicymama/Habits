@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SecureTextFeild: View {
+    @ObservedObject var prefs = DisplayPreferences()
         @FocusState var focus1: Bool
         @FocusState var focus2: Bool
         @State var showPassword: Bool = false
@@ -21,57 +22,25 @@ struct SecureTextFeild: View {
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .textContentType(.password)
-                        .font(.system(size: Home.fontSize))
+                        .font(.system(size: prefs.fontSize))
                         .focused($focus1)
                         .opacity(showPassword ? 1 : 0)
                     SecureField(placeholder, text: $text)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .textContentType(.password)
-                        .font(.system(size: Home.fontSize))
+                        .font(.system(size: prefs.fontSize))
                         .focused($focus2)
                         .opacity(showPassword ? 0 : 1)
                     Button(action: {
                         showPassword.toggle()
                         if showPassword { focus1 = true } else { focus2 = true }
                     }, label: {
-                        Image(systemName: self.showPassword ? "eye.fill" : "eye.slash.fill" ).font(.system(size: Home.fontSize, weight: .regular))
+                        Image(systemName: self.showPassword ? "eye.fill" : "eye.slash.fill" ).font(.system(size: prefs.fontSize, weight: .regular))
                             .padding()
-                            .foregroundColor(Home.foregroundColor)
+                            .foregroundColor(prefs.foregroundColor)
                     })
             }
         }
     }
 }
-/*
- Button {
-     self.createOrLogin ? Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-         if (authResult != nil) {
-             print("Successfully created account!!")
-             Home.shared.goToLogin = false
-             self.dismiss()
-             UserDefaults.standard.set( authResult?.user.uid, forKey: "userID")
-             createUser(user: User(id: (authResult?.user.uid)!, email: self.email, password: self.password))
-         }
-         if (error != nil) {
-             print("Error creating account")
-         }
-     }
-     : Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-         if (authResult != nil) {
-             print("Successfully signed in!")
-             Home.shared.goToLogin = false
-             self.dismiss()
-             UserDefaults.standard.set( authResult?.user.uid, forKey: "userID")
-         }
-         if (error != nil) {
-             print("Error signing in")
-         }
-     }
- } label: {
-     Text(self.createOrLogin ? "Save >" : "Sign in >")
-         .font(.system(size: 20))
- }
- .padding(.leading, UIScreen.main.bounds.width / 2)
- .padding(.bottom, 40)
- */

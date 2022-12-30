@@ -10,6 +10,7 @@ import SwiftUI
 struct NotificationBox: View, Identifiable {
     var id: UUID
     var goal: Goal = Goal.placeholderGoal
+    @ObservedObject var prefs = DisplayPreferences()
     @State var thumbsUpTap = false
     @State var thumbsDownTap = false
     @State var notifDate = ""
@@ -19,7 +20,7 @@ struct NotificationBox: View, Identifiable {
             HStack {
                 
                 Text("\(goal.title)")
-                    .font(.system(size: Home.titleFontSize))
+                    .font(.system(size: prefs.titleFontSize))
                     .padding(.bottom)
                     .padding(.top, 10)
             }
@@ -29,9 +30,9 @@ struct NotificationBox: View, Identifiable {
             HStack {
                 VStack {
                     Text(self.notifDate)
-                        .font(.system(size: Home.fontSize - 2))
+                        .font(.system(size: prefs.fontSize - 2))
                     Text(self.notifTime)
-                        .font(.system(size: Home.fontSize - 2))
+                        .font(.system(size: prefs.fontSize - 2))
                         .bold()
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width / 2.5, alignment: .leading)
@@ -72,10 +73,10 @@ struct NotificationBox: View, Identifiable {
             }
             .padding(.bottom)
         }
-        .foregroundColor(Home.foregroundColor)
+        .foregroundColor(prefs.foregroundColor)
         .overlay(
             RoundedRectangle(cornerRadius: 15)
-                .stroke(Home.foregroundColor, lineWidth: 2)
+                .stroke(prefs.foregroundColor, lineWidth: 2)
         )
         .onDisappear {
             if self.thumbsUpTap == true || self.thumbsDownTap == true {

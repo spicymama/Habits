@@ -14,12 +14,13 @@ import UIKit
 
 struct Settings: View {
     @Environment(\.dismiss) var dismiss
-    @State var backgroundColor = Home.backgroundColor
-    @State var foregroundColor = Home.foregroundColor
-    @State var accentColor = Home.accentColor
-    @State var fontSize = 15.0
-    @State var headerFontSize = 35.0
-    @State var titleFontSize = 25.0
+    @ObservedObject var prefs = DisplayPreferences()
+    @State var fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
+    @State var headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
+    @State var titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0
+    @State var backgroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "backgroundColor") ?? .white)
+    @State var foregroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "foregroundColor") ?? .gray)
+    @State var accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .gray)
     @State private var isEditing = false
     @State private var isEditing2 = false
     @State private var isEditing3 = false
@@ -75,7 +76,7 @@ struct Settings: View {
                 .tint(accentColor)
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(Home.foregroundColor, lineWidth: 2)
+                        .stroke(self.foregroundColor, lineWidth: 2)
                 )
                 .animation(.easeInOut(duration: 1), value: self.colorTap)
                 VStack {
@@ -148,7 +149,7 @@ struct Settings: View {
                 .tint(accentColor)
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(Home.foregroundColor, lineWidth: 2)
+                        .stroke(self.foregroundColor, lineWidth: 2)
                 )
                 .padding(.top, 25)
                 .animation(.easeInOut(duration: 1), value: self.colorTap)
@@ -186,6 +187,7 @@ struct Settings: View {
                             }
                         }
                     }
+                    prefs.updateView()
                     self.dismiss()
                 } label: {
                     Text("Save Changes")

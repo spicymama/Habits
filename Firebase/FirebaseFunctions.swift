@@ -110,6 +110,7 @@ func updateGoal(goal: Goal) {
 
 func fetchSingleGoal(id: String, completion: @escaping (Goal) -> Void) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    if UserDefaults.standard.bool(forKey: "goToLogin") == true { return }
     let goal: Goal = Goal(id: id, listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
     let db = Firestore.firestore()
     print(id)
@@ -119,7 +120,7 @@ func fetchSingleGoal(id: String, completion: @escaping (Goal) -> Void) {
                 print("Error getting documents: \(error)")
             } else {
                 guard let querySnapshot = querySnapshot else { return }
-                guard let notifs = querySnapshot.data()!["scheduledNotifs"] as? [Timestamp] else  { return }
+                let notifs = querySnapshot.data()!["scheduledNotifs"] as? [Timestamp] ?? []
                 let monNotifs = querySnapshot.data()!["monNotifs"] as? [Timestamp] ?? []
                 let tusNotifs = querySnapshot.data()!["tusNotifs"] as? [Timestamp] ?? []
                 let wedNotifs = querySnapshot.data()!["wedNotifs"] as? [Timestamp] ?? []
