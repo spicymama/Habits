@@ -18,4 +18,5 @@ class User {
         self.email = email
         self.password = password
     }
+    static var goalArr: [Goal] = []
 }

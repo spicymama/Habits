@@ -99,7 +99,7 @@ func updateGoal(goal: Goal) {
         if let error = error {
             print("Error writing document: \(error)")
         } else {
-            Home.shared.goalArr = Home.shared.goalArr.map { $0.id == goal.id ? goal : $0 }
+            User.goalArr = User.goalArr.map { $0.id == goal.id ? goal : $0 }
             LocalNotificationManager.shared.clearNotifsForUpdate(goal: goal)
             LocalNotificationManager.shared.setDailyNotifs(goal: goal)
             LocalNotificationManager.shared.setScheduledNotifs(goal: goal)
@@ -250,14 +250,14 @@ func deleteGoal(goal: Goal) {
           print("Error removing document: \(err)")
         }
         else {
-            for i in Home.shared.goalArr {
+            for i in User.goalArr {
                 var index = 0
                 if i.id == goal.id {
-                    Home.shared.goalArr.remove(at: index)
+                    User.goalArr.remove(at: index)
                 }
                 index += 1
             }
-            print(Home.shared.goalArr)
+            print(User.goalArr)
           print("Document successfully removed!")
         }
       }

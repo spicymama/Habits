@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
@@ -14,11 +15,16 @@ struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     @Environment(\.refresh) var refresh
     @ObservedObject var appState = AppState.shared
-    @ObservedObject var prefs = DisplayPreferences()
+   // @StateObject var prefs = DisplayPreferences()
     static var shared = Home()
     static var allNotifs: [Goal] = []
     @State private var addButtonTap = false
-    @State var goalArr: [Goal] = []
+    @State var fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
+    @State var headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
+    @State var titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0
+    @State var backgroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "backgroundColor") ?? .white)
+    @State var foregroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "foregroundColor") ?? .gray)
+    @State var accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .gray)
     @State var categoryArr: [String] = []
     @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
     @State var notificationTap = false
@@ -50,7 +56,7 @@ struct Home: View {
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
-                            .foregroundColor(prefs.accentColor)
+                            .foregroundColor(self.accentColor)
                             .padding(.trailing)
                             .padding(.leading, 30)
                             .fullScreenCover(isPresented: $settingsTap, onDismiss: fetchForRefresh) {
@@ -63,7 +69,7 @@ struct Home: View {
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
-                            .foregroundColor(prefs.accentColor)
+                            .foregroundColor(self.accentColor)
                             .fullScreenCover(isPresented: $notificationTap, onDismiss: fetchForRefresh) {
                                 NotificationsView()
                             }
@@ -78,13 +84,13 @@ struct Home: View {
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topTrailing)
                             .padding(.leading, UIScreen.main.bounds.width - 135)
-                            .foregroundColor(prefs.accentColor)
+                            .foregroundColor(self.accentColor)
                         }
                         
                         Text("Habits")
                             .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                            .font(.system(size: prefs.headerFontSize))
-                            .foregroundColor(prefs.foregroundColor)
+                            .font(.system(size: self.headerFontSize))
+                            .foregroundColor(self.foregroundColor)
                             .padding(.bottom, 25)
                     }
                     ForEach(self.goalTiles) { tile in
@@ -97,8 +103,8 @@ struct Home: View {
                     }
                     !self.doneGoalTiles.isEmpty || !self.doneListTiles.isEmpty ? Text("History")
                         .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                        .font(.system(size: prefs.headerFontSize))
-                        .foregroundColor(prefs.foregroundColor)
+                        .font(.system(size: self.headerFontSize))
+                        .foregroundColor(self.foregroundColor)
                         .padding(.top, 50): nil
                     ForEach(self.doneGoalTiles) { tile in
                         tile
@@ -110,7 +116,7 @@ struct Home: View {
                     }
                 }
             }.frame(maxWidth: .infinity)
-            .background(prefs.backgroundColor)
+            .background(self.backgroundColor)
             .onAppear() {
                 let defaults = UserDefaults.standard
                 if defaults.bool(forKey: "goToLogin").description.isEmpty {
@@ -142,7 +148,7 @@ struct Home: View {
         self.listTiles = []
         self.doneGoalTiles = []
         self.doneListTiles = []
-        for goal in goalArr {
+        for goal in User.goalArr {
             if goal.category == "" {
                 if goal.endDate < Date.now || goal.prog >= 100.0 {
                     self.doneGoalTiles.append(GoalTile(goal: goal))
@@ -154,7 +160,7 @@ struct Home: View {
         for cat in categoryArr {
             var goals: [Goal] = []
             var doneCount = 0
-            for goal in goalArr {
+            for goal in User.goalArr {
                 if goal.category == cat {
                     goals.append(goal)
                 }
@@ -171,10 +177,16 @@ struct Home: View {
         }
     }
     func fetchForRefresh() {
+        self.fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
+        self.headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
+        self.titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0
+        self.backgroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "backgroundColor") ?? .white)
+        self.foregroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "foregroundColor") ?? .gray)
+        self.accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .gray)
         fetchAllGoals { goals in
             self.categoryArr = []
-            self.goalArr = []
-            self.goalArr.append(contentsOf: goals)
+            User.goalArr = []
+            User.goalArr.append(contentsOf: goals)
             for i in goals {
                 if !self.categoryArr.contains(i.category) && i.category != "" {
                     self.categoryArr.append(i.category)

@@ -75,7 +75,7 @@ struct EditHabit: View {
                     .frame(maxWidth: UIScreen.main.bounds.width - 60, minHeight: 70, maxHeight: 5000, alignment: .leading)
                     .font(.system(size: prefs.headerFontSize))
                     .foregroundColor(prefs.foregroundColor)
-                    .background(prefs.backgroundColor)
+                    .background(.clear)
                     .padding(.leading, 20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)

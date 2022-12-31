@@ -14,7 +14,7 @@ import UIKit
 
 struct Settings: View {
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var prefs = DisplayPreferences()
+    @StateObject var prefs = DisplayPreferences()
     @State var fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
     @State var headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
     @State var titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0

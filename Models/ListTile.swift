@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ListTile: View, Identifiable {
-    static var shared = ListTile(goalArr: Home.shared.goalArr)
+    static var shared = ListTile(goalArr: User.goalArr)
     @ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
     var goalArr: [Goal]
@@ -75,6 +75,6 @@ struct ListTile: View, Identifiable {
 
 struct ListTile_Previews: PreviewProvider {
     static var previews: some View {
-        ListTile(goalArr: Home.shared.goalArr)
+        ListTile(goalArr: User.goalArr)
     }
 }
