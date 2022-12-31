@@ -59,11 +59,10 @@ struct GoalTile_Previews: PreviewProvider {
 }
 
 struct DropViewDelegate: DropDelegate {
-    
     var currentItem: GoalTile
     var items: Binding<[GoalTile]>
     var draggingItem: Binding<GoalTile?>
-
+    var isDone = false
     func performDrop(info: DropInfo) -> Bool {
         draggingItem.wrappedValue = nil
         return true
@@ -81,7 +80,11 @@ struct DropViewDelegate: DropDelegate {
                     let uid = i.goal.id
                     goalTileOrder.append(uid)
                 }
-                UserDefaults.standard.set(goalTileOrder, forKey: "goalTileOrder")
+                if isDone == true {
+                    UserDefaults.standard.set(goalTileOrder, forKey: "doneGoalTileOrder")
+                } else {
+                    UserDefaults.standard.set(goalTileOrder, forKey: "goalTileOrder")
+                }
             }
         }
     }

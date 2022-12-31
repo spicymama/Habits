@@ -93,6 +93,7 @@ struct Home: View {
                             .foregroundColor(self.foregroundColor)
                             .padding(.bottom, 25)
                     }
+                    
                     ForEach(self.goalTiles) { tile in
                         tile
                             .padding(.top, 20)
@@ -114,6 +115,11 @@ struct Home: View {
                     ForEach(self.doneGoalTiles) { tile in
                         tile
                             .padding(.top, 20)
+                            .onDrag {
+                                goalTileDrag = tile
+                                return NSItemProvider()
+                            }
+                            .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $doneGoalTiles, draggingItem: $goalTileDrag, isDone: true))
                     }
                     ForEach(self.doneListTiles) { tile in
                         tile
@@ -150,15 +156,19 @@ struct Home: View {
     }
     func formatTiles()-> () {
         var goalTileArr: [GoalTile] = []
+        var listTileArr: [ListTile] = []
+        var doneGoalTileArr: [GoalTile] = []
+        var doneListTileArr: [ListTile] = []
         self.goalTiles = []
         self.listTiles = []
         self.doneGoalTiles = []
         self.doneListTiles = []
         let goalTileOrder = UserDefaults.standard.value(forKey: "goalTileOrder") as? [String] ?? []
-        
+        let doneGoalTileOrder = UserDefaults.standard.value(forKey: "doneGoalTileOrder") as? [String] ?? []
         for goal in User.goalArr {
             if goal.category == "" {
                 if goal.endDate < Date.now || goal.prog >= 100.0 {
+                    doneGoalTileArr.append(GoalTile(goal: goal))
                     self.doneGoalTiles.append(GoalTile(goal: goal))
                 } else {
                     goalTileArr.append(GoalTile(goal: goal))
@@ -166,19 +176,26 @@ struct Home: View {
                 }
             }
         }
-        print("TILE ORDER: \(goalTileOrder)")
         if !goalTileOrder.isEmpty {
             self.goalTiles = []
             for uid in goalTileOrder {
                 for tile in goalTileArr {
-                    print("ORDER: \(uid), TILE: \(tile.goal.id)")
                     if tile.goal.id == uid {
                         self.goalTiles.append(tile)
                     }
                 }
             }
         }
-        
+        if !doneGoalTileOrder.isEmpty {
+            self.doneGoalTiles = []
+            for uid in doneGoalTileOrder {
+                for tile in doneGoalTileArr {
+                    if tile.goal.id == uid {
+                        self.doneGoalTiles.append(tile)
+                    }
+                }
+            }
+        }
         for cat in categoryArr {
             var goals: [Goal] = []
             var doneCount = 0
