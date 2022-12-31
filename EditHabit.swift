@@ -233,6 +233,9 @@ struct EditHabit: View {
     }
     
     func create() {
+        if self.endDate <= Date.now {
+            self.endDate = Date.distantFuture
+        }
         createGoal(goal: currentGoal())
         LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
         LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())

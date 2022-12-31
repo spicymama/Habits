@@ -61,10 +61,22 @@ struct GoalView: View, Identifiable {
             .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
             .padding(.bottom, 10)
             .accentColor(.gray)
-            Text(self.notes)
-                .frame(maxWidth: UIScreen.main.bounds.width - 70, maxHeight: .infinity, alignment: .topLeading)
-                .lineLimit(100)
-                .foregroundColor(prefs.foregroundColor)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 500, alignment: .center)
+                        .foregroundColor(prefs.accentColor)
+                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        .stroke(prefs.foregroundColor, lineWidth: 1.5)
+                        .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 500, alignment: .center)
+                    TextField("Notes...", text: self.$notes, axis: .vertical)
+                        .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 50, maxHeight: 1000, alignment: .leading)
+                        .font(.system(size: prefs.fontSize))
+                        .foregroundColor(prefs.foregroundColor)
+                        .onDisappear {
+                            currentGoal.selfNotes = self.notes
+                            updateGoal(goal: currentGoal)
+                        }
+                }.padding(.vertical)
             HStack {
                 currentGoal.progressTracker == "1" || currentGoal.progressTracker == "2" ? Button {
                     self.thumbsDownTap.toggle()
@@ -121,7 +133,7 @@ struct GoalView: View, Identifiable {
                     EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
                 }
         }.foregroundColor(prefs.foregroundColor)
-        }
+        }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity)
     }
 }
 

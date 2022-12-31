@@ -26,14 +26,14 @@ struct GoalTile: View, Identifiable {
             .padding(.top, 10)
             .frame(maxHeight: UIScreen.main.bounds.height - 150, alignment: .topTrailing)
             .zIndex(1)
-            ScrollView {
-                Text("\(goal.title)")
-                    .frame(maxWidth: UIScreen.main.bounds.width - 100, maxHeight: 75)
+            VStack {
+                self.tap ? Text("\(goal.title)")
+                    .frame(maxWidth: UIScreen.main.bounds.width - 100)
                     .font(.system(size: prefs.titleFontSize))
                     .foregroundColor(prefs.foregroundColor)
-                    .padding(.vertical)
-
-                self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes).frame(maxWidth: UIScreen.main.bounds.width - 20)
+                    .padding(.vertical) : nil
+                
+                self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes)
             }
             .onTapGesture {
                 self.tap = false
