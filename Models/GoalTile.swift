@@ -63,6 +63,7 @@ struct DropViewDelegate: DropDelegate {
     var items: Binding<[GoalTile]>
     var draggingItem: Binding<GoalTile?>
     var isDone = false
+    let startIndex: Int
     func performDrop(info: DropInfo) -> Bool {
         draggingItem.wrappedValue = nil
         return true
@@ -71,7 +72,8 @@ struct DropViewDelegate: DropDelegate {
     func dropEntered(info: DropInfo) {
         var goalTileOrder: [String] = []
         if currentItem.id != draggingItem.wrappedValue?.id {
-            let from = items.wrappedValue.firstIndex(of: draggingItem.wrappedValue!)!
+            print("START INDEX: \(startIndex)")
+            let from = items.wrappedValue.firstIndex(of: draggingItem.wrappedValue!) ?? startIndex
             let to = items.wrappedValue.firstIndex(of: currentItem)!
             if items[to].id != draggingItem.wrappedValue?.id {
                 items.wrappedValue.move(fromOffsets: IndexSet(integer: from),

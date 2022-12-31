@@ -93,16 +93,15 @@ struct Home: View {
                             .foregroundColor(self.foregroundColor)
                             .padding(.bottom, 25)
                     }
-                    
-                    ForEach(self.goalTiles) { tile in
-                        tile
-                            .padding(.top, 20)
-                            .onDrag {
-                                goalTileDrag = tile
-                                return NSItemProvider()
-                            }
-                            .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $goalTiles, draggingItem: $goalTileDrag))
-                    }
+                        ForEach(self.goalTiles) { tile in
+                            tile
+                                .padding(.top, 20)
+                             .onDrag {
+                             goalTileDrag = tile
+                             return NSItemProvider()
+                             }
+                             .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $goalTiles, draggingItem: $goalTileDrag, startIndex: goalTiles.firstIndex(of: tile)!))
+                        }
                     ForEach(self.listTiles) { tile in
                         tile
                             .padding(.top, 20)
@@ -119,7 +118,7 @@ struct Home: View {
                                 goalTileDrag = tile
                                 return NSItemProvider()
                             }
-                            .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $doneGoalTiles, draggingItem: $goalTileDrag, isDone: true))
+                            .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $doneGoalTiles, draggingItem: $goalTileDrag, isDone: true, startIndex: doneGoalTiles.firstIndex(of: tile)!))
                     }
                     ForEach(self.doneListTiles) { tile in
                         tile
@@ -155,6 +154,8 @@ struct Home: View {
         }
     }
     func formatTiles()-> () {
+        //UserDefaults.standard.removeObject(forKey: "goalTileOrder")
+        //UserDefaults.standard.removeObject(forKey: "doneGoalTileOrder")
         var goalTileArr: [GoalTile] = []
         var listTileArr: [ListTile] = []
         var doneGoalTileArr: [GoalTile] = []
