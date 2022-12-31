@@ -33,13 +33,13 @@ struct Category: View {
             HStack {
                 self.tap ? nil :
                 TextField("Add New...", text: self.$category, axis: .vertical)
-                    .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 30, maxHeight: 40, alignment: .leading)
+                    .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 30, maxHeight: 80, alignment: .leading)
                     .font(.system(size: prefs.fontSize))
                     .foregroundColor(prefs.foregroundColor)
                     .padding(.leading, 20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(prefs.accentColor, lineWidth: 2)
+                            .stroke(prefs.foregroundColor, lineWidth: 2)
                     )
                 self.tap ? nil : self.category == "" ? nil : Button {
                     self.animate.toggle()

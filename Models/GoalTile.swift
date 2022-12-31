@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GoalTile: View, Identifiable {
+struct GoalTile: View, Identifiable, Equatable {
     static var shared = GoalTile(goal: Goal.placeholderGoal)
     @ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
@@ -41,16 +41,52 @@ struct GoalTile: View, Identifiable {
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
                     .stroke(prefs.foregroundColor, lineWidth: 2)
-            )
+            ).edgesIgnoringSafeArea(.horizontal)
             .animation(.easeInOut(duration: 1.0), value: self.tap)
                 .padding(.trailing, self.tap ? UIScreen.main.bounds.width / 10 : 0)
                 .padding(.bottom, 15)
         }
+    }
+    static func == (lhs: GoalTile, rhs: GoalTile) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 
 struct GoalTile_Previews: PreviewProvider {
     static var previews: some View {
         GoalTile(goal: Goal.placeholderGoal)
+    }
+}
+
+struct DropViewDelegate: DropDelegate {
+    
+    var currentItem: GoalTile
+    var items: Binding<[GoalTile]>
+    var draggingItem: Binding<GoalTile?>
+
+    func performDrop(info: DropInfo) -> Bool {
+        draggingItem.wrappedValue = nil
+        return true
+    }
+    
+    func dropEntered(info: DropInfo) {
+        var goalTileOrder: [String] = []
+        if currentItem.id != draggingItem.wrappedValue?.id {
+            let from = items.wrappedValue.firstIndex(of: draggingItem.wrappedValue!)!
+            let to = items.wrappedValue.firstIndex(of: currentItem)!
+            if items[to].id != draggingItem.wrappedValue?.id {
+                items.wrappedValue.move(fromOffsets: IndexSet(integer: from),
+                    toOffset: to > from ? to + 1 : to)
+                for i in items {
+                    let uid = i.goal.id
+                    goalTileOrder.append(uid)
+                }
+                UserDefaults.standard.set(goalTileOrder, forKey: "goalTileOrder")
+            }
+        }
+    }
+    
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+       return DropProposal(operation: .move)
     }
 }

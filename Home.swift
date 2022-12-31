@@ -34,6 +34,7 @@ struct Home: View {
     @State var doneGoalTiles: [GoalTile] = []
     @State var listTiles: [ListTile] = []
     @State var doneListTiles: [ListTile] = []
+    @State var goalTileDrag: GoalTile?
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
             .init { () -> Bool in
@@ -95,6 +96,11 @@ struct Home: View {
                     ForEach(self.goalTiles) { tile in
                         tile
                             .padding(.top, 20)
+                            .onDrag {
+                                goalTileDrag = tile
+                                return NSItemProvider()
+                            }
+                            .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $goalTiles, draggingItem: $goalTileDrag))
                     }
                     ForEach(self.listTiles) { tile in
                         tile
@@ -143,19 +149,36 @@ struct Home: View {
         }
     }
     func formatTiles()-> () {
+        var goalTileArr: [GoalTile] = []
         self.goalTiles = []
         self.listTiles = []
         self.doneGoalTiles = []
         self.doneListTiles = []
+        let goalTileOrder = UserDefaults.standard.value(forKey: "goalTileOrder") as? [String] ?? []
+        
         for goal in User.goalArr {
             if goal.category == "" {
                 if goal.endDate < Date.now || goal.prog >= 100.0 {
                     self.doneGoalTiles.append(GoalTile(goal: goal))
                 } else {
+                    goalTileArr.append(GoalTile(goal: goal))
                     self.goalTiles.append(GoalTile(goal: goal))
                 }
             }
         }
+        print("TILE ORDER: \(goalTileOrder)")
+        if !goalTileOrder.isEmpty {
+            self.goalTiles = []
+            for uid in goalTileOrder {
+                for tile in goalTileArr {
+                    print("ORDER: \(uid), TILE: \(tile.goal.id)")
+                    if tile.goal.id == uid {
+                        self.goalTiles.append(tile)
+                    }
+                }
+            }
+        }
+        
         for cat in categoryArr {
             var goals: [Goal] = []
             var doneCount = 0

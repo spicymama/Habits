@@ -70,9 +70,9 @@ struct GoalView: View, Identifiable {
                         .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 500, alignment: .center)
                     TextField("Notes...", text: self.$notes, axis: .vertical)
                         .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 50, maxHeight: 1000, alignment: .leading)
-                        .font(.system(size: prefs.fontSize))
+                        .font(.system(size: prefs.fontSize / 1.2))
                         .foregroundColor(prefs.foregroundColor)
-                        .onDisappear {
+                        .onSubmit {
                             currentGoal.selfNotes = self.notes
                             updateGoal(goal: currentGoal)
                         }
