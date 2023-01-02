@@ -72,6 +72,7 @@ struct GoalView: View, Identifiable {
                         .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 50, maxHeight: 1000, alignment: .leading)
                         .font(.system(size: prefs.fontSize / 1.2))
                         .foregroundColor(prefs.foregroundColor)
+                        .tint(prefs.foregroundColor)
                         .onSubmit {
                             currentGoal.selfNotes = self.notes
                             updateGoal(goal: currentGoal)

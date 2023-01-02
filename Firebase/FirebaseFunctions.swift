@@ -14,6 +14,7 @@ class FirestoreManager: ObservableObject {
 }
 func createGoal(goal: Goal) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     let goalData: [String : Any] = [
@@ -42,7 +43,17 @@ func createGoal(goal: Goal) {
         if let error = error {
             print("Error writing document: \(error)")
         } else {
+            var order = tileOrder
             print("Document successfully written!")
+            if goal.category == "" {
+                order.insert(goal.id, at: 0)
+                UserDefaults.standard.set(order, forKey: "tileOrder")
+            } else {
+                if !order.contains(goal.category) {
+                    order.insert(goal.category, at: 0)
+                    UserDefaults.standard.set(order, forKey: "tileOrder")
+                }
+            }
         }
     }
 }

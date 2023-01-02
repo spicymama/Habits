@@ -30,11 +30,13 @@ struct Home: View {
     @State var newNotifs = false
     @State var settingsTap = false
     @State var color = Color.gray
-    @State var goalTiles: [GoalTile] = []
-    @State var doneGoalTiles: [GoalTile] = []
-    @State var listTiles: [ListTile] = []
-    @State var doneListTiles: [ListTile] = []
-    @State var goalTileDrag: GoalTile?
+   // @State var goalTiles: [GoalTile] = []
+   // @State var doneGoalTiles: [GoalTile] = []
+   // @State var listTiles: [ListTile] = []
+  //  @State var doneListTiles: [ListTile] = []
+    @State var tileDrag: Tile?
+    @State var tiles: [Tile] = []
+    @State var doneTiles: [Tile] = []
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
             .init { () -> Bool in
@@ -93,37 +95,41 @@ struct Home: View {
                             .foregroundColor(self.foregroundColor)
                             .padding(.bottom, 25)
                     }
-                        ForEach(self.goalTiles) { tile in
+                        ForEach(self.tiles) { tile in
                             tile
                                 .padding(.top, 20)
                              .onDrag {
-                             goalTileDrag = tile
+                             tileDrag = tile
                              return NSItemProvider()
                              }
-                             .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $goalTiles, draggingItem: $goalTileDrag, startIndex: goalTiles.firstIndex(of: tile)!))
+                             .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $tiles, draggingItem: $tileDrag, startIndex: tiles.firstIndex(of: tile)!))
                         }
+                    /*
                     ForEach(self.listTiles) { tile in
                         tile
                             .padding(.top, 20)
                     }
-                    !self.doneGoalTiles.isEmpty || !self.doneListTiles.isEmpty ? Text("History")
+                     */
+                    !self.doneTiles.isEmpty || !self.doneTiles.isEmpty ? Text("History")
                         .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
                         .font(.system(size: self.headerFontSize))
                         .foregroundColor(self.foregroundColor)
                         .padding(.top, 50): nil
-                    ForEach(self.doneGoalTiles) { tile in
+                    ForEach(self.doneTiles) { tile in
                         tile
                             .padding(.top, 20)
                             .onDrag {
-                                goalTileDrag = tile
+                                tileDrag = tile
                                 return NSItemProvider()
                             }
-                            .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $doneGoalTiles, draggingItem: $goalTileDrag, isDone: true, startIndex: doneGoalTiles.firstIndex(of: tile)!))
+                            .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $doneTiles, draggingItem: $tileDrag, isDone: true, startIndex: doneTiles.firstIndex(of: tile)!))
                     }
+                    /*
                     ForEach(self.doneListTiles) { tile in
                         tile
                             .padding(.top, 20)
                     }
+                     */
                 }
             }.frame(maxWidth: .infinity)
             .background(self.backgroundColor)
@@ -154,46 +160,30 @@ struct Home: View {
         }
     }
     func formatTiles()-> () {
-        //UserDefaults.standard.removeObject(forKey: "goalTileOrder")
-        //UserDefaults.standard.removeObject(forKey: "doneGoalTileOrder")
-        var goalTileArr: [GoalTile] = []
-        var listTileArr: [ListTile] = []
-        var doneGoalTileArr: [GoalTile] = []
-        var doneListTileArr: [ListTile] = []
-        self.goalTiles = []
-        self.listTiles = []
-        self.doneGoalTiles = []
-        self.doneListTiles = []
-        let goalTileOrder = UserDefaults.standard.value(forKey: "goalTileOrder") as? [String] ?? []
-        let doneGoalTileOrder = UserDefaults.standard.value(forKey: "doneGoalTileOrder") as? [String] ?? []
+       // UserDefaults.standard.removeObject(forKey: "tileOrder")
+       // UserDefaults.standard.removeObject(forKey: "doneTileOrder")
+       // var goalTileArr: [GoalTile] = []
+       // var listTileArr: [ListTile] = []
+       // var doneGoalTileArr: [GoalTile] = []
+       // var doneListTileArr: [ListTile] = []
+        var tileArr: [Tile] = []
+        var doneTileArr: [Tile] = []
+        self.tiles = []
+      //  self.listTiles = []
+        self.doneTiles = []
+       // self.doneListTiles = []
+        let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
+        let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
         for goal in User.goalArr {
             if goal.category == "" {
                 if goal.endDate < Date.now || goal.prog >= 100.0 {
-                    doneGoalTileArr.append(GoalTile(goal: goal))
-                    self.doneGoalTiles.append(GoalTile(goal: goal))
+                    doneTileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
+                   // self.doneGoalTiles.append(GoalTile(goal: goal))
+                    self.doneTiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
                 } else {
-                    goalTileArr.append(GoalTile(goal: goal))
-                    self.goalTiles.append(GoalTile(goal: goal))
-                }
-            }
-        }
-        if !goalTileOrder.isEmpty {
-            self.goalTiles = []
-            for uid in goalTileOrder {
-                for tile in goalTileArr {
-                    if tile.goal.id == uid {
-                        self.goalTiles.append(tile)
-                    }
-                }
-            }
-        }
-        if !doneGoalTileOrder.isEmpty {
-            self.doneGoalTiles = []
-            for uid in doneGoalTileOrder {
-                for tile in doneGoalTileArr {
-                    if tile.goal.id == uid {
-                        self.doneGoalTiles.append(tile)
-                    }
+                    tileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
+                 //   self.goalTiles.append(GoalTile(goal: goal))
+                    self.tiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
                 }
             }
         }
@@ -208,13 +198,37 @@ struct Home: View {
                     doneCount += 1
                 }
             }
-            let list = ListTile(goalArr: goals)
+            let list = Tile(id: cat, listTile: ListTile(goalArr: goals))
             if doneCount == goals.count {
-                self.doneListTiles.append(list)
+                self.doneTiles.append(list)
+                doneTileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
             } else {
-                self.listTiles.append(list)
+                self.tiles.append(list)
+                tileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
             }
         }
+        if !tileOrder.isEmpty {
+            self.tiles = []
+            for uid in tileOrder {
+                for tile in tileArr {
+                    if tile.id == uid {
+                        self.tiles.append(tile)
+                    }
+                }
+            }
+        }
+        if !doneTileOrder.isEmpty {
+            self.doneTiles = []
+            for uid in doneTileOrder {
+                for tile in doneTileArr {
+                    if tile.id == uid {
+                        self.doneTiles.append(tile)
+                    }
+                }
+            }
+        }
+        print("TILE ORDER: \(tileOrder)")
+        print("DONE TILE ORDER: \(doneTileOrder)")
     }
     func fetchForRefresh() {
         self.fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0

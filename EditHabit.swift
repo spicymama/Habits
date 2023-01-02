@@ -138,7 +138,8 @@ struct EditHabit: View {
                             .font(.system(size: prefs.titleFontSize))
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 65, alignment: .trailing)
-                    .padding(.top, 30)
+                    .padding(.top, 20)
+                    .padding(.bottom, 20)
                     .animation(.easeInOut(duration: 1.0), value: self.remindersTap)
                     .onTapGesture {
                         self.progressTrackerTap.toggle()
@@ -180,6 +181,7 @@ struct EditHabit: View {
                             .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 120, maxHeight: 5000, alignment: .leading)
                             .font(.system(size: prefs.fontSize))
                             .foregroundColor(prefs.foregroundColor)
+                            .tint(prefs.foregroundColor)
                             .padding(.leading, 20)
                     }
                 }

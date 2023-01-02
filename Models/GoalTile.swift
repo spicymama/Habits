@@ -59,9 +59,9 @@ struct GoalTile_Previews: PreviewProvider {
 }
 
 struct DropViewDelegate: DropDelegate {
-    var currentItem: GoalTile
-    var items: Binding<[GoalTile]>
-    var draggingItem: Binding<GoalTile?>
+    var currentItem: Tile
+    var items: Binding<[Tile]>
+    var draggingItem: Binding<Tile?>
     var isDone = false
     let startIndex: Int
     func performDrop(info: DropInfo) -> Bool {
@@ -70,7 +70,7 @@ struct DropViewDelegate: DropDelegate {
     }
     
     func dropEntered(info: DropInfo) {
-        var goalTileOrder: [String] = []
+        var tileOrder: [String] = []
         if currentItem.id != draggingItem.wrappedValue?.id {
             print("START INDEX: \(startIndex)")
             let from = items.wrappedValue.firstIndex(of: draggingItem.wrappedValue!) ?? startIndex
@@ -78,14 +78,14 @@ struct DropViewDelegate: DropDelegate {
             if items[to].id != draggingItem.wrappedValue?.id {
                 items.wrappedValue.move(fromOffsets: IndexSet(integer: from),
                     toOffset: to > from ? to + 1 : to)
-                for i in items {
-                    let uid = i.goal.id
-                    goalTileOrder.append(uid)
+                for tile in items {
+                    let uid = tile.id
+                    tileOrder.append(uid)
                 }
                 if isDone == true {
-                    UserDefaults.standard.set(goalTileOrder, forKey: "doneGoalTileOrder")
+                    UserDefaults.standard.set(tileOrder, forKey: "doneTileOrder")
                 } else {
-                    UserDefaults.standard.set(goalTileOrder, forKey: "goalTileOrder")
+                    UserDefaults.standard.set(tileOrder, forKey: "tileOrder")
                 }
             }
         }
