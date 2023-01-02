@@ -12,6 +12,7 @@ struct GoalTile: View, Identifiable, Equatable {
     @ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
     var goal: Goal
+    var isDone = false
     @State var tap = true
     var body: some View {
         ZStack {
@@ -33,7 +34,7 @@ struct GoalTile: View, Identifiable, Equatable {
                     .foregroundColor(prefs.foregroundColor)
                     .padding(.vertical) : nil
                 
-                self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes)
+                self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes, isDone: self.isDone)
             }
             .onTapGesture {
                 self.tap = false

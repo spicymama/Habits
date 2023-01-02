@@ -157,7 +157,7 @@ struct Settings: View {
                 .onTapGesture {
                     self.fontTap = true
                 }
-                self.notifsAllowed ? nil : HStack {
+                notifsAuthorized() ? nil : HStack {
                     Button("Allow Notifications") {
                     self.notifsAllowed.toggle()
                     }

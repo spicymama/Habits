@@ -30,10 +30,6 @@ struct Home: View {
     @State var newNotifs = false
     @State var settingsTap = false
     @State var color = Color.gray
-   // @State var goalTiles: [GoalTile] = []
-   // @State var doneGoalTiles: [GoalTile] = []
-   // @State var listTiles: [ListTile] = []
-  //  @State var doneListTiles: [ListTile] = []
     @State var tileDrag: Tile?
     @State var tiles: [Tile] = []
     @State var doneTiles: [Tile] = []
@@ -104,12 +100,6 @@ struct Home: View {
                              }
                              .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $tiles, draggingItem: $tileDrag, startIndex: tiles.firstIndex(of: tile)!))
                         }
-                    /*
-                    ForEach(self.listTiles) { tile in
-                        tile
-                            .padding(.top, 20)
-                    }
-                     */
                     !self.doneTiles.isEmpty || !self.doneTiles.isEmpty ? Text("History")
                         .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
                         .font(.system(size: self.headerFontSize))
@@ -124,12 +114,6 @@ struct Home: View {
                             }
                             .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $doneTiles, draggingItem: $tileDrag, isDone: true, startIndex: doneTiles.firstIndex(of: tile)!))
                     }
-                    /*
-                    ForEach(self.doneListTiles) { tile in
-                        tile
-                            .padding(.top, 20)
-                    }
-                     */
                 }
             }.frame(maxWidth: .infinity)
             .background(self.backgroundColor)
@@ -160,29 +144,21 @@ struct Home: View {
         }
     }
     func formatTiles()-> () {
-       // UserDefaults.standard.removeObject(forKey: "tileOrder")
-       // UserDefaults.standard.removeObject(forKey: "doneTileOrder")
-       // var goalTileArr: [GoalTile] = []
-       // var listTileArr: [ListTile] = []
-       // var doneGoalTileArr: [GoalTile] = []
-       // var doneListTileArr: [ListTile] = []
+      //  UserDefaults.standard.removeObject(forKey: "tileOrder")
+      //  UserDefaults.standard.removeObject(forKey: "doneTileOrder")
         var tileArr: [Tile] = []
         var doneTileArr: [Tile] = []
         self.tiles = []
-      //  self.listTiles = []
         self.doneTiles = []
-       // self.doneListTiles = []
         let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
         let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
         for goal in User.goalArr {
             if goal.category == "" {
                 if goal.endDate < Date.now || goal.prog >= 100.0 {
-                    doneTileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
-                   // self.doneGoalTiles.append(GoalTile(goal: goal))
-                    self.doneTiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
+                    doneTileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal, isDone: true)))
+                    self.doneTiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal, isDone: true)))
                 } else {
                     tileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
-                 //   self.goalTiles.append(GoalTile(goal: goal))
                     self.tiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
                 }
             }
@@ -198,12 +174,11 @@ struct Home: View {
                     doneCount += 1
                 }
             }
-            let list = Tile(id: cat, listTile: ListTile(goalArr: goals))
             if doneCount == goals.count {
-                self.doneTiles.append(list)
-                doneTileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
+                self.doneTiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
+                doneTileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
             } else {
-                self.tiles.append(list)
+                self.tiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
                 tileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
             }
         }

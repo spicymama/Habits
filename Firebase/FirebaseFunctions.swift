@@ -235,6 +235,8 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
 }
 
 func deleteGoal(goal: Goal) {
+    let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
+    let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
     let notifsArr = UNUserNotificationCenter.current()
     notifsArr.getDeliveredNotifications { notifs in
         for notif in notifs {
@@ -267,6 +269,30 @@ func deleteGoal(goal: Goal) {
                     User.goalArr.remove(at: index)
                 }
                 index += 1
+            }
+            if tileOrder.contains(goal.category) {
+                var tiles = tileOrder
+                guard let index = tiles.firstIndex(of: goal.category) else { return }
+                tiles.remove(at: index)
+                UserDefaults.standard.set(tiles, forKey: "tileOrder")
+            }
+            if doneTileOrder.contains(goal.category) {
+                var tiles = doneTileOrder
+                guard let index = tiles.firstIndex(of: goal.category) else { return }
+                tiles.remove(at: index)
+                UserDefaults.standard.set(tiles, forKey: "doneTileOrder")
+            }
+            if tileOrder.contains(goal.id) {
+                var tiles = tileOrder
+                guard let index = tiles.firstIndex(of: goal.id) else { return }
+                tiles.remove(at: index)
+                UserDefaults.standard.set(tiles, forKey: "tileOrder")
+            }
+            if doneTileOrder.contains(goal.id) {
+                var tiles = doneTileOrder
+                guard let index = tiles.firstIndex(of: goal.id) else { return }
+                tiles.remove(at: index)
+                UserDefaults.standard.set(tiles, forKey: "doneTileOrder")
             }
             print(User.goalArr)
           print("Document successfully removed!")

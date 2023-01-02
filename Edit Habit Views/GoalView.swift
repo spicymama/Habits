@@ -19,6 +19,8 @@ struct GoalView: View, Identifiable {
     @State var notes = ""
     @State var thumbsUpTap = false
     @State var thumbsDownTap = false
+    @State var isDone = false
+    @State var deleteTap = false
 
     var body: some View {
         VStack {
@@ -63,22 +65,19 @@ struct GoalView: View, Identifiable {
             .accentColor(.gray)
                 ZStack {
                     RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 500, alignment: .center)
-                        .foregroundColor(prefs.accentColor)
-                    RoundedRectangle(cornerRadius: 15, style: .continuous)
                         .stroke(prefs.foregroundColor, lineWidth: 1.5)
                         .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 500, alignment: .center)
                     TextField("Notes...", text: self.$notes, axis: .vertical)
                         .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 50, maxHeight: 1000, alignment: .leading)
                         .font(.system(size: prefs.fontSize / 1.2))
                         .foregroundColor(prefs.foregroundColor)
-                        .tint(prefs.foregroundColor)
+                        .tint(prefs.accentColor)
                         .onSubmit {
                             currentGoal.selfNotes = self.notes
                             updateGoal(goal: currentGoal)
                         }
                 }.padding(.vertical)
-            HStack {
+            self.isDone ? nil : HStack {
                 currentGoal.progressTracker == "1" || currentGoal.progressTracker == "2" ? Button {
                     self.thumbsDownTap.toggle()
                     if self.thumbsUpTap == true {
@@ -96,6 +95,7 @@ struct GoalView: View, Identifiable {
                 } label: {
                     Image(systemName: self.thumbsDownTap ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                         .font(.system(size: 30))
+                        .foregroundColor(prefs.accentColor)
                 }
                 .padding(.trailing, 20)
                 .padding(.leading, 20)
@@ -117,6 +117,7 @@ struct GoalView: View, Identifiable {
                 } label: {
                     Image(systemName: self.thumbsUpTap ? "hand.thumbsup.fill" : "hand.thumbsup")
                         .font(.system(size: 30))
+                        .foregroundColor(prefs.accentColor)
                 }
                 .padding(.leading, 20)
                 .padding(.bottom, 20) : nil
@@ -127,6 +128,7 @@ struct GoalView: View, Identifiable {
             } label: {
                 Image(systemName: "chevron.right.circle")
                     .imageScale(.large)
+                    .foregroundColor(prefs.accentColor)
             }.frame(maxWidth: 20, maxHeight: 20, alignment: .trailing)
                 .padding(.bottom, 20)
                 .padding(.leading, currentGoal.progressTracker == "3" ? 240 : 80)
@@ -134,7 +136,37 @@ struct GoalView: View, Identifiable {
                     EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
                 }
         }.foregroundColor(prefs.foregroundColor)
+            self.isDone ?
+            
+            self.deleteTap ?
+            Button {
+                deleteGoal(goal: self.currentGoal)
+                Home.shared.fetchForRefresh()
+            } label: {
+                Text("Confirm Delete")
+                Image(systemName: "")
+                    .imageScale(.large)
+            }.font(.system(size: prefs.fontSize))
+            .foregroundColor(.red)
+            .frame(maxWidth: 200, maxHeight: 60, alignment: .trailing)
+            .padding(.bottom, 20)
+            .padding(.leading, 230)
+            : Button {
+                self.deleteTap = true
+            } label: {
+                Text("")
+                Image(systemName: "trash.circle")
+                    .imageScale(.large)
+                
+            }.font(.system(size: prefs.fontSize))
+            .foregroundColor(prefs.accentColor)
+            .frame(maxWidth: 30, maxHeight: 40, alignment: .trailing)
+            .padding(.bottom, 20)
+            .padding(.leading, 240)
+            
+            : nil
         }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity)
+            .animation(.easeInOut, value: self.deleteTap)
     }
 }
 

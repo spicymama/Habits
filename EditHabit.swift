@@ -173,15 +173,13 @@ struct EditHabit: View {
                         self.notesTap.toggle()
                     }
                     self.notesTap ? nil : ZStack {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .foregroundColor(prefs.accentColor)
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(prefs.foregroundColor, lineWidth: 2)
                         TextField("Notes...", text: self.$notes, axis: .vertical)
                             .frame(maxWidth: UIScreen.main.bounds.width - 30, minHeight: 120, maxHeight: 5000, alignment: .leading)
                             .font(.system(size: prefs.fontSize))
                             .foregroundColor(prefs.foregroundColor)
-                            .tint(prefs.foregroundColor)
+                            .tint(prefs.accentColor)
                             .padding(.leading, 20)
                     }
                 }

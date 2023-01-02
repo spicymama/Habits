@@ -12,6 +12,7 @@ struct ListTile: View, Identifiable {
     @ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
     var goalArr: [Goal]
+    var isDone = false
     @State var wasTapped = true
     @State var pad = true
     var body: some View {
@@ -50,7 +51,7 @@ struct ListTile: View, Identifiable {
                         .padding(.bottom, 10)
                         .padding(.leading, 10)
                     } : nil
-                    self.wasTapped ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes)
+                    self.wasTapped ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes, isDone: self.isDone)
                 }
             }
             .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 150)
