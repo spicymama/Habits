@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Category: View {
-    var catArr: [String] = Home.shared.categoryArr
+    var catArr: [String] = Database().catArr
     @ObservedObject var prefs = DisplayPreferences()
     @State var category: String
     @State var tap = true

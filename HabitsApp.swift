@@ -12,6 +12,7 @@ import FirebaseFirestore
 import UserNotifications
 
 class AppDelegate: NSObject, UIApplicationDelegate {
+    var categoryArr: [String] = []
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
      // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
@@ -54,6 +55,7 @@ struct HabitsApp: App {
 }
 
 func fetchNotifs() {
+    @ObservedObject var db = Database()
     let notifsArr = UNUserNotificationCenter.current()
     let dispatchGroup = DispatchGroup()
     dispatchGroup.enter()
@@ -63,16 +65,18 @@ func fetchNotifs() {
             let listID = notif.request.content.userInfo["listID"]
             fetchSingleGoal(id: goalID as! String) { goal in
                 goal.listID = listID as! String
-                if !Home.allNotifs.contains(goal) {
-                    Home.allNotifs.append(goal)
+                if !db.allNotifs.contains(goal) {
+                    db.allNotifs.append(goal)
                     print("Title: \(goal.title) \n UID: \(goal.id)")
                 }
             }
         }
     }
-    print("GOAL ARRAY: \(Home.allNotifs)")
+    Home.shared.fetchForRefresh()
+   // print("GOAL ARRAY: \(Home.allNotifs)")
     dispatchGroup.leave()
 }
+
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {

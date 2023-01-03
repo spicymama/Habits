@@ -11,9 +11,10 @@ import UserNotifications
 struct NotificationsView: View {
     static var shared = NotificationsView()
     @ObservedObject var prefs = DisplayPreferences()
+    @ObservedObject var db = Database()
     @Environment(\.dismiss) var dismiss
     @State var showNotifs = false
-    @State var allNotifs: [Goal] = Home.allNotifs
+    @State var allNotifs: [Goal] = Database().allNotifs
     var body: some View {
         ScrollView {
             VStack {

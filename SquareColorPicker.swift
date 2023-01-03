@@ -30,6 +30,6 @@ struct SquareColorPicker: View {
 
 struct SquareColorPicker_Previews: PreviewProvider {
     static var previews: some View {
-        SquareColorPicker(colorValue: Home.shared.$color, title: "")
+        SquareColorPicker(colorValue: EditHabit.shared.$prefs.foregroundColor, title: "")
     }
 }

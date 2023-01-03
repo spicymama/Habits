@@ -54,7 +54,7 @@ class Goal: Identifiable, ObservableObject, Equatable {
         self.prog = prog
     }
     
-    static var placeholderGoal = Goal(id: "", listID: "", category: "Category", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0, monNotifs: [], tusNotifs: [Date.now], wedNotifs: [Date()], thursNotifs: [], friNotifs: [Date.now], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "Manually track my progress", selfNotes: "Here are some notes and I am making them somewhat long to ensure I get an accurate representation of what a long srting will look like whilst displayed in the 'notes' text view on a goal view", prog: 50.0)
+    static var placeholderGoal = Goal(id: "", listID: "", category: "", title: "Title", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0, monNotifs: [], tusNotifs: [Date.now], wedNotifs: [Date()], thursNotifs: [], friNotifs: [Date.now], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "Manually track my progress", selfNotes: "", prog: 50.0)
     
     static func == (lhs: Goal, rhs: Goal) -> Bool {
         return lhs.listID == rhs.listID && lhs.id == rhs.id

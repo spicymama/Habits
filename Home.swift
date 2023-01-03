@@ -15,24 +15,22 @@ struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     @Environment(\.refresh) var refresh
     @ObservedObject var appState = AppState.shared
+    @ObservedObject var db = Database()
+   // @StateObject var prefs = DisplayPreferences()
     static var shared = Home()
-    static var allNotifs: [Goal] = []
     @State private var addButtonTap = false
-    @State var fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
-    @State var headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
-    @State var titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0
-    @State var backgroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "backgroundColor") ?? .white)
-    @State var foregroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "foregroundColor") ?? .gray)
-    @State var accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .gray)
-    @State var categoryArr: [String] = []
+   // @State var fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
+   // @State var headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
+   // @State var titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0
+    //@State var backgroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "backgroundColor") ?? .white)
+    //@State var foregroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "foregroundColor") ?? .gray)
+    //@State var accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .gray)
+   // @State var categoryArr: [String] = []
     @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
     @State var notificationTap = false
     @State var newNotifs = false
     @State var settingsTap = false
-    @State var color = Color.gray
     @State var tileDrag: Tile?
-    @State var tiles: [Tile] = []
-    @State var doneTiles: [Tile] = []
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
             .init { () -> Bool in
@@ -42,7 +40,6 @@ struct Home: View {
             }
         }
     var body: some View {
-        NavigationStack {
             ScrollView {
                 VStack {
                     VStack {
@@ -54,7 +51,7 @@ struct Home: View {
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
-                            .foregroundColor(self.accentColor)
+                            .foregroundColor(DisplayPreferences().accentColor)
                             .padding(.trailing)
                             .padding(.leading, 30)
                             .fullScreenCover(isPresented: $settingsTap, onDismiss: fetchForRefresh) {
@@ -67,7 +64,7 @@ struct Home: View {
                                     .imageScale(.large)
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)
-                            .foregroundColor(self.accentColor)
+                            .foregroundColor(DisplayPreferences().accentColor)
                             .fullScreenCover(isPresented: $notificationTap, onDismiss: fetchForRefresh) {
                                 NotificationsView()
                             }
@@ -82,41 +79,45 @@ struct Home: View {
                             }
                             .frame(maxWidth: 15, maxHeight: 15, alignment: .topTrailing)
                             .padding(.leading, UIScreen.main.bounds.width - 135)
-                            .foregroundColor(self.accentColor)
+                            .foregroundColor(DisplayPreferences().accentColor)
                         }
                         
                         Text("Habits")
                             .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                            .font(.system(size: self.headerFontSize))
-                            .foregroundColor(self.foregroundColor)
+                            .font(.system(size: DisplayPreferences().headerFontSize))
+                            .foregroundColor(DisplayPreferences().foregroundColor)
                             .padding(.bottom, 25)
                     }
-                        ForEach(self.tiles) { tile in
+                    if !db.tiles.isEmpty {
+                        ForEach(db.tiles, id: \.id) { tile in
                             tile
                                 .padding(.top, 20)
-                             .onDrag {
-                             tileDrag = tile
-                             return NSItemProvider()
-                             }
-                             .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $tiles, draggingItem: $tileDrag, startIndex: tiles.firstIndex(of: tile)!))
-                        }
-                    !self.doneTiles.isEmpty || !self.doneTiles.isEmpty ? Text("History")
+                                .onDrag {
+                                    tileDrag = tile
+                                    return NSItemProvider()
+                                }
+                                .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $db.tiles, draggingItem: $tileDrag, startIndex: db.tiles.firstIndex(of: tile)!))
+                        }.frame(maxHeight: .infinity)
+                    }
+                    !db.doneTiles.isEmpty ? Text("History")
                         .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                        .font(.system(size: self.headerFontSize))
-                        .foregroundColor(self.foregroundColor)
+                        .font(.system(size: DisplayPreferences().headerFontSize))
+                        .foregroundColor(DisplayPreferences().foregroundColor)
                         .padding(.top, 50): nil
-                    ForEach(self.doneTiles) { tile in
-                        tile
-                            .padding(.top, 20)
-                            .onDrag {
-                                tileDrag = tile
-                                return NSItemProvider()
-                            }
-                            .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $doneTiles, draggingItem: $tileDrag, isDone: true, startIndex: doneTiles.firstIndex(of: tile)!))
+                    if !db.doneTiles.isEmpty {
+                        ForEach(db.doneTiles, id: \.id) { tile in
+                            tile
+                                .padding(.top, 20)
+                                .onDrag {
+                                    tileDrag = tile
+                                    return NSItemProvider()
+                                }
+                                .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $db.doneTiles, draggingItem: $tileDrag, isDone: true, startIndex: db.doneTiles.firstIndex(of: tile)!))
+                        }.frame(maxHeight: .infinity)
                     }
                 }
             }.frame(maxWidth: .infinity)
-            .background(self.backgroundColor)
+            .background(DisplayPreferences().backgroundColor)
             .onAppear() {
                 let defaults = UserDefaults.standard
                 if defaults.bool(forKey: "goToLogin").description.isEmpty {
@@ -130,13 +131,13 @@ struct Home: View {
                             defaults.set(true, forKey: "goToLogin")
                         }
                     }
-                fetchForRefresh()
+                    fetchForRefresh()
                 }
             }
             .fullScreenCover(isPresented: $goToLogin) {
                 LoginView()
             }
-        }.refreshable {
+        .refreshable {
             fetchForRefresh()
         }
         .fullScreenCover(isPresented: pushNavigationBinding) {
@@ -148,25 +149,25 @@ struct Home: View {
       //  UserDefaults.standard.removeObject(forKey: "doneTileOrder")
         var tileArr: [Tile] = []
         var doneTileArr: [Tile] = []
-        self.tiles = []
-        self.doneTiles = []
+        db.tiles = []
+        db.doneTiles = []
         let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
         let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
-        for goal in User.goalArr {
+        for goal in db.goalArr {
             if goal.category == "" {
                 if goal.endDate < Date.now || goal.prog >= 100.0 {
                     doneTileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal, isDone: true)))
-                    self.doneTiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal, isDone: true)))
+                    db.doneTiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal, isDone: true)))
                 } else {
                     tileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
-                    self.tiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
+                    db.tiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
                 }
             }
         }
-        for cat in categoryArr {
+        for cat in db.catArr {
             var goals: [Goal] = []
             var doneCount = 0
-            for goal in User.goalArr {
+            for goal in db.goalArr {
                 if goal.category == cat {
                     goals.append(goal)
                 }
@@ -175,29 +176,29 @@ struct Home: View {
                 }
             }
             if doneCount == goals.count {
-                self.doneTiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
+                db.doneTiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
                 doneTileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
             } else {
-                self.tiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
+                db.tiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
                 tileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
             }
         }
         if !tileOrder.isEmpty {
-            self.tiles = []
+            db.tiles = []
             for uid in tileOrder {
                 for tile in tileArr {
                     if tile.id == uid {
-                        self.tiles.append(tile)
+                        db.tiles.append(tile)
                     }
                 }
             }
         }
         if !doneTileOrder.isEmpty {
-            self.doneTiles = []
+            db.doneTiles = []
             for uid in doneTileOrder {
                 for tile in doneTileArr {
                     if tile.id == uid {
-                        self.doneTiles.append(tile)
+                        db.doneTiles.append(tile)
                     }
                 }
             }
@@ -206,23 +207,23 @@ struct Home: View {
         print("DONE TILE ORDER: \(doneTileOrder)")
     }
     func fetchForRefresh() {
-        self.fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
-        self.headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
-        self.titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0
-        self.backgroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "backgroundColor") ?? .white)
-        self.foregroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "foregroundColor") ?? .gray)
-        self.accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .gray)
+       // self.fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
+       // self.headerFontSize = UserDefaults.standard.value(forKey: "headerFontSize") as? Double ?? 35.0
+       // self.titleFontSize = UserDefaults.standard.value(forKey: "titleFontSize") as? Double ?? 25.0
+       // self.backgroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "backgroundColor") ?? .white)
+       // self.foregroundColor = Color(uiColor: UserDefaults.standard.color(forKey: "foregroundColor") ?? .gray)
+       // self.accentColor = Color(uiColor: UserDefaults.standard.color(forKey: "accentColor") ?? .gray)
         fetchAllGoals { goals in
-            self.categoryArr = []
-            User.goalArr = []
-            User.goalArr.append(contentsOf: goals)
+            db.catArr = []
+            db.goalArr = []
+            db.goalArr.append(contentsOf: goals)
             for i in goals {
-                if !self.categoryArr.contains(i.category) && i.category != "" {
-                    self.categoryArr.append(i.category)
+                if !db.catArr.contains(i.category) && i.category != "" {
+                    db.catArr.append(i.category)
                 }
             }
         }
-        if !Home.allNotifs.isEmpty {
+        if !db.allNotifs.isEmpty {
             self.newNotifs = true
         } else {
             self.newNotifs = false

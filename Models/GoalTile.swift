@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GoalTile: View, Identifiable, Equatable {
     static var shared = GoalTile(goal: Goal.placeholderGoal)
-    @ObservedObject var prefs = DisplayPreferences()
+   // @ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
     var goal: Goal
     var isDone = false
@@ -21,7 +21,7 @@ struct GoalTile: View, Identifiable, Equatable {
             } label: {
                 Image(systemName: "xmark.circle")
                     .imageScale(.large)
-                    .foregroundColor(prefs.accentColor)
+                    .foregroundColor(DisplayPreferences().accentColor)
             }
             .padding(.leading, UIScreen.main.bounds.width / 1.3)
             .padding(.top, 10)
@@ -30,9 +30,9 @@ struct GoalTile: View, Identifiable, Equatable {
             VStack {
                 self.tap ? Text("\(goal.title)")
                     .frame(maxWidth: UIScreen.main.bounds.width - 100)
-                    .font(.system(size: prefs.titleFontSize))
-                    .foregroundColor(prefs.foregroundColor)
-                    .padding(.vertical) : nil
+                    .font(.system(size: DisplayPreferences().titleFontSize))
+                    .foregroundColor(DisplayPreferences().foregroundColor)
+                    .padding(.vertical, 15) : nil
                 
                 self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes, isDone: self.isDone)
             }
@@ -41,7 +41,7 @@ struct GoalTile: View, Identifiable, Equatable {
             }
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
-                    .stroke(prefs.foregroundColor, lineWidth: 2)
+                    .stroke(DisplayPreferences().foregroundColor, lineWidth: 2)
             ).edgesIgnoringSafeArea(.horizontal)
             .animation(.easeInOut(duration: 1.0), value: self.tap)
                 .padding(.trailing, self.tap ? UIScreen.main.bounds.width / 10 : 0)

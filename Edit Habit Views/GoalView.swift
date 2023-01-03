@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct GoalView: View, Identifiable {
-    @Environment(\.refresh) var refresh
     @ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
     var currentGoal: Goal
@@ -55,6 +54,7 @@ struct GoalView: View, Identifiable {
                     }
                 }
                 ).allowsHitTesting(currentGoal.progressTracker == "3" ? true : false)
+                    .tint(prefs.accentColor)
                 
                 Text("\(self.prog, specifier: "%.0f") %")
                     .foregroundColor(prefs.accentColor)

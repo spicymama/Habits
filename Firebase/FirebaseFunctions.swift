@@ -10,6 +10,7 @@ import Firebase
 import SwiftUI
 
 class FirestoreManager: ObservableObject {
+    
     @Published var goal: Goal = Goal(id: "", listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0, monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
 }
 func createGoal(goal: Goal) {
@@ -80,6 +81,7 @@ func createUser(user: User) {
 }
 
 func updateGoal(goal: Goal) {
+    @ObservedObject var localDB = Database()
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
@@ -110,7 +112,7 @@ func updateGoal(goal: Goal) {
         if let error = error {
             print("Error writing document: \(error)")
         } else {
-            User.goalArr = User.goalArr.map { $0.id == goal.id ? goal : $0 }
+            localDB.goalArr = localDB.goalArr.map { $0.id == goal.id ? goal : $0 }
             LocalNotificationManager.shared.clearNotifsForUpdate(goal: goal)
             LocalNotificationManager.shared.setDailyNotifs(goal: goal)
             LocalNotificationManager.shared.setScheduledNotifs(goal: goal)
@@ -235,6 +237,7 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
 }
 
 func deleteGoal(goal: Goal) {
+    @ObservedObject var localDB = Database()
     let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
     let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
     let notifsArr = UNUserNotificationCenter.current()
@@ -263,10 +266,10 @@ func deleteGoal(goal: Goal) {
           print("Error removing document: \(err)")
         }
         else {
-            for i in User.goalArr {
+            for i in localDB.goalArr {
                 var index = 0
                 if i.id == goal.id {
-                    User.goalArr.remove(at: index)
+                    localDB.goalArr.remove(at: index)
                 }
                 index += 1
             }
@@ -294,7 +297,7 @@ func deleteGoal(goal: Goal) {
                 tiles.remove(at: index)
                 UserDefaults.standard.set(tiles, forKey: "doneTileOrder")
             }
-            print(User.goalArr)
+            print(localDB.goalArr)
           print("Document successfully removed!")
         }
       }

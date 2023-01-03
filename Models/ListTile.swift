@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ListTile: View, Identifiable {
-    static var shared = ListTile(goalArr: User.goalArr)
-    @ObservedObject var prefs = DisplayPreferences()
+    static var shared = ListTile(goalArr: Database().goalArr)
+    //@ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
     var goalArr: [Goal]
     var isDone = false
@@ -22,7 +22,7 @@ struct ListTile: View, Identifiable {
             } label: {
                 Image(systemName: "xmark.circle")
                     .imageScale(.large)
-                    .foregroundColor(prefs.accentColor)
+                    .foregroundColor(DisplayPreferences().accentColor)
             }
             .padding(.leading, UIScreen.main.bounds.width / 1.3)
             .padding(.top, 10)
@@ -30,21 +30,21 @@ struct ListTile: View, Identifiable {
             .zIndex(1)
             ScrollView {
                 Text(goalArr.first?.category ?? "")
-                    .font(.system(size: self.wasTapped ? prefs.titleFontSize : prefs.titleFontSize + 5))
+                    .font(.system(size: self.wasTapped ? DisplayPreferences().titleFontSize : DisplayPreferences().titleFontSize + 5))
                         .padding(.top, 25)
-                        .foregroundColor(prefs.foregroundColor)
+                        .foregroundColor(DisplayPreferences().foregroundColor)
                         
                 ForEach(goalArr) { goal in
                     self.wasTapped ? VStack {
                         HStack {
                             Image(systemName: "circle")
                                 .fontWeight(.semibold)
-                                .font(.system(size: self.wasTapped ? prefs.fontSize - 4 : prefs.fontSize))
-                                .foregroundColor(prefs.accentColor)
+                                .font(.system(size: self.wasTapped ? DisplayPreferences().fontSize - 4 : DisplayPreferences().fontSize))
+                                .foregroundColor(DisplayPreferences().accentColor)
                             
                             Text(goal.title)
-                                .font(.system(size: self.wasTapped ? prefs.fontSize : prefs.fontSize + 5))
-                                .foregroundColor(prefs.foregroundColor)
+                                .font(.system(size: self.wasTapped ? DisplayPreferences().fontSize : DisplayPreferences().fontSize + 5))
+                                .foregroundColor(DisplayPreferences().foregroundColor)
                                 
                         }
                         .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 5000, alignment: .leading)
@@ -56,7 +56,7 @@ struct ListTile: View, Identifiable {
             }
             .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 150)
             .frame(minHeight: 100)
-            .foregroundColor(prefs.foregroundColor)
+            .foregroundColor(DisplayPreferences().foregroundColor)
             .padding(.bottom, 25)
             .tint(.gray)
         }
@@ -66,7 +66,7 @@ struct ListTile: View, Identifiable {
         }
         .overlay(
         RoundedRectangle(cornerRadius: 15)
-            .stroke(prefs.foregroundColor, lineWidth: 2)
+            .stroke(DisplayPreferences().foregroundColor, lineWidth: 2)
         )
         .animation(Animation.easeInOut(duration: 1.0), value: self.wasTapped)
         .padding(.leading, self.wasTapped ? UIScreen.main.bounds.width / 5 : 0)
@@ -76,6 +76,6 @@ struct ListTile: View, Identifiable {
 
 struct ListTile_Previews: PreviewProvider {
     static var previews: some View {
-        ListTile(goalArr: User.goalArr)
+        ListTile(goalArr: Database().goalArr)
     }
 }

@@ -11,6 +11,7 @@ struct NotificationBox: View, Identifiable {
     var id: UUID
     var goal: Goal = Goal.placeholderGoal
     @ObservedObject var prefs = DisplayPreferences()
+    @ObservedObject var db = Database()
     @State var thumbsUpTap = false
     @State var thumbsDownTap = false
     @State var notifDate = ""
@@ -91,9 +92,9 @@ struct NotificationBox: View, Identifiable {
    
     func removeSeenNotif() {
         var index1 = 0
-        for notif in Home.allNotifs {
+        for notif in db.allNotifs {
             if notif.listID == goal.listID {
-                Home.allNotifs.remove(at: index1)
+                db.allNotifs.remove(at: index1)
                 break
             }
             index1 += 1

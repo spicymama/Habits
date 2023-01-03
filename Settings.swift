@@ -178,6 +178,13 @@ struct Settings: View {
                     defaults.set(UIColor(backgroundColor), forKey: "backgroundColor")
                     defaults.set(UIColor(foregroundColor), forKey: "foregroundColor")
                     defaults.set(UIColor(accentColor), forKey: "accentColor")
+                    prefs.fontSize = fontSize
+                    prefs.headerFontSize = headerFontSize
+                    prefs.titleFontSize = titleFontSize
+                    prefs.updateView()
+                    prefs.foregroundColor = foregroundColor
+                    prefs.backgroundColor = backgroundColor
+                    prefs.accentColor = accentColor
                     if notifsAuthorized() == false && self.notifsAllowed == true {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                             if success {
@@ -187,7 +194,6 @@ struct Settings: View {
                             }
                         }
                     }
-                    prefs.updateView()
                     self.dismiss()
                 } label: {
                     Text("Save Changes")
