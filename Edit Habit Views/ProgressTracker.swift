@@ -119,9 +119,11 @@ struct ProgressTracker: View {
             .onAppear {
                 if self.selectedOp == "1" {
                     self.op1selected = true
+                    self.picker1 = goodcheckinGoal
                 }
                 if self.selectedOp == "2" {
                     self.op2selected = true
+                    self.picker2 = goodcheckinGoal
                 }
                 if self.selectedOp == "3" {
                     self.op3selected = true

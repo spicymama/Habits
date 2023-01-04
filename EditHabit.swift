@@ -49,6 +49,8 @@ struct EditHabit: View {
     @State var sunNotifs: [Date] = []
     @State var scheduledReminders: [Date] = []
     @State var goodcheckinGoal = 0
+    @State var goodcheckins = 0
+    @State var badcheckins = 0
     @State var notes = ""
     @State var category = ""
     @State var needTitle = false

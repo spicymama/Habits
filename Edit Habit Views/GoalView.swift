@@ -133,8 +133,8 @@ struct GoalView: View, Identifiable {
             }.frame(maxWidth: 20, maxHeight: 20, alignment: .trailing)
                 .padding(.bottom, 20)
                 .padding(.leading, currentGoal.progressTracker == "3" ? 240 : 80)
-                .fullScreenCover(isPresented: self.$editGoalTap) {
-                    EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, goodcheckinGoal: currentGoal.goodCheckinGoal, notes: currentGoal.selfNotes, category: currentGoal.category)
+                .fullScreenCover(isPresented: self.$editGoalTap, onDismiss: Home.shared.didDismiss) {
+                    EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate, monNotifs: currentGoal.monNotifs, tusNotifs: currentGoal.tusNotifs, wedNotifs: currentGoal.wedNotifs, thursNotifs: currentGoal.thursNotifs, friNotifs: currentGoal.friNotifs, satNotifs: currentGoal.satNotifs, sunNotifs: currentGoal.sunNotifs,   scheduledReminders: currentGoal.scheduledNotifs, goodcheckinGoal: currentGoal.goodCheckinGoal, goodcheckins: currentGoal.goodCheckins, badcheckins: currentGoal.badCheckins, notes: currentGoal.selfNotes, category: currentGoal.category)
                 }
         }.foregroundColor(prefs.foregroundColor)
             self.isDone ?
