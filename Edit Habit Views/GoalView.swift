@@ -166,7 +166,7 @@ struct GoalView: View, Identifiable {
             .padding(.leading, 240)
             
             : nil
-        }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity)
+        }.frame(maxWidth: UIScreen.main.bounds.width - 40, maxHeight: .infinity)
             .animation(.easeInOut, value: self.deleteTap)
     }
 }

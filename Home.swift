@@ -87,7 +87,6 @@ struct Home: View {
                 }
                 self.hideTiles ? nil : ForEach(db.tiles, id: \.id) { tile in
                         tile
-                            .padding(.top, 20)
                             .onDrag {
                                 tileDrag = tile
                                 return NSItemProvider()
@@ -101,7 +100,6 @@ struct Home: View {
                     .padding(.top, 50): nil
                 self.hideTiles ? nil : ForEach(db.doneTiles, id: \.id) { tile in
                         tile
-                            .padding(.top, 20)
                             .onDrag {
                                 tileDrag = tile
                                 return NSItemProvider()

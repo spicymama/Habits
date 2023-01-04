@@ -44,8 +44,8 @@ struct GoalTile: View, Identifiable, Equatable {
                     .stroke(DisplayPreferences().foregroundColor, lineWidth: 2)
             ).edgesIgnoringSafeArea(.horizontal)
             .animation(.easeInOut(duration: 1.0), value: self.tap)
-                .padding(.trailing, self.tap ? UIScreen.main.bounds.width / 10 : 0)
-                .padding(.bottom, 15)
+            .padding(.trailing, self.tap ? UIScreen.main.bounds.width / 10 : 0)
+            .padding(.vertical, self.tap ? 0 : 15)
         }
     }
     static func == (lhs: GoalTile, rhs: GoalTile) -> Bool {
