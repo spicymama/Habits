@@ -13,6 +13,7 @@ import UserNotifications
 import UIKit
 
 struct Settings: View {
+    static let shared = Settings()
     @Environment(\.dismiss) var dismiss
     @StateObject var prefs = DisplayPreferences()
     @State var fontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double ?? 15.0
@@ -85,7 +86,7 @@ struct Settings: View {
                     } label: {
                         Image(systemName: "xmark.circle")
                             .imageScale(.large)
-                            .foregroundColor(Color(UIColor.systemGray4))
+                            .foregroundColor(prefs.accentColor)
                     }
                     .padding(.leading, UIScreen.main.bounds.width / 1.6)
                     .padding(.top) : nil
@@ -181,7 +182,6 @@ struct Settings: View {
                     prefs.fontSize = fontSize
                     prefs.headerFontSize = headerFontSize
                     prefs.titleFontSize = titleFontSize
-                    prefs.updateView()
                     prefs.foregroundColor = foregroundColor
                     prefs.backgroundColor = backgroundColor
                     prefs.accentColor = accentColor

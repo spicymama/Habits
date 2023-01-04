@@ -72,7 +72,7 @@ func fetchNotifs() {
             }
         }
     }
-    Home.shared.fetchForRefresh()
+    db.fetchForRefresh()
    // print("GOAL ARRAY: \(Home.allNotifs)")
     dispatchGroup.leave()
 }

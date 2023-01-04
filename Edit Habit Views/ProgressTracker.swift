@@ -23,7 +23,6 @@ struct ProgressTracker: View {
     
     var body: some View {
         VStack {
-           // Text("Checkin Goal: \(goodcheckinGoal)")
             HStack {
                 Text("Number of positive checkins \n before end date")
                     .foregroundColor(prefs.foregroundColor)
@@ -117,6 +116,17 @@ struct ProgressTracker: View {
                 }
         }.animation(.easeInOut(duration: 0.8), value: self.op1Tap)
             .animation(.easeInOut(duration: 0.8), value: self.op2Tap)
+            .onAppear {
+                if self.selectedOp == "1" {
+                    self.op1selected = true
+                }
+                if self.selectedOp == "2" {
+                    self.op2selected = true
+                }
+                if self.selectedOp == "3" {
+                    self.op3selected = true
+                }
+            }
     }
     func expandView(op: String)-> Bool {
         if op == "1" {

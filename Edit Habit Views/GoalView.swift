@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GoalView: View, Identifiable {
     @ObservedObject var prefs = DisplayPreferences()
+    @ObservedObject var db = Database()
     var id = UUID()
     var currentGoal: Goal
     @State var editGoalTap = false
@@ -133,7 +134,7 @@ struct GoalView: View, Identifiable {
                 .padding(.bottom, 20)
                 .padding(.leading, currentGoal.progressTracker == "3" ? 240 : 80)
                 .fullScreenCover(isPresented: self.$editGoalTap) {
-                    EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, notes: currentGoal.selfNotes, category: currentGoal.category)
+                    EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate,  scheduledReminders: currentGoal.scheduledNotifs, goodcheckinGoal: currentGoal.goodCheckinGoal, notes: currentGoal.selfNotes, category: currentGoal.category)
                 }
         }.foregroundColor(prefs.foregroundColor)
             self.isDone ?
@@ -141,7 +142,7 @@ struct GoalView: View, Identifiable {
             self.deleteTap ?
             Button {
                 deleteGoal(goal: self.currentGoal)
-                Home.shared.fetchForRefresh()
+                db.fetchForRefresh()
             } label: {
                 Text("Confirm Delete")
                 Image(systemName: "")
