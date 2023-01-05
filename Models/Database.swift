@@ -15,7 +15,7 @@ class Database: ObservableObject {
     @Published var goalArr: [Goal] = []
     @Published var catArr: [String] = []
     @Published var newNotifs = false
-    
+    @Published var hideTiles = false
     
     func formatTiles()-> () {
       //  UserDefaults.standard.removeObject(forKey: "tileOrder")

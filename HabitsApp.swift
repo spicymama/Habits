@@ -17,6 +17,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
      // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
      // UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+      /*
+      let defaults = UserDefaults.standard
+      defaults.removeObject(forKey: "doneTileOrder")
+      defaults.removeObject(forKey: "tileOrder")
+      defaults.removeObject(forKey: "userID")
+      defaults.removeObject(forKey: "goToLogin")
+      defaults.removeObject(forKey: "email")
+      defaults.removeObject(forKey: "password")
+       */
       fetchNotifs()
     return true
   }
@@ -41,6 +50,7 @@ class AppState: ObservableObject {
 struct HabitsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var firestoreManager = FirestoreManager()
+    @StateObject var db = Database()
 
        init() {
            FirebaseApp.configure()
@@ -49,6 +59,7 @@ struct HabitsApp: App {
         WindowGroup {
             Home()
                 .environmentObject(firestoreManager)
+                .environmentObject(db)
         }
     }
     static var padEdge: Edge.Set = .leading

@@ -7,6 +7,8 @@
 
 import Foundation
 import Firebase
+import FirebaseAuth
+import FirebaseFirestore
 import SwiftUI
 
 class FirestoreManager: ObservableObject {
@@ -123,7 +125,7 @@ func updateGoal(goal: Goal) {
 
 func fetchSingleGoal(id: String, completion: @escaping (Goal) -> Void) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-    if UserDefaults.standard.bool(forKey: "goToLogin") == true { return }
+    if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 1 { return }
     let goal: Goal = Goal(id: id, listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
     let db = Firestore.firestore()
     print(id)

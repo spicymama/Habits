@@ -28,13 +28,21 @@ struct TimePicker: View {
                             .padding(.trailing, UIScreen.main.bounds.width / 4)
                             .foregroundColor(prefs.foregroundColor)
                         Button {
+                            if notifsAuthorized() == false {
+                                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                                    if success {
+                                        print("All set!")
+                                    } else if let error = error {
+                                        print(error.localizedDescription)
+                                    }
+                                }
+                            }
                             if self.hidden == true {
                                 self.hidden.toggle()
                             } else {
                                 if !self.notifArr.contains(date) {
                                     self.notifArr.append(date)
                                 }
-                                
                             }
                         } label: {
                             Image(systemName: "plus")
@@ -79,7 +87,20 @@ struct TimePicker: View {
         }
     }
 }
-
+func notifsAuthorized()-> Bool {
+    let currentNotification = UNUserNotificationCenter.current()
+    var returnBool = false
+    currentNotification.getNotificationSettings(completionHandler: { (settings) in
+       if settings.authorizationStatus == .notDetermined {
+         returnBool = false
+       } else if settings.authorizationStatus == .denied {
+         returnBool = false
+       } else if settings.authorizationStatus == .authorized {
+          returnBool = true
+       }
+    })
+    return returnBool
+}
 struct TimePicker_Previews: PreviewProvider {
     static var previews: some View {
         TimePicker(date: EditHabit.shared.$monDate, hidden: EditHabit.shared.$monHidden, notifArr: EditHabit.shared.$monNotifs, name: "Monday")

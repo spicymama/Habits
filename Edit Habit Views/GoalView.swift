@@ -126,6 +126,8 @@ struct GoalView: View, Identifiable {
                 EditHabit.shared.title = currentGoal.title
                 self.editGoalTap = true
                 EditHabit.editGoal = true
+                db.hideTiles = true
+                db.objectWillChange.send()
             } label: {
                 Image(systemName: "chevron.right.circle")
                     .imageScale(.large)
@@ -133,7 +135,7 @@ struct GoalView: View, Identifiable {
             }.frame(maxWidth: 20, maxHeight: 20, alignment: .trailing)
                 .padding(.bottom, 20)
                 .padding(.leading, currentGoal.progressTracker == "3" ? 240 : 80)
-                .fullScreenCover(isPresented: self.$editGoalTap, onDismiss: Home.shared.didDismiss) {
+                .fullScreenCover(isPresented: self.$editGoalTap, onDismiss: didDismiss) {
                     EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate, monNotifs: currentGoal.monNotifs, tusNotifs: currentGoal.tusNotifs, wedNotifs: currentGoal.wedNotifs, thursNotifs: currentGoal.thursNotifs, friNotifs: currentGoal.friNotifs, satNotifs: currentGoal.satNotifs, sunNotifs: currentGoal.sunNotifs,   scheduledReminders: currentGoal.scheduledNotifs, goodcheckinGoal: currentGoal.goodCheckinGoal, goodcheckins: currentGoal.goodCheckins, badcheckins: currentGoal.badCheckins, notes: currentGoal.selfNotes, category: currentGoal.category)
                 }
         }.foregroundColor(prefs.foregroundColor)
@@ -168,6 +170,10 @@ struct GoalView: View, Identifiable {
             : nil
         }.frame(maxWidth: UIScreen.main.bounds.width - 40, maxHeight: .infinity)
             .animation(.easeInOut, value: self.deleteTap)
+    }
+    func didDismiss() {
+        db.hideTiles = false
+        db.objectWillChange.send()
     }
 }
 

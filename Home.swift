@@ -12,19 +12,17 @@ import FirebaseAuth
 import FirebaseFirestore
 
 struct Home: View {
+    static var shared = Home()
     @EnvironmentObject var firestoreManager: FirestoreManager
     @Environment(\.refresh) var refresh
     @ObservedObject var appState = AppState.shared
     @ObservedObject var db = Database()
-    //@StateObject var prefs = DisplayPreferences()
-    static var shared = Home()
     @State private var addButtonTap = false
-   // @State var tiles = Database().$tiles
-    @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
+    @State var goToLogin = goToLoginPage()
     @State var notificationTap = false
     @State var settingsTap = false
     @State var tileDrag: Tile?
-    @State var hideTiles = false
+   // @State var hideTiles = false
     var padToggle = true
     var pushNavigationBinding : Binding<Bool> {
         .init { () -> Bool in
@@ -40,7 +38,7 @@ struct Home: View {
                     HStack {
                         Button {
                             settingsTap = true
-                            hideTiles = true
+                            db.hideTiles = true
                         } label: {
                             Image(systemName: "gearshape")
                                 .imageScale(.large)
@@ -54,7 +52,7 @@ struct Home: View {
                         }
                         Button {
                             notificationTap = true
-                            hideTiles = true
+                            db.hideTiles = true
                         } label: {
                             Image(systemName: db.newNotifs ? "bell.badge" : "bell")
                                 .imageScale(.large)
@@ -67,7 +65,7 @@ struct Home: View {
                         Button {
                             EditHabit.editGoal = false
                             addButtonTap = true
-                            hideTiles = true
+                            db.hideTiles = true
                         } label: {
                             Image(systemName: "plus.square")
                                 .imageScale(.large)
@@ -85,7 +83,7 @@ struct Home: View {
                         .foregroundColor(DisplayPreferences().foregroundColor)
                         .padding(.bottom, 25)
                 }
-                self.hideTiles ? nil : ForEach(db.tiles, id: \.id) { tile in
+                db.hideTiles ? nil : ForEach(db.tiles, id: \.id) { tile in
                         tile
                             .onDrag {
                                 tileDrag = tile
@@ -98,7 +96,7 @@ struct Home: View {
                     .font(.system(size: DisplayPreferences().headerFontSize))
                     .foregroundColor(DisplayPreferences().foregroundColor)
                     .padding(.top, 50): nil
-                self.hideTiles ? nil : ForEach(db.doneTiles, id: \.id) { tile in
+                db.hideTiles ? nil : ForEach(db.doneTiles, id: \.id) { tile in
                         tile
                             .onDrag {
                                 tileDrag = tile
@@ -111,15 +109,19 @@ struct Home: View {
             .background(DisplayPreferences().backgroundColor)
             .onAppear() {
                 let defaults = UserDefaults.standard
-                if defaults.bool(forKey: "goToLogin").description.isEmpty {
-                    defaults.set(true, forKey: "goToLogin")
+              //  defaults.removeObject(forKey: "goToLogin")
+                if defaults.value(forKey: "goToLogin") == nil {
+                    defaults.set(1, forKey: "goToLogin")
                 }
-                if defaults.bool(forKey: "goToLogin") == false {
+                else if defaults.value(forKey: "goToLogin") as! Int == 0 {
+                    defaults.set(1, forKey: "goToLogin")
+                }
+                else if defaults.value(forKey: "goToLogin") as! Int == 2 {
                     Auth.auth().signIn(withEmail: UserDefaults.standard.value(forKey: "email") as! String, password: UserDefaults.standard.value(forKey: "password") as! String) { authResult, error in
                         if (authResult != nil) {
                             print("Successfully signed in!")
                         } else {
-                            defaults.set(true, forKey: "goToLogin")
+                            defaults.set(1, forKey: "goToLogin")
                         }
                     }
                     db.fetchForRefresh()
@@ -137,7 +139,7 @@ struct Home: View {
     }
     func didDismiss() {
         db.fetchForRefresh()
-        self.hideTiles = false
+        db.hideTiles = false
     }
 }
 

@@ -28,7 +28,7 @@ struct Settings: View {
     @State var colorTap = false
     @State var fontTap = false
     @State var showSaveButton = false
-    @State var goToLogin = false
+    @State var goToLogin = goToLoginPage()
     @State var notifsAllowed = notifsAuthorized()
     var body: some View {
         ScrollView {
@@ -185,15 +185,6 @@ struct Settings: View {
                     prefs.foregroundColor = foregroundColor
                     prefs.backgroundColor = backgroundColor
                     prefs.accentColor = accentColor
-                    if notifsAuthorized() == false && self.notifsAllowed == true {
-                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                            if success {
-                                print("All set!")
-                            } else if let error = error {
-                                print(error.localizedDescription)
-                            }
-                        }
-                    }
                     self.dismiss()
                 } label: {
                     Text("Save Changes")
@@ -203,6 +194,7 @@ struct Settings: View {
                 Button {
                     logoutUser()
                     self.goToLogin = true
+                    UserDefaults.standard.set(1, forKey: "goToLogin")
                 } label: {
                     Text("Sign Out")
                         .foregroundColor(.red)
@@ -218,7 +210,19 @@ struct Settings: View {
         .tint(accentColor)
     }
 }
-
+func goToLoginPage()-> Bool {
+    var returnBool = false
+    if UserDefaults.standard.value(forKey: "goToLogin") == nil {
+        returnBool = true
+    }
+    else if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 1 {
+        returnBool = true
+    }
+    else if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 2 {
+        returnBool = false
+    }
+    return returnBool
+}
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
         Settings()
@@ -228,24 +232,11 @@ func logoutUser() {
     do { try Auth.auth().signOut() }
     catch { print("already logged out") }
     let defaults = UserDefaults.standard
-    defaults.set(true, forKey: "goToLogin")
+    defaults.set(1, forKey: "goToLogin")
     defaults.set("", forKey: "email")
     defaults.set("", forKey: "password")
 }
-func notifsAuthorized()-> Bool {
-    let currentNotification = UNUserNotificationCenter.current()
-    var returnBool = false
-    currentNotification.getNotificationSettings(completionHandler: { (settings) in
-       if settings.authorizationStatus == .notDetermined {
-         returnBool = false
-       } else if settings.authorizationStatus == .denied {
-         returnBool = false
-       } else if settings.authorizationStatus == .authorized {
-          returnBool = true
-       }
-    })
-    return returnBool
-}
+
 
 extension UserDefaults {
     func color(forKey key: String) -> UIColor? {
