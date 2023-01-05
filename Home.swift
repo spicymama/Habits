@@ -18,7 +18,7 @@ struct Home: View {
     @ObservedObject var appState = AppState.shared
     @ObservedObject var db = Database()
     @State private var addButtonTap = false
-    @State var goToLogin = goToLoginPage()
+    @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
     @State var notificationTap = false
     @State var settingsTap = false
     @State var tileDrag: Tile?
@@ -109,7 +109,7 @@ struct Home: View {
             .background(DisplayPreferences().backgroundColor)
             .onAppear() {
                 let defaults = UserDefaults.standard
-              //  defaults.removeObject(forKey: "goToLogin")
+              // defaults.removeObject(forKey: "goToLogin")
                 if defaults.value(forKey: "goToLogin") == nil {
                     defaults.set(1, forKey: "goToLogin")
                 }

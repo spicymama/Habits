@@ -55,6 +55,7 @@ struct GoalView: View, Identifiable {
                     }
                 }
                 ).allowsHitTesting(currentGoal.progressTracker == "3" ? true : false)
+                    .allowsHitTesting(self.isDone ? false : true)
                     .tint(prefs.accentColor)
                 
                 Text("\(self.prog, specifier: "%.0f") %")

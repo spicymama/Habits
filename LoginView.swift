@@ -80,12 +80,15 @@ struct LoginView: View {
         if self.email != "" {
             self.createOrLogin ? self.password == self.confirmPassword ? Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if (authResult != nil) {
-                    print("Successfully created account!!")
-                    UserDefaults.standard.set(2, forKey: "goToLogin")
+                    let defaults = UserDefaults.standard
+                    defaults.set(1, forKey: "goToLogin")
+                    defaults.set(self.email, forKey: "email")
+                    defaults.set(self.password, forKey: "password")
+                    defaults.set(authResult?.user.uid, forKey: "userID")
                     Home.shared.goToLogin = false
-                    self.dismiss()
-                    UserDefaults.standard.set( authResult?.user.uid, forKey: "userID")
                     createUser(user: User(id: (authResult?.user.uid)!, email: self.email, password: self.password))
+                    print("Successfully created account!!")
+                    self.dismiss()
                 }
                 if (error != nil) {
                     print("Error creating account")
@@ -95,8 +98,11 @@ struct LoginView: View {
              Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
                 if (authResult != nil) {
                     print("Successfully signed in!")
-                    UserDefaults.standard.set(2, forKey: "goToLogin")
-                    UserDefaults.standard.set( authResult?.user.uid, forKey: "userID")
+                    let defaults = UserDefaults.standard
+                    defaults.set(1, forKey: "goToLogin")
+                    defaults.set(self.email, forKey: "email")
+                    defaults.set(self.password, forKey: "password")
+                    defaults.set(authResult?.user.uid, forKey: "userID")
                     Home.shared.goToLogin = false
                     self.dismiss()
                 }
@@ -107,8 +113,6 @@ struct LoginView: View {
             if staySignedIn == true {
                 let defaults = UserDefaults.standard
                 defaults.set(2, forKey: "goToLogin")
-                defaults.set(self.email, forKey: "email")
-                defaults.set(self.password, forKey: "password")
             }
         } else {
             self.needsChange = true

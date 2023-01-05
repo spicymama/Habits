@@ -28,7 +28,7 @@ struct Settings: View {
     @State var colorTap = false
     @State var fontTap = false
     @State var showSaveButton = false
-    @State var goToLogin = goToLoginPage()
+    @State var goToLogin = false
     @State var notifsAllowed = notifsAuthorized()
     var body: some View {
         ScrollView {
@@ -213,6 +213,9 @@ struct Settings: View {
 func goToLoginPage()-> Bool {
     var returnBool = false
     if UserDefaults.standard.value(forKey: "goToLogin") == nil {
+        returnBool = true
+    }
+    else if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 0 {
         returnBool = true
     }
     else if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 1 {
