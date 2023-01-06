@@ -17,65 +17,80 @@ class Database: ObservableObject {
     @Published var newNotifs = false
     @Published var hideTiles = false
     
-    func formatTiles() {
-      //  UserDefaults.standard.removeObject(forKey: "tileOrder")
-      //  UserDefaults.standard.removeObject(forKey: "doneTileOrder")
-       
-    }
-    
     func fetchForRefresh() {
          fetchAllGoals { goals in
             self.catArr = []
             self.goalArr = []
             self.goalArr = goals
-            // self.goalArr.append(contentsOf: goals)
-            for i in goals {
-                if !self.catArr.contains(i.category) && i.category != "" {
-                    self.catArr.append(i.category)
-                }
-            }
-            // self.hideTiles = true
-            // self.formatTiles()
-             print("GOAL FETCH: \(self.goalArr.count)")
-             
+        
              var tileArr: [Tile] = []
              var doneTileArr: [Tile] = []
              self.tiles = []
              self.doneTiles = []
+           //  UserDefaults.standard.removeObject(forKey: "tileOrder")
              let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
              let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
              for goal in self.goalArr {
+                 print("GOAL in initial arr: \(goal.title)")
                  if goal.category == "" {
                      if goal.endDate < Date.now || goal.prog >= 100.0 {
                          doneTileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal, isDone: true)))
                          self.doneTiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal, isDone: true)))
+                         var newTileOrder = doneTileOrder
+                         if !newTileOrder.contains(goal.id) {
+                             newTileOrder.append(goal.id)
+                             UserDefaults.standard.set(newTileOrder, forKey: "doneTileOrder")
+                         }
                      } else {
                          tileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
                          self.tiles.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal)))
+                         var newTileOrder = tileOrder
+                         if !newTileOrder.contains(goal.id) {
+                             newTileOrder.append(goal.id)
+                             UserDefaults.standard.set(newTileOrder, forKey: "tileOrder")
+                         }
+                     }
+                 } else {
+                     if !self.catArr.contains(goal.category) && goal.category != "" {
+                         self.catArr.append(goal.category)
+                         print("CATEGORY: \(goal.category)")
                      }
                  }
              }
+             UserDefaults.standard.set(self.catArr, forKey: "catArr")
              for cat in self.catArr {
+                 print("CAT ARRAY: \(self.catArr)")
                  var goals: [Goal] = []
                  var doneCount = 0
                  for goal in self.goalArr {
                      if goal.category == cat {
                          goals.append(goal)
-                     }
-                     if goal.endDate < Date.now || goal.prog >= 100.0 {
-                         doneCount += 1
+                         if goal.endDate < Date.now || goal.prog >= 100.0 {
+                             doneCount += 1
+                         }
                      }
                  }
                  if doneCount == goals.count {
                      self.doneTiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
                      doneTileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
+                     var newTileOrder = doneTileOrder
+                     if !newTileOrder.contains(cat) {
+                         newTileOrder.append(cat)
+                         UserDefaults.standard.set(newTileOrder, forKey: "doneTileOrder")
+                     }
                  } else {
                      self.tiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
                      tileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
+                     var newTileOrder = tileOrder
+                     if !newTileOrder.contains(cat) {
+                         newTileOrder.append(cat)
+                         UserDefaults.standard.set(newTileOrder, forKey: "tileOrder")
+                     }
                  }
              }
              if !tileOrder.isEmpty {
                  self.tiles = []
+                 print("TILE ORDER: \(tileOrder)")
                  for uid in tileOrder {
                      for tile in tileArr {
                          if tile.id == uid {
@@ -85,6 +100,7 @@ class Database: ObservableObject {
                  }
              }
              if !doneTileOrder.isEmpty {
+                 print("DONE TILE ORDER: \(doneTileOrder)")
                  self.doneTiles = []
                  for uid in doneTileOrder {
                      for tile in doneTileArr {
@@ -94,7 +110,6 @@ class Database: ObservableObject {
                      }
                  }
              }
-             print("TILE COUNT: \(self.tiles.count + self.doneTiles.count)")
          }
             if !self.allNotifs.isEmpty {
                 self.newNotifs = true

@@ -128,7 +128,6 @@ struct GoalView: View, Identifiable {
                 self.editGoalTap = true
                 EditHabit.editGoal = true
                 db.hideTiles = true
-                db.objectWillChange.send()
             } label: {
                 Image(systemName: "chevron.right.circle")
                     .imageScale(.large)

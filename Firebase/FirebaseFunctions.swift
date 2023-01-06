@@ -17,7 +17,7 @@ class FirestoreManager: ObservableObject {
 }
 func createGoal(goal: Goal) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-    let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
+   // let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     let goalData: [String : Any] = [
@@ -46,8 +46,9 @@ func createGoal(goal: Goal) {
         if let error = error {
             print("Error writing document: \(error)")
         } else {
-            var order = tileOrder
             print("Document successfully written!")
+            /*
+            var order = tileOrder
             if goal.category == "" {
                 order.insert(goal.id, at: 0)
                 UserDefaults.standard.set(order, forKey: "tileOrder")
@@ -57,6 +58,7 @@ func createGoal(goal: Goal) {
                     UserDefaults.standard.set(order, forKey: "tileOrder")
                 }
             }
+            */
         }
     }
 }
@@ -240,7 +242,7 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
 
 func deleteGoal(goal: Goal) {
     @ObservedObject var localDB = Database()
-    let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
+    //let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
     let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
     let notifsArr = UNUserNotificationCenter.current()
     notifsArr.getDeliveredNotifications { notifs in
@@ -268,6 +270,7 @@ func deleteGoal(goal: Goal) {
           print("Error removing document: \(err)")
         }
         else {
+            /*
             for i in localDB.goalArr {
                 var index = 0
                 if i.id == goal.id {
@@ -300,6 +303,7 @@ func deleteGoal(goal: Goal) {
                 UserDefaults.standard.set(tiles, forKey: "doneTileOrder")
             }
             print(localDB.goalArr)
+            */
           print("Document successfully removed!")
         }
       }
