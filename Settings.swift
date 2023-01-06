@@ -29,7 +29,6 @@ struct Settings: View {
     @State var fontTap = false
     @State var showSaveButton = false
     @State var goToLogin = false
-    @State var notifsAllowed = notifsAuthorized()
     var body: some View {
         ScrollView {
             Button {
@@ -158,19 +157,7 @@ struct Settings: View {
                 .onTapGesture {
                     self.fontTap = true
                 }
-                notifsAuthorized() ? nil : HStack {
-                    Button("Allow Notifications") {
-                    self.notifsAllowed.toggle()
-                    }
-                    Image(systemName: self.notifsAllowed ? "square.fill" : "square")
-                }
-                .foregroundColor(foregroundColor)
-                .font(.system(size: fontSize))
-                .tint(accentColor)
-                .padding(.top, 25)
-                .onTapGesture {
-                    self.notifsAllowed.toggle()
-                }
+             
                 self.showSaveButton ? Button {
                     let defaults = UserDefaults.standard
                     defaults.set(fontSize, forKey: "fontSize")
@@ -190,7 +177,7 @@ struct Settings: View {
                     Text("Save Changes")
                         .foregroundColor(foregroundColor)
                         .font(.system(size: fontSize))
-                }.padding() : nil
+                }.padding(.top, 40) : nil
                 Button {
                     logoutUser()
                     self.goToLogin = true
@@ -199,7 +186,7 @@ struct Settings: View {
                     Text("Sign Out")
                         .foregroundColor(.red)
                         .font(.system(size: fontSize))
-                }.padding(.top, 20)
+                }.padding(.top, 30)
             }
             .fullScreenCover(isPresented: self.$goToLogin) {
                 LoginView()
@@ -210,6 +197,7 @@ struct Settings: View {
         .tint(accentColor)
     }
 }
+/*
 func goToLoginPage()-> Bool {
     var returnBool = false
     if UserDefaults.standard.value(forKey: "goToLogin") == nil {
@@ -226,6 +214,7 @@ func goToLoginPage()-> Bool {
     }
     return returnBool
 }
+ */
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
         Settings()

@@ -225,6 +225,7 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
                     goal = Goal(id: "", listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
                 }
                 completion(allGoals)
+                Database().fetchComplete = true
             }
         }
         

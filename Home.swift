@@ -18,13 +18,11 @@ struct Home: View {
     @ObservedObject var appState = AppState.shared
     @ObservedObject var db = Database()
     @State private var addButtonTap = false
-    @State var goToLogin = UserDefaults.standard.bool(forKey: "goToLogin")
     @State var notificationTap = false
     @State var settingsTap = false
     @State var tileDrag: Tile?
-   // @State var hideTiles = false
     var padToggle = true
-    var pushNavigationBinding : Binding<Bool> {
+    var goToNotifs : Binding<Bool> {
         .init { () -> Bool in
             appState.navigateTo != nil
         } set: { (newValue) in
@@ -108,34 +106,16 @@ struct Home: View {
         }.frame(maxWidth: .infinity)
             .background(DisplayPreferences().backgroundColor)
             .onAppear() {
-                let defaults = UserDefaults.standard
-              // defaults.removeObject(forKey: "goToLogin")
-                if defaults.value(forKey: "goToLogin") == nil {
-                    defaults.set(1, forKey: "goToLogin")
-                }
-                else if defaults.value(forKey: "goToLogin") as! Int == 0 {
-                    defaults.set(1, forKey: "goToLogin")
-                }
-                else if defaults.value(forKey: "goToLogin") as! Int == 2 {
-                    Auth.auth().signIn(withEmail: UserDefaults.standard.value(forKey: "email") as! String, password: UserDefaults.standard.value(forKey: "password") as! String) { authResult, error in
-                        if (authResult != nil) {
-                            print("Successfully signed in!")
-                        } else {
-                            defaults.set(1, forKey: "goToLogin")
-                        }
-                    }
-                    db.fetchForRefresh()
-                }
-            }
-            .fullScreenCover(isPresented: $goToLogin) {
-                LoginView()
+               
             }
             .refreshable {
                 db.fetchForRefresh()
+               // db.formatTiles()
             }
-            .fullScreenCover(isPresented: pushNavigationBinding) {
+            .fullScreenCover(isPresented: goToNotifs) {
                 NotificationsView()
             }
+            .navigationBarBackButtonHidden()
     }
     func didDismiss() {
         db.fetchForRefresh()

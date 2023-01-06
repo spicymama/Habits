@@ -57,7 +57,8 @@ struct HabitsApp: App {
        }
     var body: some Scene {
         WindowGroup {
-            Home()
+           // Home()
+            LaunchScreen()
                 .environmentObject(firestoreManager)
                 .environmentObject(db)
         }
@@ -83,7 +84,7 @@ func fetchNotifs() {
             }
         }
     }
-    db.fetchForRefresh()
+   // db.fetchForRefresh()
    // print("GOAL ARRAY: \(Home.allNotifs)")
     dispatchGroup.leave()
 }
