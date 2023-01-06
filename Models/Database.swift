@@ -16,7 +16,6 @@ class Database: ObservableObject {
     @Published var catArr: [String] = []
     @Published var newNotifs = false
     @Published var hideTiles = false
-    @Published var fetchComplete = false
     
     func formatTiles() {
       //  UserDefaults.standard.removeObject(forKey: "tileOrder")
@@ -95,9 +94,7 @@ class Database: ObservableObject {
                      }
                  }
              }
-             self.hideTiles = false
              print("TILE COUNT: \(self.tiles.count + self.doneTiles.count)")
-             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.showTiles)
          }
             if !self.allNotifs.isEmpty {
                 self.newNotifs = true
@@ -106,7 +103,5 @@ class Database: ObservableObject {
             }
             self.objectWillChange.send()
     }
-    func showTiles() {
-        self.hideTiles = false
-    }
+   
 }

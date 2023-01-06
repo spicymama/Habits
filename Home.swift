@@ -106,11 +106,10 @@ struct Home: View {
         }.frame(maxWidth: .infinity)
             .background(DisplayPreferences().backgroundColor)
             .onAppear() {
-               
+                didDismiss()
             }
             .refreshable {
                 db.fetchForRefresh()
-               // db.formatTiles()
             }
             .fullScreenCover(isPresented: goToNotifs) {
                 NotificationsView()

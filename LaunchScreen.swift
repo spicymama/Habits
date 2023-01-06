@@ -51,8 +51,6 @@ struct LaunchScreen: View {
                         if (authResult != nil) {
                             db.fetchForRefresh()
                             self.goHome = true
-                            db.hideTiles = true
-                           
                             print("Successfully signed in!")
                         } else {
                             defaults.set(1, forKey: "goToLogin")
@@ -77,16 +75,7 @@ struct LaunchScreen: View {
             }).labelsHidden()
                 .navigationBarBackButtonHidden()
         }
-        /*
-         .fullScreenCover(isPresented: self.$goToLogin) {
-         LoginView()
-         }
-         .fullScreenCover(isPresented: self.$goHome) {
-         Home()
-         }
-         */
     }
-   
 }
 
 struct LaunchScreen_Previews: PreviewProvider {
