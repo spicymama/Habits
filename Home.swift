@@ -16,7 +16,7 @@ struct Home: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     @Environment(\.refresh) var refresh
     @ObservedObject var appState = AppState.shared
-    @ObservedObject var db = Database()
+    @StateObject var db = Database()
     @State private var addButtonTap = false
     @State var notificationTap = false
     @State var settingsTap = false
