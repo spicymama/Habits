@@ -177,8 +177,9 @@ struct EditHabit: View {
                     self.notesTap ? nil : ZStack {
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(prefs.foregroundColor, lineWidth: 2)
+                            .frame(maxWidth: UIScreen.main.bounds.width - 50)
                         TextField("Notes...", text: self.$notes, axis: .vertical)
-                            .frame(maxWidth: UIScreen.main.bounds.width - 50, minHeight: 120, maxHeight: 5000, alignment: .leading)
+                            .frame(maxWidth: UIScreen.main.bounds.width - 60, minHeight: 120, maxHeight: 5000, alignment: .leading)
                             .font(.system(size: prefs.fontSize))
                             .foregroundColor(prefs.foregroundColor)
                             .tint(prefs.accentColor)

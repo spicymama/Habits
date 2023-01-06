@@ -11,7 +11,7 @@ struct NotificationBox: View, Identifiable {
     var id: UUID
     var goal: Goal = Goal.placeholderGoal
     @ObservedObject var prefs = DisplayPreferences()
-    @ObservedObject var db = Database()
+   // @ObservedObject var db = Database()
     @State var thumbsUpTap = false
     @State var thumbsDownTap = false
     @State var notifDate = ""
@@ -73,12 +73,12 @@ struct NotificationBox: View, Identifiable {
                 .padding(.leading, 30)
             }
             .padding(.bottom)
-        }
+        }.frame(maxWidth: UIScreen.main.bounds.width - 50)
         .foregroundColor(prefs.foregroundColor)
         .overlay(
             RoundedRectangle(cornerRadius: 15)
                 .stroke(prefs.foregroundColor, lineWidth: 2)
-        )
+        ).frame(maxWidth: UIScreen.main.bounds.width - 50)
         .onDisappear {
             if self.thumbsUpTap == true || self.thumbsDownTap == true {
                 updateGoal(goal: self.goal)
@@ -92,9 +92,9 @@ struct NotificationBox: View, Identifiable {
    
     func removeSeenNotif() {
         var index1 = 0
-        for notif in db.allNotifs {
+        for notif in NotificationsView.allNotifs {
             if notif.listID == goal.listID {
-                db.allNotifs.remove(at: index1)
+                NotificationsView.allNotifs.remove(at: index1)
                 break
             }
             index1 += 1

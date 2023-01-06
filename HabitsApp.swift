@@ -17,15 +17,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
      // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
      // UNUserNotificationCenter.current().removeAllDeliveredNotifications()
-      /*
-      let defaults = UserDefaults.standard
-      defaults.removeObject(forKey: "doneTileOrder")
-      defaults.removeObject(forKey: "tileOrder")
-      defaults.removeObject(forKey: "userID")
-      defaults.removeObject(forKey: "goToLogin")
-      defaults.removeObject(forKey: "email")
-      defaults.removeObject(forKey: "password")
-       */
       fetchNotifs()
     return true
   }
@@ -67,7 +58,7 @@ struct HabitsApp: App {
 }
 
 func fetchNotifs() {
-    @ObservedObject var db = Database()
+   // @ObservedObject var db = Database()
     let notifsArr = UNUserNotificationCenter.current()
     let dispatchGroup = DispatchGroup()
     dispatchGroup.enter()
@@ -77,9 +68,9 @@ func fetchNotifs() {
             let listID = notif.request.content.userInfo["listID"]
             fetchSingleGoal(id: goalID as! String) { goal in
                 goal.listID = listID as! String
-                if !db.allNotifs.contains(goal) {
-                    db.allNotifs.append(goal)
-                    print("Title: \(goal.title) \n UID: \(goal.id)")
+                if !NotificationsView.allNotifs.contains(goal) {
+                    NotificationsView.allNotifs.append(goal)
+                    print("NOTIFS: \(NotificationsView.allNotifs)")
                 }
             }
         }

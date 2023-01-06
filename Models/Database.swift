@@ -9,15 +9,16 @@ import Foundation
 import SwiftUI
 
 class Database: ObservableObject {
-    @Published var allNotifs: [Goal] = []
+   // @Published var allNotifs: [Goal] = []
     @Published var tiles: [Tile] = []
     @Published var doneTiles: [Tile] = []
     @Published var goalArr: [Goal] = []
     @Published var catArr: [String] = []
-    @Published var newNotifs = false
+   // @Published var newNotifs = false
     @Published var hideTiles = false
     
     func fetchForRefresh() {
+        self.hideTiles = true
          fetchAllGoals { goals in
             self.catArr = []
             self.goalArr = []
@@ -57,6 +58,7 @@ class Database: ObservableObject {
                      }
                  }
              }
+             self.hideTiles = false
              UserDefaults.standard.set(self.catArr, forKey: "catArr")
              for cat in self.catArr {
                  print("CAT ARRAY: \(self.catArr)")
@@ -111,11 +113,6 @@ class Database: ObservableObject {
                  }
              }
          }
-            if !self.allNotifs.isEmpty {
-                self.newNotifs = true
-            } else {
-                self.newNotifs = false
-            }
             self.objectWillChange.send()
     }
    

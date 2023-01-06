@@ -47,14 +47,14 @@ struct ListTile: View, Identifiable {
                                 .foregroundColor(DisplayPreferences().foregroundColor)
                                 
                         }
-                        .frame(maxWidth: UIScreen.main.bounds.width - 30, maxHeight: 5000, alignment: .leading)
+                        .frame(maxWidth: UIScreen.main.bounds.width - 35, maxHeight: 5000, alignment: .leading)
                         .padding(.bottom, 10)
                         .padding(.leading, 10)
                     } : nil
                     self.wasTapped ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes, isDone: self.isDone)
                 }
             }
-            .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 20, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 150)
+            .frame(maxWidth: self.wasTapped ? 250 : UIScreen.main.bounds.width - 30, maxHeight: self.wasTapped ? 600 : UIScreen.main.bounds.height - 150)
             .frame(minHeight: 100)
             .foregroundColor(DisplayPreferences().foregroundColor)
             .padding(.bottom, 25)

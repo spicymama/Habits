@@ -11,10 +11,10 @@ import UserNotifications
 struct NotificationsView: View {
     static var shared = NotificationsView()
     @ObservedObject var prefs = DisplayPreferences()
-    @ObservedObject var db = Database()
+   // @StateObject var db = Database()
     @Environment(\.dismiss) var dismiss
-    @State var showNotifs = false
-    @State var allNotifs: [Goal] = Database().allNotifs
+   // @State var showNotifs = false
+    static var allNotifs: [Goal] = []
     var body: some View {
         ScrollView {
             VStack {
@@ -29,9 +29,11 @@ struct NotificationsView: View {
                     .font(.system(size: prefs.headerFontSize))
                     .foregroundColor(prefs.foregroundColor)
                     .padding(.bottom, 25)
-                ForEach(self.allNotifs, id: \.listID) { notif in
+                ForEach(NotificationsView.allNotifs, id: \.listID) { notif in
                     NotificationBox(id: UUID(), goal: notif)
                 }
+            }.onAppear {
+                print("NOTIFS: \(NotificationsView.allNotifs)")
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(prefs.backgroundColor)
