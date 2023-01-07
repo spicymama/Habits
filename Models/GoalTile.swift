@@ -24,7 +24,7 @@ struct GoalTile: View, Identifiable, Equatable {
                     .foregroundColor(DisplayPreferences().accentColor)
             }
             .padding(.leading, UIScreen.main.bounds.width / 1.3)
-            .padding(.top, 10)
+            .padding(.top, 20)
             .frame(maxHeight: UIScreen.main.bounds.height - 150, alignment: .topTrailing)
             .zIndex(1)
             VStack {

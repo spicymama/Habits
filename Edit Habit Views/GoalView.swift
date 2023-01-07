@@ -32,7 +32,7 @@ struct GoalView: View, Identifiable {
             .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 50, alignment: .leading)
             .padding(.bottom, 10)
             .padding(.leading, 40)
-            HStack {
+            isDone ? nil : HStack {
                 Image(systemName: currentGoal.monNotifs.isEmpty ? "m.circle" : "m.circle.fill")
                 Image(systemName: currentGoal.tusNotifs.isEmpty ? "t.circle" : "t.circle.fill")
                 Image(systemName: currentGoal.wedNotifs.isEmpty ? "w.circle" : "w.circle.fill")
@@ -44,6 +44,18 @@ struct GoalView: View, Identifiable {
                 .padding(.leading, 25)
                 .padding(.bottom, 10)
                 .foregroundColor(prefs.foregroundColor)
+            isDone ? currentGoal.progressTracker == "3" ?
+            Text("Look at the progress you've made! Add some notes about how things went.")
+                .padding(.horizontal)
+                .font(.system(size: prefs.fontSize))
+                .foregroundColor(prefs.foregroundColor)
+                .lineLimit(5, reservesSpace: true)
+            :
+            Text("In \(Calendar.current.dateComponents([.day], from: currentGoal.dateCreated, to: currentGoal.endDate).day!) days, you had \(currentGoal.goodCheckins + currentGoal.badCheckins) checkins, \(currentGoal.goodCheckins) of which were positive! Add some notes about how things went.")
+                .padding(.horizontal)
+                .font(.system(size: prefs.fontSize))
+                .foregroundColor(prefs.foregroundColor)
+                .lineLimit(5, reservesSpace: true) : nil
             HStack {
                 Slider(value: self.$prog,
                        in: 0...100,
@@ -64,7 +76,7 @@ struct GoalView: View, Identifiable {
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
             .padding(.bottom, 10)
-            .accentColor(.gray)
+            .accentColor(prefs.accentColor)
                 ZStack {
                     RoundedRectangle(cornerRadius: 15, style: .continuous)
                         .stroke(prefs.foregroundColor, lineWidth: 1.5)

@@ -32,7 +32,7 @@ struct ProgressTracker: View {
                 Image(systemName: self.op1selected ? "square.fill" : "square")
                     .foregroundColor(prefs.foregroundColor)
                     .padding(.horizontal, 15)
-            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 60, alignment: .trailing)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 60, alignment: .bottomTrailing)
                 .onTapGesture {
                     self.op1Tap.toggle()
                     self.op2Tap = false
@@ -67,7 +67,7 @@ struct ProgressTracker: View {
                 Image(systemName: self.op2selected ? "square.fill" : "square")
                     .foregroundColor(prefs.foregroundColor)
                     .padding(.horizontal, 15)
-            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 60, alignment: .trailing)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 60, alignment: .bottomTrailing)
                 .onTapGesture {
                     self.op1Tap = false
                     self.op2Tap.toggle()
@@ -101,7 +101,7 @@ struct ProgressTracker: View {
                Image(systemName: self.op3selected ? "square.fill" : "square")
                     .foregroundColor(prefs.foregroundColor)
                     .padding(.horizontal, 15)
-            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 40, alignment: .trailing)
+            }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 40, alignment: .bottomTrailing)
                 .onTapGesture {
                     self.op1Tap = false
                     self.op2Tap = false

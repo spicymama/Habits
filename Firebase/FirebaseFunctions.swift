@@ -91,6 +91,9 @@ func updateGoal(goal: Goal) {
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     let progress = calculateProg(tracker: goal.progressTracker, goodCheckinGoal: goal.goodCheckinGoal, goodCheckins: goal.goodCheckins, prog: goal.prog)
     goal.prog = progress
+    if goal.prog >= 100.0 && goal.endDate > Date.now {
+        goal.endDate = Date.now
+    }
     let goalData: [String : Any] = [
         "id" : goal.id,
         "badCheckins" : goal.badCheckins,
