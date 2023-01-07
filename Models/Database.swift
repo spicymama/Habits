@@ -9,16 +9,13 @@ import Foundation
 import SwiftUI
 
 class Database: ObservableObject {
-   // @Published var allNotifs: [Goal] = []
     @Published var tiles: [Tile] = []
     @Published var doneTiles: [Tile] = []
     @Published var goalArr: [Goal] = []
     @Published var catArr: [String] = []
-   // @Published var newNotifs = false
     @Published var hideTiles = false
     static var allNotifs: [Goal] = []
     func fetchForRefresh() {
-        self.hideTiles = true
          fetchAllGoals { goals in
             self.catArr = []
             self.goalArr = []
@@ -31,8 +28,8 @@ class Database: ObservableObject {
            //  UserDefaults.standard.removeObject(forKey: "tileOrder")
              let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
              let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
+            
              for goal in self.goalArr {
-                 print("GOAL in initial arr: \(goal.title)")
                  if goal.category == "" {
                      if goal.endDate < Date.now || goal.prog >= 100.0 {
                          doneTileArr.append(Tile(id: goal.id, goalTile: GoalTile(goal: goal, isDone: true)))
@@ -54,14 +51,11 @@ class Database: ObservableObject {
                  } else {
                      if !self.catArr.contains(goal.category) && goal.category != "" {
                          self.catArr.append(goal.category)
-                         print("CATEGORY: \(goal.category)")
                      }
                  }
              }
-             self.hideTiles = false
              UserDefaults.standard.set(self.catArr, forKey: "catArr")
              for cat in self.catArr {
-                 print("CAT ARRAY: \(self.catArr)")
                  var goals: [Goal] = []
                  var doneCount = 0
                  for goal in self.goalArr {
@@ -92,7 +86,6 @@ class Database: ObservableObject {
              }
              if !tileOrder.isEmpty {
                  self.tiles = []
-                 print("TILE ORDER: \(tileOrder)")
                  for uid in tileOrder {
                      for tile in tileArr {
                          if tile.id == uid {
@@ -102,7 +95,6 @@ class Database: ObservableObject {
                  }
              }
              if !doneTileOrder.isEmpty {
-                 print("DONE TILE ORDER: \(doneTileOrder)")
                  self.doneTiles = []
                  for uid in doneTileOrder {
                      for tile in doneTileArr {
@@ -116,4 +108,60 @@ class Database: ObservableObject {
             self.objectWillChange.send()
     }
    
+    func clearOldNotifs() {
+        for tile in self.doneTiles {
+            if let goal = tile.goalTile?.goal {
+                UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+                    for request in requests {
+                        let goalID = request.content.userInfo["goalUID"]
+                        if goalID as! String == goal.id {
+                            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [request.identifier])
+                        }
+                    }
+                }
+            }
+            if let goals = tile.listTile?.goalArr {
+                for goal in goals {
+                    UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+                        for request in requests {
+                            let goalID = request.content.userInfo["goalUID"]
+                            if goalID as! String == goal.id {
+                                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [request.identifier])
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
+        let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
+        var newOrder = tileOrder
+        var newDoneOrder = doneTileOrder
+        for i in tileOrder {
+           var keep = false
+            for goal in self.goalArr {
+                if goal.id == i {
+                    keep = true
+                }
+            }
+            if keep == false {
+                guard let index = newOrder.firstIndex(of: i) else { break }
+                newOrder.remove(at: index)
+            }
+        }
+        for i in doneTileOrder {
+           var keep = false
+            for goal in self.goalArr {
+                if goal.id == i {
+                    keep = true
+                }
+            }
+            if keep == false {
+                guard let index = newDoneOrder.firstIndex(of: i) else { break }
+                newDoneOrder.remove(at: index)
+            }
+        }
+        UserDefaults.standard.set(newOrder, forKey: "tileOrder")
+        UserDefaults.standard.set(newDoneOrder, forKey: "doneTileOrder")
+    }
 }

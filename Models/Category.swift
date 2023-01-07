@@ -15,7 +15,6 @@ struct Category: View {
     @State var tap = true
     @State var dateTap = true
     @State var selectedCat = ""
-    @State var animate = true
     
     var body: some View {
         VStack {
@@ -29,7 +28,6 @@ struct Category: View {
             .padding(.top, 40)
             .onTapGesture {
                 self.tap.toggle()
-               // self.animate.toggle()
             }
             HStack {
                 self.tap ? nil :
@@ -43,7 +41,6 @@ struct Category: View {
                             .stroke(prefs.foregroundColor, lineWidth: 2)
                     )
                 self.tap ? nil : self.category == "" ? nil : Button {
-                    //self.animate.toggle()
                     self.tap.toggle()
                     self.selectedCat = category
                     self.category = ""
@@ -61,7 +58,6 @@ struct Category: View {
                             .foregroundColor(prefs.foregroundColor)
                             .font(.system(size: prefs.fontSize))
                             .onTapGesture {
-                               // self.animate.toggle()
                                 self.tap.toggle()
                                 self.category = ""
                                 self.selectedCat = cat
@@ -78,19 +74,17 @@ struct Category: View {
                     .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .trailing)
                     .onTapGesture {
                         self.dateTap.toggle()
-                       // self.animate.toggle()
                     }
                 self.dateTap ? nil : Button {
                     self.selectedCat = ""
                     self.category = ""
                     self.dateTap.toggle()
-                    //self.animate.toggle()
                 } label: {
                     Image(systemName: "xmark.circle")
                         .font(.system(size: prefs.fontSize))
                 }.padding(.trailing, 10)
             } .foregroundColor(prefs.foregroundColor)
-        }.animation(.easeInOut(duration: 0.5), value: self.animate)
+        }.animation(.easeInOut(duration: 0.5), value: self.tap)
             .frame(maxHeight: 150)
     }
 }

@@ -197,24 +197,7 @@ struct Settings: View {
         .tint(accentColor)
     }
 }
-/*
-func goToLoginPage()-> Bool {
-    var returnBool = false
-    if UserDefaults.standard.value(forKey: "goToLogin") == nil {
-        returnBool = true
-    }
-    else if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 0 {
-        returnBool = true
-    }
-    else if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 1 {
-        returnBool = true
-    }
-    else if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 2 {
-        returnBool = false
-    }
-    return returnBool
-}
- */
+
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
         Settings()

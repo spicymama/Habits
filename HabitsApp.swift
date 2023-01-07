@@ -15,15 +15,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     var categoryArr: [String] = []
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-     // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-     // UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+    //  UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    //  UNUserNotificationCenter.current().removeAllDeliveredNotifications()
       fetchNotifs()
     return true
   }
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void ) {
         fetchNotifs()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            print("Dispatch")
             AppState.shared.navigateTo = "notifications"
         }
     }
@@ -58,10 +57,9 @@ struct HabitsApp: App {
 }
 
 func fetchNotifs() {
-   // @ObservedObject var db = Database()
     let notifsArr = UNUserNotificationCenter.current()
-    let dispatchGroup = DispatchGroup()
-    dispatchGroup.enter()
+  //  let dispatchGroup = DispatchGroup()
+  //  dispatchGroup.enter()
     notifsArr.getDeliveredNotifications { notifs in
         for notif in notifs {
             let goalID = notif.request.content.userInfo["goalUID"]
@@ -70,14 +68,11 @@ func fetchNotifs() {
                 goal.listID = listID as! String
                 if !Database.allNotifs.contains(goal) {
                     Database.allNotifs.append(goal)
-                    print("NOTIFS: \(Database.allNotifs)")
                 }
             }
         }
     }
-   // db.fetchForRefresh()
-   // print("GOAL ARRAY: \(Home.allNotifs)")
-    dispatchGroup.leave()
+   // dispatchGroup.leave()
 }
 
 

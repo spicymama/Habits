@@ -32,7 +32,7 @@ struct NotificationsView: View {
                     NotificationBox(id: UUID(), goal: notif, allNotifs: self.$allNotifs)
                 }
             }.onAppear {
-                print("NOTIFS: \(self.allNotifs)")
+                Database().clearOldNotifs()
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(prefs.backgroundColor)

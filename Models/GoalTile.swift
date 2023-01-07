@@ -73,7 +73,6 @@ struct DropViewDelegate: DropDelegate {
     func dropEntered(info: DropInfo) {
         var tileOrder: [String] = []
         if currentItem.id != draggingItem.wrappedValue?.id {
-            print("START INDEX: \(startIndex)")
             let from = items.wrappedValue.firstIndex(of: draggingItem.wrappedValue!) ?? startIndex
             let to = items.wrappedValue.firstIndex(of: currentItem)!
             if items[to].id != draggingItem.wrappedValue?.id {

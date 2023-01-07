@@ -47,18 +47,6 @@ func createGoal(goal: Goal) {
             print("Error writing document: \(error)")
         } else {
             print("Document successfully written!")
-            /*
-            var order = tileOrder
-            if goal.category == "" {
-                order.insert(goal.id, at: 0)
-                UserDefaults.standard.set(order, forKey: "tileOrder")
-            } else {
-                if !order.contains(goal.category) {
-                    order.insert(goal.category, at: 0)
-                    UserDefaults.standard.set(order, forKey: "tileOrder")
-                }
-            }
-            */
         }
     }
 }
@@ -133,7 +121,6 @@ func fetchSingleGoal(id: String, completion: @escaping (Goal) -> Void) {
     if UserDefaults.standard.value(forKey: "goToLogin") as! Int == 1 { return }
     let goal: Goal = Goal(id: id, listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0,  monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [], progressTracker: "", selfNotes: "", prog: 0.0)
     let db = Firestore.firestore()
-    print(id)
     DispatchQueue.main.async {
         db.collection("User").document(currentUser).collection("Goals").document(id).getDocument() { (querySnapshot, error) in
             if let error = error {

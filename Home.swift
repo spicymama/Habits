@@ -36,7 +36,7 @@ struct Home: View {
                     HStack {
                         Button {
                             settingsTap = true
-                           // db.hideTiles = true
+                            db.hideTiles = true
                         } label: {
                             Image(systemName: "gearshape")
                                 .imageScale(.large)
@@ -50,7 +50,8 @@ struct Home: View {
                         }
                         Button {
                             notificationTap = true
-                           // db.hideTiles = true
+                            db.hideTiles = true
+                           // clearOldNotifs()
                         } label: {
                             Image(systemName: Database.allNotifs.count > 0 ? "bell.badge" : "bell")
                                 .imageScale(.large)
@@ -63,7 +64,7 @@ struct Home: View {
                         Button {
                             EditHabit.editGoal = false
                             addButtonTap = true
-                           // db.hideTiles = true
+                            db.hideTiles = true
                         } label: {
                             Image(systemName: "plus.square")
                                 .imageScale(.large)
@@ -109,7 +110,9 @@ struct Home: View {
                 didDismiss()
             }
             .refreshable {
+                db.hideTiles = true
                 db.fetchForRefresh()
+                db.hideTiles = false
             }
             .fullScreenCover(isPresented: goToNotifs) {
                 NotificationsView()
@@ -118,7 +121,7 @@ struct Home: View {
     }
     func didDismiss() {
         db.fetchForRefresh()
-       // db.hideTiles = false
+        db.hideTiles = false
     }
 }
 

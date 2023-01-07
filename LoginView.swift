@@ -65,6 +65,7 @@ struct LoginView: View {
                 Text(self.createOrLogin ? "Already have an account?\nLog in" : "Create an account")
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .center)
+            .padding(.bottom, 25)
             Button {
                 staySignedIn.toggle()
             } label: {
@@ -77,9 +78,6 @@ struct LoginView: View {
             .foregroundColor(.gray)
             .animation(.easeInOut, value: self.createOrLogin)
             .navigationBarBackButtonHidden()
-           // .fullScreenCover(isPresented: self.$goHome) {
-             //   Home()
-           // }
     }
     func checkFields() {
         if self.email != "" {
@@ -109,7 +107,6 @@ struct LoginView: View {
                 if (authResult != nil) {
                     print("Successfully signed in!")
                     let defaults = UserDefaults.standard
-                   // defaults.set(1, forKey: "goToLogin")
                     defaults.set(self.email, forKey: "email")
                     defaults.set(self.password, forKey: "password")
                     defaults.set(authResult?.user.uid, forKey: "userID")
