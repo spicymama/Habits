@@ -52,7 +52,7 @@ struct Home: View {
                             notificationTap = true
                            // db.hideTiles = true
                         } label: {
-                            Image(systemName: NotificationsView.allNotifs.count > 0 ? "bell.badge" : "bell")
+                            Image(systemName: Database.allNotifs.count > 0 ? "bell.badge" : "bell")
                                 .imageScale(.large)
                         }
                         .frame(maxWidth: 15, maxHeight: 15, alignment: .topLeading)

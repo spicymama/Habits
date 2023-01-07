@@ -68,9 +68,9 @@ func fetchNotifs() {
             let listID = notif.request.content.userInfo["listID"]
             fetchSingleGoal(id: goalID as! String) { goal in
                 goal.listID = listID as! String
-                if !NotificationsView.allNotifs.contains(goal) {
-                    NotificationsView.allNotifs.append(goal)
-                    print("NOTIFS: \(NotificationsView.allNotifs)")
+                if !Database.allNotifs.contains(goal) {
+                    Database.allNotifs.append(goal)
+                    print("NOTIFS: \(Database.allNotifs)")
                 }
             }
         }

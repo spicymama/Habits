@@ -16,7 +16,7 @@ class Database: ObservableObject {
     @Published var catArr: [String] = []
    // @Published var newNotifs = false
     @Published var hideTiles = false
-    
+    static var allNotifs: [Goal] = []
     func fetchForRefresh() {
         self.hideTiles = true
          fetchAllGoals { goals in

@@ -16,6 +16,7 @@ struct NotificationBox: View, Identifiable {
     @State var thumbsDownTap = false
     @State var notifDate = ""
     @State var notifTime = ""
+    @Binding var allNotifs: [Goal]
     var body: some View {
         VStack {
             HStack {
@@ -25,9 +26,13 @@ struct NotificationBox: View, Identifiable {
                     .padding(.bottom)
                     .padding(.top, 10)
             }
-            Text("How hare things going? So far, \(goal.goodCheckins) of your \(goal.goodCheckins + goal.badCheckins) checkins have been positive. You got this!")
+            Text("How are things going?")
                 .padding(.horizontal)
                 .padding(.bottom)
+            self.thumbsUpTap == true || self.thumbsDownTap == true ?
+            Text("So far, \(goal.goodCheckins) of your \(goal.goodCheckins + goal.badCheckins) checkins have been positive. You got this!")
+                .padding(.horizontal)
+                .padding(.bottom) : nil
             HStack {
                 VStack {
                     Text(self.notifDate)
@@ -49,6 +54,12 @@ struct NotificationBox: View, Identifiable {
                     if thumbsDownTap == false {
                         goal.badCheckins -= 1
                     }
+                    for notif in self.allNotifs {
+                        if notif.id == goal.id {
+                            notif.badCheckins = goal.badCheckins
+                            notif.goodCheckins = goal.goodCheckins
+                        }
+                    }
                 } label: {
                     Image(systemName: self.thumbsDownTap ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                         .font(.system(size: 30))
@@ -66,6 +77,12 @@ struct NotificationBox: View, Identifiable {
                     if thumbsUpTap == false {
                         goal.goodCheckins -= 1
                     }
+                    for notif in self.allNotifs {
+                        if notif.id == goal.id {
+                            notif.badCheckins = goal.badCheckins
+                            notif.goodCheckins = goal.goodCheckins
+                        }
+                    }
                 } label: {
                     Image(systemName: self.thumbsUpTap ? "hand.thumbsup.fill" : "hand.thumbsup")
                         .font(.system(size: 30))
@@ -73,12 +90,15 @@ struct NotificationBox: View, Identifiable {
                 .padding(.leading, 30)
             }
             .padding(.bottom)
-        }.frame(maxWidth: UIScreen.main.bounds.width - 50)
+        }
+        .animation(.easeInOut, value: thumbsUpTap || thumbsDownTap)
+        .frame(maxWidth: UIScreen.main.bounds.width - 65)
         .foregroundColor(prefs.foregroundColor)
+        .padding(.bottom, 15)
         .overlay(
             RoundedRectangle(cornerRadius: 15)
                 .stroke(prefs.foregroundColor, lineWidth: 2)
-        ).frame(maxWidth: UIScreen.main.bounds.width - 50)
+        ).frame(maxWidth: UIScreen.main.bounds.width - 60)
         .onDisappear {
             if self.thumbsUpTap == true || self.thumbsDownTap == true {
                 updateGoal(goal: self.goal)
@@ -89,12 +109,11 @@ struct NotificationBox: View, Identifiable {
         }
     }
     
-   
     func removeSeenNotif() {
         var index1 = 0
-        for notif in NotificationsView.allNotifs {
+        for notif in Database.allNotifs {
             if notif.listID == goal.listID {
-                NotificationsView.allNotifs.remove(at: index1)
+                Database.allNotifs.remove(at: index1)
                 break
             }
             index1 += 1
@@ -130,6 +149,6 @@ struct NotificationBox: View, Identifiable {
 
 struct NotificationBox_Previews: PreviewProvider {
     static var previews: some View {
-        NotificationBox(id: UUID(), goal: Goal.placeholderGoal)
+        NotificationBox(id: UUID(), goal: Goal.placeholderGoal, allNotifs: NotificationsView.shared.$allNotifs)
     }
 }
