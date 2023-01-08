@@ -45,13 +45,13 @@ struct GoalView: View, Identifiable, Equatable {
                 .padding(.bottom, 10)
                 .foregroundColor(prefs.foregroundColor)
             isDone ? currentGoal.progressTracker == "3" ?
-            Text("Look at the progress you've made! Add some notes about how things went.")
+            Text("Look at the progress you've made! Consider adding some notes about how things went.")
                 .padding(.horizontal)
                 .font(.system(size: prefs.fontSize))
                 .foregroundColor(prefs.foregroundColor)
                 .lineLimit(5, reservesSpace: true)
             :
-            Text("In \(Calendar.current.dateComponents([.day], from: currentGoal.dateCreated, to: currentGoal.endDate).day!) days, you had \(currentGoal.goodCheckins + currentGoal.badCheckins) checkins, \(currentGoal.goodCheckins) of which were positive! Add some notes about how things went.")
+            Text("In \(Calendar.current.dateComponents([.day], from: currentGoal.dateCreated, to: currentGoal.endDate).day!) days, you had \(currentGoal.goodCheckins + currentGoal.badCheckins) checkins, \(currentGoal.goodCheckins) of which were positive! Consider adding some notes about how things went.")
                 .padding(.horizontal)
                 .font(.system(size: prefs.fontSize))
                 .foregroundColor(prefs.foregroundColor)
@@ -207,38 +207,3 @@ extension Date {
         return Calendar.current.dateComponents([.weekday], from: self).weekday
     }
 }
-/*
-struct ListDropViewDelegate: DropDelegate {
-    var item: GoalView
-    var itemArr: Binding<[GoalView]>
-    var dragItem: Binding<GoalView?>
-   // var isDone = false
-    let startIndex: Int
-    func performDrop(info: DropInfo) -> Bool {
-        dragItem.wrappedValue = nil
-        return true
-    }
-    
-    func dropEnter(info: DropInfo) {
-        var goalOrder: [String] = []
-        if item.id != dragItem.wrappedValue?.id {
-            let from = itemArr.wrappedValue.firstIndex(of: dragItem.wrappedValue!) ?? startIndex
-            let to = itemArr.wrappedValue.firstIndex(of: item)!
-            if itemArr[to].id != dragItem.wrappedValue?.id {
-                itemArr.wrappedValue.move(fromOffsets: IndexSet(integer: from),
-                    toOffset: to > from ? to + 1 : to)
-                for goal in itemArr {
-                    let uid = goal.currentGoal.id
-                    goalOrder.append(uid)
-                }
-                let key = "\(item.currentGoal.category)Order"
-                UserDefaults.standard.set(goalOrder, forKey: key)
-            }
-        }
-    }
-    
-    func dropUpdate(info: DropInfo) -> DropProposal? {
-       return DropProposal(operation: .move)
-    }
-}
- */
