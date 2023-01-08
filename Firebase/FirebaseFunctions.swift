@@ -44,6 +44,12 @@ func createGoal(goal: Goal) {
         if let error = error {
             print("Error writing document: \(error)")
         } else {
+            if goal.category != "" {
+                guard let catArr = UserDefaults.standard.value(forKey: "\(goal.category)Order") as? [String] else { return }
+                var newArr = catArr
+                newArr.append(goal.id)
+                UserDefaults.standard.set(newArr, forKey: "\(goal.category)Order")
+            }
             print("Document successfully written!")
         }
     }

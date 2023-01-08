@@ -9,7 +9,6 @@ import SwiftUI
 
 struct GoalTile: View, Identifiable, Equatable {
     static var shared = GoalTile(goal: Goal.placeholderGoal)
-   // @ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
     var goal: Goal
     var isDone = false

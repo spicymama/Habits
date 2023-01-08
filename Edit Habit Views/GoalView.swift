@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct GoalView: View, Identifiable, Equatable {
-    @ObservedObject var prefs = DisplayPreferences()
     @StateObject var db = Database()
     var id = ""
     var currentGoal: Goal
@@ -25,11 +24,11 @@ struct GoalView: View, Identifiable, Equatable {
     var body: some View {
         VStack {
             HStack {
-                Text(currentGoal.title)
-                    .font(.system(size: prefs.titleFontSize))
-                    .foregroundColor(prefs.foregroundColor)
+           Text(currentGoal.title)
+                    .font(.system(size: DisplayPreferences().titleFontSize))
+                    .foregroundColor(DisplayPreferences().foregroundColor)
             }
-            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 50, alignment: .leading)
+            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 80, alignment: .leading)
             .padding(.bottom, 10)
             .padding(.leading, 40)
             isDone ? nil : HStack {
@@ -43,18 +42,18 @@ struct GoalView: View, Identifiable, Equatable {
             }  .frame(maxWidth: UIScreen.main.bounds.width - 40, maxHeight: 50, alignment: .leading)
                 .padding(.leading, 25)
                 .padding(.bottom, 10)
-                .foregroundColor(prefs.foregroundColor)
+                .foregroundColor(DisplayPreferences().foregroundColor)
             isDone ? currentGoal.progressTracker == "3" ?
             Text("Look at the progress you've made! Consider adding some notes about how things went.")
                 .padding(.horizontal)
-                .font(.system(size: prefs.fontSize))
-                .foregroundColor(prefs.foregroundColor)
+                .font(.system(size: DisplayPreferences().fontSize))
+                .foregroundColor(DisplayPreferences().foregroundColor)
                 .lineLimit(5, reservesSpace: true)
             :
             Text("In \(Calendar.current.dateComponents([.day], from: currentGoal.dateCreated, to: currentGoal.endDate).day!) days, you had \(currentGoal.goodCheckins + currentGoal.badCheckins) checkins, \(currentGoal.goodCheckins) of which were positive! Consider adding some notes about how things went.")
                 .padding(.horizontal)
-                .font(.system(size: prefs.fontSize))
-                .foregroundColor(prefs.foregroundColor)
+                .font(.system(size: DisplayPreferences().fontSize))
+                .foregroundColor(DisplayPreferences().foregroundColor)
                 .lineLimit(5, reservesSpace: true) : nil
             HStack {
                 Slider(value: self.$prog,
@@ -68,24 +67,24 @@ struct GoalView: View, Identifiable, Equatable {
                 }
                 ).allowsHitTesting(currentGoal.progressTracker == "3" ? true : false)
                     .allowsHitTesting(self.isDone ? false : true)
-                    .tint(prefs.accentColor)
+                    .tint(DisplayPreferences().accentColor)
                 
                 Text("\(self.prog, specifier: "%.0f") %")
-                    .foregroundColor(prefs.accentColor)
+                    .foregroundColor(DisplayPreferences().accentColor)
                     .padding(.leading)
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
             .padding(.bottom, 10)
-            .accentColor(prefs.accentColor)
+            .accentColor(DisplayPreferences().accentColor)
                 ZStack {
                     RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .stroke(prefs.foregroundColor, lineWidth: 1.5)
+                        .stroke(DisplayPreferences().foregroundColor, lineWidth: 1.5)
                         .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 500, alignment: .center)
                     TextField("Notes...", text: self.$notes, axis: .vertical)
                         .frame(maxWidth: UIScreen.main.bounds.width - 80, minHeight: 50, maxHeight: 1000, alignment: .leading)
-                        .font(.system(size: prefs.fontSize / 1.2))
-                        .foregroundColor(prefs.foregroundColor)
-                        .tint(prefs.accentColor)
+                        .font(.system(size: DisplayPreferences().fontSize / 1.2))
+                        .foregroundColor(DisplayPreferences().foregroundColor)
+                        .tint(DisplayPreferences().accentColor)
                         .onSubmit {
                             currentGoal.selfNotes = self.notes
                             updateGoal(goal: currentGoal)
@@ -109,7 +108,7 @@ struct GoalView: View, Identifiable, Equatable {
                 } label: {
                     Image(systemName: self.thumbsDownTap ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                         .font(.system(size: 30))
-                        .foregroundColor(prefs.accentColor)
+                        .foregroundColor(DisplayPreferences().accentColor)
                 }
                 .padding(.trailing, 20)
                 .padding(.leading, 20)
@@ -131,7 +130,7 @@ struct GoalView: View, Identifiable, Equatable {
                 } label: {
                     Image(systemName: self.thumbsUpTap ? "hand.thumbsup.fill" : "hand.thumbsup")
                         .font(.system(size: 30))
-                        .foregroundColor(prefs.accentColor)
+                        .foregroundColor(DisplayPreferences().accentColor)
                 }
                 .padding(.leading, 20)
                 .padding(.bottom, 20) : nil
@@ -143,14 +142,14 @@ struct GoalView: View, Identifiable, Equatable {
             } label: {
                 Image(systemName: "chevron.right.circle")
                     .imageScale(.large)
-                    .foregroundColor(prefs.accentColor)
+                    .foregroundColor(DisplayPreferences().accentColor)
             }.frame(maxWidth: 20, maxHeight: 20, alignment: .trailing)
                 .padding(.bottom, 20)
                 .padding(.leading, currentGoal.progressTracker == "3" ? 240 : 80)
                 .fullScreenCover(isPresented: self.$editGoalTap, onDismiss: didDismiss) {
                     EditHabit(id: currentGoal.id, prog: currentGoal.prog, dateCreated: currentGoal.dateCreated, title: currentGoal.title, selectedTracker: currentGoal.progressTracker, endDate: currentGoal.endDate, monNotifs: currentGoal.monNotifs, tusNotifs: currentGoal.tusNotifs, wedNotifs: currentGoal.wedNotifs, thursNotifs: currentGoal.thursNotifs, friNotifs: currentGoal.friNotifs, satNotifs: currentGoal.satNotifs, sunNotifs: currentGoal.sunNotifs,   scheduledReminders: currentGoal.scheduledNotifs, goodcheckinGoal: currentGoal.goodCheckinGoal, goodcheckins: currentGoal.goodCheckins, badcheckins: currentGoal.badCheckins, notes: currentGoal.selfNotes, category: currentGoal.category)
                 }
-        }.foregroundColor(prefs.foregroundColor)
+        }.foregroundColor(DisplayPreferences().foregroundColor)
             self.isDone ?
             
             self.deleteTap ?
@@ -161,7 +160,7 @@ struct GoalView: View, Identifiable, Equatable {
                 Text("Confirm Delete")
                 Image(systemName: "")
                     .imageScale(.large)
-            }.font(.system(size: prefs.fontSize))
+            }.font(.system(size: DisplayPreferences().fontSize))
             .foregroundColor(.red)
             .frame(maxWidth: 200, maxHeight: 60, alignment: .trailing)
             .padding(.bottom, 20)
@@ -173,8 +172,8 @@ struct GoalView: View, Identifiable, Equatable {
                 Image(systemName: "trash.circle")
                     .imageScale(.large)
                 
-            }.font(.system(size: prefs.fontSize))
-            .foregroundColor(prefs.accentColor)
+            }.font(.system(size: DisplayPreferences().fontSize))
+            .foregroundColor(DisplayPreferences().accentColor)
             .frame(maxWidth: 30, maxHeight: 40, alignment: .trailing)
             .padding(.bottom, 20)
             .padding(.leading, 240)

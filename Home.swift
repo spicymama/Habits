@@ -51,7 +51,6 @@ struct Home: View {
                         Button {
                             notificationTap = true
                             db.hideTiles = true
-                           // clearOldNotifs()
                         } label: {
                             Image(systemName: Database.allNotifs.count > 0 ? "bell.badge" : "bell")
                                 .imageScale(.large)

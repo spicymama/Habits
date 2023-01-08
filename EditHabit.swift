@@ -191,6 +191,7 @@ struct EditHabit: View {
                         EditHabit.editGoal ? update() : create()
                         self.category = ""
                         self.notes = ""
+                        EditHabit.selectedCat = ""
                         dismiss()
                     }
                 } label: {
@@ -206,6 +207,7 @@ struct EditHabit: View {
                     deleteGoal(goal: currentGoal())
                     self.category = ""
                     self.notes = ""
+                    EditHabit.selectedCat = ""
                     dismiss()
                 } label: {
                     Text("Delete")
@@ -233,12 +235,14 @@ struct EditHabit: View {
     }
     
     func update() {
+        db.hideTiles = true
         updateGoal(goal: currentGoal())
         EditHabit.editGoal = false
         db.hideTiles = false
     }
     
     func create() {
+        db.hideTiles = true
         if self.endDate <= Date.now {
             self.endDate = Date.distantFuture
         }

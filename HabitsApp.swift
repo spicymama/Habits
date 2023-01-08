@@ -15,7 +15,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     var categoryArr: [String] = []
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    //  UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+     // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     //  UNUserNotificationCenter.current().removeAllDeliveredNotifications()
       fetchNotifs()
     return true
@@ -60,6 +60,7 @@ func fetchNotifs() {
     let notifsArr = UNUserNotificationCenter.current()
   //  let dispatchGroup = DispatchGroup()
   //  dispatchGroup.enter()
+    Database().fetchForRefresh()
     notifsArr.getDeliveredNotifications { notifs in
         for notif in notifs {
             let goalID = notif.request.content.userInfo["goalUID"]

@@ -169,7 +169,7 @@ class Database: ObservableObject {
         print("GOALS: \(goals)")
         var tileArr: [GoalView] = []
         if let cat = goals.first?.category {
-          //  UserDefaults.standard.removeObject(forKey: "\(cat)Order")
+        //    UserDefaults.standard.removeObject(forKey: "\(cat)Order")
             if let listOrder = UserDefaults.standard.value(forKey: "\(cat)Order") as? [String] {
                 print("LIST ORDER: \(listOrder)")
                 if listOrder == [""] || listOrder == [] {
