@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GoalView: View, Identifiable, Equatable {
     @ObservedObject var prefs = DisplayPreferences()
-    @ObservedObject var db = Database()
+    @StateObject var db = Database()
     var id = ""
     var currentGoal: Goal
     @State var editGoalTap = false
