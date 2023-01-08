@@ -29,6 +29,7 @@ struct Settings: View {
     @State var fontTap = false
     @State var showSaveButton = false
     @State var goToLogin = false
+    @State var deleteAccTap = false
     var body: some View {
         ScrollView {
             Button {
@@ -187,6 +188,18 @@ struct Settings: View {
                         .foregroundColor(.red)
                         .font(.system(size: fontSize))
                 }.padding(.top, 30)
+                Button {
+                    if deleteAccTap == true {
+                        deleteAccount()
+                        self.goToLogin = true
+                        UserDefaults.standard.set(1, forKey: "goToLogin")
+                    }
+                    self.deleteAccTap = true
+                } label: {
+                    Text(self.deleteAccTap ? "Confirm Account Delete" : "Delete Account")
+                        .foregroundColor(.red)
+                        .font(.system(size: fontSize))
+                }.padding(.top, 30)
             }
             .fullScreenCover(isPresented: self.$goToLogin) {
                 LoginView()
@@ -211,7 +224,27 @@ func logoutUser() {
     defaults.set("", forKey: "email")
     defaults.set("", forKey: "password")
 }
-
+func deleteAccount() {
+    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    let db = Firestore.firestore()
+    let docRef = db.collection("User").document(currentUser)
+    let user = Auth.auth().currentUser
+    docRef.delete() { err in
+        if let err = err {
+            print("Error removing document: \(err)")
+        }
+        else {
+            user?.delete { error in
+                if let error = error {
+                    print("Error deleting account \(error)")
+                } else {
+                    print("Account deleted")
+                }
+            }
+            print("Document successfully removed!")
+        }
+    }
+}
 
 extension UserDefaults {
     func color(forKey key: String) -> UIColor? {

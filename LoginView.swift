@@ -91,7 +91,6 @@ struct LoginView: View {
             self.createOrLogin ? self.password == self.confirmPassword ? Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if (authResult != nil) {
                     let defaults = UserDefaults.standard
-                   // defaults.set(1, forKey: "goToLogin")
                     defaults.set(self.email, forKey: "email")
                     defaults.set(self.password, forKey: "password")
                     defaults.set(authResult?.user.uid, forKey: "userID")
@@ -101,7 +100,7 @@ struct LoginView: View {
                         defaults.set(1, forKey: "goToLogin")
                     }
                     self.goHome = true
-                    createUser(user: User(id: (authResult?.user.uid)!, email: self.email, password: self.password))
+                    createUser(user: User(id: (authResult?.user.uid)!, email: self.email))
                     print("Successfully created account!!")
                     self.dismiss()
                 }

@@ -55,8 +55,7 @@ func createUser(user: User) {
     let id = docRef.documentID
     let userData: [String : Any] = [
         "id" : id,
-        "email" : user.email,
-        "password" : user.password
+        "email" : user.email
         ]
     docRef.setData(userData) { error in
         if let error = error {
@@ -261,6 +260,8 @@ func deleteGoal(goal: Goal) {
       }
     EditHabit.editGoal = false
 }
+
+
 
 func calculateProg(tracker: String, goodCheckinGoal: Int, goodCheckins: Int, prog: Double)-> Double {
     var progToSend = 0.0
