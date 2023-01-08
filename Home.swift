@@ -108,6 +108,7 @@ struct Home: View {
             }
         }.frame(maxWidth: .infinity)
             .background(DisplayPreferences().backgroundColor)
+            .animation(.default, value: self.tileDrag)
             .onAppear() {
                 didDismiss()
             }

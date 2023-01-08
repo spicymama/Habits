@@ -75,15 +75,18 @@ struct DropViewDelegate: DropDelegate {
     }
     
     func dropEntered(info: DropInfo) {
-        if (currentItem != nil) {
+        if (currentItem != nil) && (listItem == nil) {
             var tileOrder: [String] = []
-            if currentItem?.id != draggingItem?.wrappedValue?.id {
-            let from = items?.wrappedValue.firstIndex(of: (draggingItem?.wrappedValue!)!) ?? startIndex
-                let to = items?.wrappedValue.firstIndex(of: currentItem!)!
-                if items?[to!].id != draggingItem?.wrappedValue?.id {
-                    items?.wrappedValue.move(fromOffsets: IndexSet(integer: from),
-                                             toOffset: (to! > from ? to! + 1 : to)!)
-                for tile in items! {
+            guard let tile = currentItem else { return }
+            guard let tiles = items else { return }
+            guard let tileDrag = draggingItem else { return }
+            if tileDrag.wrappedValue != nil && tile.id != tileDrag.wrappedValue?.id {
+                let from = tiles.wrappedValue.firstIndex(of: (tileDrag.wrappedValue!)) ?? startIndex
+                let to = tiles.wrappedValue.firstIndex(of: tile)!
+                if tiles[to].id != tileDrag.wrappedValue?.id {
+                    tiles.wrappedValue.move(fromOffsets: IndexSet(integer: from),
+                                             toOffset: (to > from ? to + 1 : to))
+                for tile in tiles {
                     let uid = tile.id
                     tileOrder.append(uid)
                 }
@@ -95,19 +98,22 @@ struct DropViewDelegate: DropDelegate {
             }
         }
     }
-        if (listItem != nil) {
+        if (listItem != nil) && (currentItem == nil) {
             var goalOrder: [String] = []
-            if listItem?.id != listDrag?.wrappedValue?.id {
-                let from = listArr?.wrappedValue.firstIndex(of: (listDrag?.wrappedValue!)!) ?? startIndex
-                let to = listArr?.wrappedValue.firstIndex(of: listItem!)!
-                if listArr?[to!].id != listDrag?.wrappedValue?.id {
-                    listArr?.wrappedValue.move(fromOffsets: IndexSet(integer: from),
-                                               toOffset: (to! > from ? to! + 1 : to)!)
-                    for goal in listArr! {
+            guard let listTile = listItem else { return }
+            guard let listTiles = listArr else { return }
+            guard let listTileDrag = listDrag else { return }
+            if listTileDrag.wrappedValue != nil && listTile.id != listTileDrag.wrappedValue?.id {
+                let from = listTiles.wrappedValue.firstIndex(of: (listTileDrag.wrappedValue!)) ?? startIndex
+                let to = listTiles.wrappedValue.firstIndex(of: listTile)!
+                if listTiles[to].id != listTileDrag.wrappedValue?.id {
+                    listTiles.wrappedValue.move(fromOffsets: IndexSet(integer: from),
+                                               toOffset: (to > from ? to + 1 : to))
+                    for goal in listTiles {
                         let uid = goal.currentGoal.id
                         goalOrder.append(uid)
                     }
-                    let key = "\(listItem!.currentGoal.category)Order"
+                    let key = "\(listTile.currentGoal.category)Order"
                     UserDefaults.standard.set(goalOrder, forKey: key)
                 }
             }

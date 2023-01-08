@@ -11,12 +11,16 @@ struct Tile: View, Equatable, Identifiable {
     var id: String = ""
     @State var goalTile: GoalTile?
     @State var listTile: ListTile?
+    @State var goalView: GoalView?
     var body: some View {
         if goalTile != nil {
             goalTile.padding(.vertical, 15)
         }
         if listTile != nil {
             listTile.padding(.vertical, 15)
+        }
+        if goalView != nil {
+            goalView?.padding(.vertical, 15)
         }
     }
     static func == (lhs: Tile, rhs: Tile) -> Bool {

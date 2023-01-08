@@ -9,9 +9,7 @@ import SwiftUI
 
 struct ListTile: View, Identifiable {
     static var shared = ListTile()
-    //@ObservedObject var prefs = DisplayPreferences()
     var id = UUID()
-   // @State var goalArr: [Goal]
     @State var tileArr: [GoalView] = []
     var goalOrder: [String] = []
     var isDone = false
@@ -54,7 +52,10 @@ struct ListTile: View, Identifiable {
                         .padding(.bottom, 10)
                         .padding(.leading, 10)
                     } : nil
-                    self.wasTapped ? nil : tile
+                    self.wasTapped ? nil :
+                    tile
+                        .padding(.top, 10)
+                        .padding(.bottom, 15)
                         .onDrag {
                             goalDrag = tile
                             return NSItemProvider()
@@ -77,6 +78,7 @@ struct ListTile: View, Identifiable {
             .stroke(DisplayPreferences().foregroundColor, lineWidth: 2)
         )
         .animation(Animation.easeInOut(duration: 1.0), value: self.wasTapped)
+        .animation(.default, value: self.goalDrag)
         .padding(.leading, self.wasTapped ? UIScreen.main.bounds.width / 5 : 0)
         .padding(.bottom, 15)
     }

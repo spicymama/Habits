@@ -25,13 +25,14 @@ struct LaunchScreen: View {
             self.goToLogin || self.goHome ? nil :
             VStack {
                 Text("Habits")
-                    .foregroundColor(prefs.foregroundColor)
+                    .foregroundColor(.gray)
                     .font(.system(size: 50))
                     .padding(.bottom, 20)
                 LoadingSpinner(animate: self.$animate)
                     .frame(width: 100, height: 100)
-                Text("Take control of what guides your life.")
                     .foregroundColor(prefs.foregroundColor)
+                Text("Take control of what guides your life.")
+                    .foregroundColor(.gray)
                     .italic()
                     .padding(.top, 20)
             }
@@ -77,7 +78,7 @@ struct LaunchScreen: View {
                 Text("")
             }).labelsHidden()
                 .navigationBarBackButtonHidden()
-        }
+        }.background(prefs.backgroundColor)
     }
 }
 

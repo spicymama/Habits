@@ -14,6 +14,7 @@ import FirebaseFirestore
 struct LoginView: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var prefs = DisplayPreferences()
     @State var email = ""
     @State var password = ""
     @State var confirmPassword = ""
@@ -23,20 +24,21 @@ struct LoginView: View {
     @State var goHome = false
     
     var body: some View {
+        ScrollView {
         VStack {
             Text("Habits")
                 .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
-                .font(.system(size: 35))
+                .font(.system(size: prefs.headerFontSize))
                 .padding(.bottom, 25)
             
             VStack {
                 Text(self.createOrLogin ? "Create Account" : "User Login")
-                    .font(.system(size: 25))
+                    .font(.system(size: prefs.titleFontSize))
                 
                 TextField("Email:", text: self.$email)
                     .padding(.vertical, 20)
                     .padding(.leading, 20)
-                    .font(.system(size: 15))
+                    .font(.system(size: prefs.fontSize))
                     .textInputAutocapitalization(.never)
                 SecureTextFeild(text: self.$password, placeholder: "Password:")
                     .padding(.vertical, self.createOrLogin ? 0 : 20)
@@ -47,14 +49,14 @@ struct LoginView: View {
             }.frame(maxWidth: UIScreen.main.bounds.width - 80, maxHeight: 250, alignment: .leading)
                 .overlay(
                     RoundedRectangle(cornerRadius: 15)
-                        .stroke(self.needsChange ? .red : .gray, lineWidth: 2)
+                        .stroke(self.needsChange ? .red : prefs.foregroundColor, lineWidth: 2)
                 )
                 .padding(.bottom, 40)
             Button {
                 checkFields()
             } label: {
                 Text(self.createOrLogin ? "Save >" : "Sign in >")
-                    .font(.system(size: 15))
+                    .font(.system(size: prefs.fontSize))
             }
             .padding(.leading, UIScreen.main.bounds.width / 2)
             .padding(.bottom, 40)
@@ -63,6 +65,7 @@ struct LoginView: View {
                 self.createOrLogin.toggle()
             } label: {
                 Text(self.createOrLogin ? "Already have an account?\nLog in" : "Create an account")
+                    .font(.system(size: prefs.fontSize))
             }
             .frame(maxWidth: UIScreen.main.bounds.width - 30, alignment: .center)
             .padding(.bottom, 25)
@@ -71,13 +74,17 @@ struct LoginView: View {
             } label: {
                 HStack {
                     Text("Keep me signed in")
+                        .font(.system(size: prefs.fontSize))
                     Image(systemName: staySignedIn ? "square.fill" : "square")
                 }
             }
         }.frame(minHeight: UIScreen.main.bounds.height / 1.2, alignment: .top)
-            .foregroundColor(.gray)
+            .foregroundColor(prefs.foregroundColor)
+            .background(prefs.backgroundColor)
             .animation(.easeInOut, value: self.createOrLogin)
             .navigationBarBackButtonHidden()
+        }.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+            .background(prefs.backgroundColor)
     }
     func checkFields() {
         if self.email != "" {
@@ -119,6 +126,7 @@ struct LoginView: View {
                     self.dismiss()
                 }
                 if (error != nil) {
+                    self.needsChange = true
                     print("Error signing in")
                 }
             }
