@@ -11,6 +11,7 @@ struct EditHabit: View {
     static var shared = EditHabit()
     @Environment(\.dismiss) var dismiss
     @ObservedObject var prefs = DisplayPreferences()
+    @StateObject var db = Database()
     var id: String = UUID().uuidString
     var prog: Double = 0
     var dateCreated: Date = Date()
@@ -59,7 +60,6 @@ struct EditHabit: View {
     @State var needEndDate = false
     static var selectedCat = ""
     static var editGoal = false
-    let dateFormatter = DateFormatter()
     
     var body: some View {
         ScrollView {
@@ -235,6 +235,7 @@ struct EditHabit: View {
     func update() {
         updateGoal(goal: currentGoal())
         EditHabit.editGoal = false
+        db.hideTiles = false
     }
     
     func create() {
@@ -245,6 +246,7 @@ struct EditHabit: View {
         LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
         LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
         EditHabit.editGoal = false
+        db.hideTiles = false
     }
     
     func checkRequiredFields()-> Bool {

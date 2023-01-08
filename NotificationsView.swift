@@ -31,6 +31,10 @@ struct NotificationsView: View {
                 ForEach(self.allNotifs, id: \.listID) { notif in
                     NotificationBox(id: UUID(), goal: notif, allNotifs: self.$allNotifs)
                 }
+                self.allNotifs.isEmpty ?
+                Text("No Reminders")
+                    .foregroundColor(prefs.foregroundColor)
+                    .font(.system(size: prefs.titleFontSize)) : nil
             }.onAppear {
                 Database().clearOldNotifs()
             }

@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct GoalView: View, Identifiable {
+struct GoalView: View, Identifiable, Equatable {
     @ObservedObject var prefs = DisplayPreferences()
     @ObservedObject var db = Database()
-    var id = UUID()
+    var id = ""
     var currentGoal: Goal
     @State var editGoalTap = false
     @State private var isEditing = false
@@ -187,6 +187,9 @@ struct GoalView: View, Identifiable {
         db.hideTiles = false
         db.objectWillChange.send()
     }
+    static func == (lhs: GoalView, rhs: GoalView) -> Bool {
+        return lhs.id == rhs.id
+    }
 }
 
 struct GoalView_Previews: PreviewProvider {
@@ -204,3 +207,38 @@ extension Date {
         return Calendar.current.dateComponents([.weekday], from: self).weekday
     }
 }
+/*
+struct ListDropViewDelegate: DropDelegate {
+    var item: GoalView
+    var itemArr: Binding<[GoalView]>
+    var dragItem: Binding<GoalView?>
+   // var isDone = false
+    let startIndex: Int
+    func performDrop(info: DropInfo) -> Bool {
+        dragItem.wrappedValue = nil
+        return true
+    }
+    
+    func dropEnter(info: DropInfo) {
+        var goalOrder: [String] = []
+        if item.id != dragItem.wrappedValue?.id {
+            let from = itemArr.wrappedValue.firstIndex(of: dragItem.wrappedValue!) ?? startIndex
+            let to = itemArr.wrappedValue.firstIndex(of: item)!
+            if itemArr[to].id != dragItem.wrappedValue?.id {
+                itemArr.wrappedValue.move(fromOffsets: IndexSet(integer: from),
+                    toOffset: to > from ? to + 1 : to)
+                for goal in itemArr {
+                    let uid = goal.currentGoal.id
+                    goalOrder.append(uid)
+                }
+                let key = "\(item.currentGoal.category)Order"
+                UserDefaults.standard.set(goalOrder, forKey: key)
+            }
+        }
+    }
+    
+    func dropUpdate(info: DropInfo) -> DropProposal? {
+       return DropProposal(operation: .move)
+    }
+}
+ */

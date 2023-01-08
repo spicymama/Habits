@@ -90,11 +90,13 @@ struct Home: View {
                             }
                             .onDrop(of: [.item], delegate: DropViewDelegate(currentItem: tile, items: $db.tiles, draggingItem: $tileDrag, startIndex: db.tiles.firstIndex(of: tile)!))
                     }.frame(maxHeight: .infinity)
+                
                !db.doneTiles.isEmpty ? Text("History")
                     .frame(maxWidth: 250, maxHeight: 55, alignment: .top)
                     .font(.system(size: DisplayPreferences().headerFontSize))
                     .foregroundColor(DisplayPreferences().foregroundColor)
                     .padding(.top, 50): nil
+                
                 db.hideTiles ? nil : ForEach(db.doneTiles, id: \.id) { tile in
                         tile
                             .onDrag {

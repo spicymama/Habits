@@ -34,7 +34,7 @@ struct GoalTile: View, Identifiable, Equatable {
                     .foregroundColor(DisplayPreferences().foregroundColor)
                     .padding(.vertical, 15) : nil
                 
-                self.tap ? nil : GoalView(currentGoal: goal, prog: goal.prog, notes: goal.selfNotes, isDone: self.isDone)
+                self.tap ? nil : GoalView(id: goal.id, currentGoal: goal, prog: goal.prog, notes: goal.selfNotes, isDone: self.isDone)
             }
             .onTapGesture {
                 self.tap = false
@@ -60,25 +60,30 @@ struct GoalTile_Previews: PreviewProvider {
 }
 
 struct DropViewDelegate: DropDelegate {
-    var currentItem: Tile
-    var items: Binding<[Tile]>
-    var draggingItem: Binding<Tile?>
+    var currentItem: Tile?
+    var items: Binding<[Tile]>?
+    var draggingItem: Binding<Tile?>?
     var isDone = false
     let startIndex: Int
+    var listItem: GoalView?
+    var listArr: Binding<[GoalView]>?
+    var listDrag: Binding<GoalView?>?
     func performDrop(info: DropInfo) -> Bool {
-        draggingItem.wrappedValue = nil
+        draggingItem?.wrappedValue = nil
+        listDrag?.wrappedValue = nil
         return true
     }
     
     func dropEntered(info: DropInfo) {
-        var tileOrder: [String] = []
-        if currentItem.id != draggingItem.wrappedValue?.id {
-            let from = items.wrappedValue.firstIndex(of: draggingItem.wrappedValue!) ?? startIndex
-            let to = items.wrappedValue.firstIndex(of: currentItem)!
-            if items[to].id != draggingItem.wrappedValue?.id {
-                items.wrappedValue.move(fromOffsets: IndexSet(integer: from),
-                    toOffset: to > from ? to + 1 : to)
-                for tile in items {
+        if (currentItem != nil) {
+            var tileOrder: [String] = []
+            if currentItem?.id != draggingItem?.wrappedValue?.id {
+            let from = items?.wrappedValue.firstIndex(of: (draggingItem?.wrappedValue!)!) ?? startIndex
+                let to = items?.wrappedValue.firstIndex(of: currentItem!)!
+                if items?[to!].id != draggingItem?.wrappedValue?.id {
+                    items?.wrappedValue.move(fromOffsets: IndexSet(integer: from),
+                                             toOffset: (to! > from ? to! + 1 : to)!)
+                for tile in items! {
                     let uid = tile.id
                     tileOrder.append(uid)
                 }
@@ -86,6 +91,24 @@ struct DropViewDelegate: DropDelegate {
                     UserDefaults.standard.set(tileOrder, forKey: "doneTileOrder")
                 } else {
                     UserDefaults.standard.set(tileOrder, forKey: "tileOrder")
+                }
+            }
+        }
+    }
+        if (listItem != nil) {
+            var goalOrder: [String] = []
+            if listItem?.id != listDrag?.wrappedValue?.id {
+                let from = listArr?.wrappedValue.firstIndex(of: (listDrag?.wrappedValue!)!) ?? startIndex
+                let to = listArr?.wrappedValue.firstIndex(of: listItem!)!
+                if listArr?[to!].id != listDrag?.wrappedValue?.id {
+                    listArr?.wrappedValue.move(fromOffsets: IndexSet(integer: from),
+                                               toOffset: (to! > from ? to! + 1 : to)!)
+                    for goal in listArr! {
+                        let uid = goal.currentGoal.id
+                        goalOrder.append(uid)
+                    }
+                    let key = "\(listItem!.currentGoal.category)Order"
+                    UserDefaults.standard.set(goalOrder, forKey: key)
                 }
             }
         }

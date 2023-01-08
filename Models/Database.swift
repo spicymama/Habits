@@ -67,16 +67,16 @@ class Database: ObservableObject {
                      }
                  }
                  if doneCount == goals.count {
-                     self.doneTiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
-                     doneTileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals, isDone: true)))
+                     self.doneTiles.append(Tile(id: cat, listTile: ListTile(tileArr: self.orderList(goals: goals), isDone: true)))
+                     doneTileArr.append(Tile(id: cat, listTile: ListTile(tileArr: self.orderList(goals: goals), isDone: true)))
                      var newTileOrder = doneTileOrder
                      if !newTileOrder.contains(cat) {
                          newTileOrder.append(cat)
                          UserDefaults.standard.set(newTileOrder, forKey: "doneTileOrder")
                      }
                  } else {
-                     self.tiles.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
-                     tileArr.append(Tile(id: cat, listTile: ListTile(goalArr: goals)))
+                     self.tiles.append(Tile(id: cat, listTile: ListTile(tileArr: self.orderList(goals: goals))))
+                     tileArr.append(Tile(id: cat, listTile: ListTile(tileArr: self.orderList(goals: goals))))
                      var newTileOrder = tileOrder
                      if !newTileOrder.contains(cat) {
                          newTileOrder.append(cat)
@@ -120,12 +120,12 @@ class Database: ObservableObject {
                     }
                 }
             }
-            if let goals = tile.listTile?.goalArr {
-                for goal in goals {
+            if let tiles = tile.listTile?.tileArr {
+                for tile in tiles {
                     UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
                         for request in requests {
                             let goalID = request.content.userInfo["goalUID"]
-                            if goalID as! String == goal.id {
+                            if goalID as! String == tile.currentGoal.id {
                                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [request.identifier])
                             }
                         }
@@ -163,5 +163,42 @@ class Database: ObservableObject {
         }
         UserDefaults.standard.set(newOrder, forKey: "tileOrder")
         UserDefaults.standard.set(newDoneOrder, forKey: "doneTileOrder")
+    }
+    
+    func orderList(goals: [Goal])-> [GoalView] {
+        print("GOALS: \(goals)")
+        var tileArr: [GoalView] = []
+        if let cat = goals.first?.category {
+          //  UserDefaults.standard.removeObject(forKey: "\(cat)Order")
+            if let listOrder = UserDefaults.standard.value(forKey: "\(cat)Order") as? [String] {
+                print("LIST ORDER: \(listOrder)")
+                if listOrder == [""] || listOrder == [] {
+                    for goal in goals {
+                        tileArr.append(createTile(goal: goal))
+                    }
+                    return tileArr
+                }
+                for uid in listOrder {
+                    for goal in goals {
+                        if goal.id == uid {
+                            if !tileArr.contains(createTile(goal: goal)) {
+                                tileArr.append(createTile(goal: goal))
+                            }
+                        }
+                    }
+                }
+        } else {
+            var newOrder: [String] = []
+            for goal in goals {
+                tileArr.append(createTile(goal: goal))
+                newOrder.append(goal.id)
+            }
+            UserDefaults.standard.set(newOrder, forKey: "\(cat)Order")
+        }
+        }
+        return tileArr
+    }
+    func createTile(goal: Goal) -> GoalView {
+        return GoalView(id: goal.id, currentGoal: goal, prog: goal.prog, notes: goal.selfNotes)
     }
 }

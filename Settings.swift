@@ -85,7 +85,7 @@ struct Settings: View {
                     } label: {
                         Image(systemName: "xmark.circle")
                             .imageScale(.large)
-                            .foregroundColor(prefs.accentColor)
+                            .foregroundColor(self.accentColor)
                     }
                     .padding(.leading, UIScreen.main.bounds.width / 1.6)
                     .padding(.top) : nil

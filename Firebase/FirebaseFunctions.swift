@@ -12,12 +12,10 @@ import FirebaseFirestore
 import SwiftUI
 
 class FirestoreManager: ObservableObject {
-    
     @Published var goal: Goal = Goal(id: "", listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0, monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
 }
 func createGoal(goal: Goal) {
     guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-   // let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     let goalData: [String : Any] = [
@@ -232,8 +230,6 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
 
 func deleteGoal(goal: Goal) {
     @ObservedObject var localDB = Database()
-    //let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
-    let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
     let notifsArr = UNUserNotificationCenter.current()
     notifsArr.getDeliveredNotifications { notifs in
         for notif in notifs {
@@ -260,40 +256,6 @@ func deleteGoal(goal: Goal) {
           print("Error removing document: \(err)")
         }
         else {
-            /*
-            for i in localDB.goalArr {
-                var index = 0
-                if i.id == goal.id {
-                    localDB.goalArr.remove(at: index)
-                }
-                index += 1
-            }
-            if tileOrder.contains(goal.category) {
-                var tiles = tileOrder
-                guard let index = tiles.firstIndex(of: goal.category) else { return }
-                tiles.remove(at: index)
-                UserDefaults.standard.set(tiles, forKey: "tileOrder")
-            }
-            if doneTileOrder.contains(goal.category) {
-                var tiles = doneTileOrder
-                guard let index = tiles.firstIndex(of: goal.category) else { return }
-                tiles.remove(at: index)
-                UserDefaults.standard.set(tiles, forKey: "doneTileOrder")
-            }
-            if tileOrder.contains(goal.id) {
-                var tiles = tileOrder
-                guard let index = tiles.firstIndex(of: goal.id) else { return }
-                tiles.remove(at: index)
-                UserDefaults.standard.set(tiles, forKey: "tileOrder")
-            }
-            if doneTileOrder.contains(goal.id) {
-                var tiles = doneTileOrder
-                guard let index = tiles.firstIndex(of: goal.id) else { return }
-                tiles.remove(at: index)
-                UserDefaults.standard.set(tiles, forKey: "doneTileOrder")
-            }
-            print(localDB.goalArr)
-            */
           print("Document successfully removed!")
         }
       }
