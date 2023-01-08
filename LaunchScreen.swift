@@ -15,24 +15,27 @@ struct LaunchScreen: View {
     @EnvironmentObject var firestoreManager: FirestoreManager
     @Environment(\.refresh) var refresh
     @ObservedObject var db = Database()
+    @ObservedObject var prefs = DisplayPreferences()
     @State var goToLogin = false
     @State var goHome = false
+    @State var animate = true
     
     var body: some View {
         NavigationStack {
             self.goToLogin || self.goHome ? nil :
             VStack {
                 Text("Habits")
-                    .foregroundColor(.gray)
+                    .foregroundColor(prefs.foregroundColor)
                     .font(.system(size: 50))
-                LoadingIcon()
+                    .padding(.bottom, 20)
+                LoadingSpinner(animate: self.$animate)
                     .frame(width: 100, height: 100)
-                    .padding(.vertical, 20)
                 Text("Take control of what guides your life.")
-                    .foregroundColor(.gray)
+                    .foregroundColor(prefs.foregroundColor)
                     .italic()
-                    .padding(.top)
-            }.onAppear {
+                    .padding(.top, 20)
+            }
+            .onAppear {
                 let defaults = UserDefaults.standard
                 // defaults.removeObject(forKey: "goToLogin")
                 if defaults.value(forKey: "goToLogin") == nil {
@@ -83,21 +86,12 @@ struct LaunchScreen_Previews: PreviewProvider {
         LaunchScreen()
     }
 }
-
-struct LoadingIcon: View {
-    let style = StrokeStyle(lineWidth: 6, lineCap: .round)
-    @State var animate = false
-    let color1 = Color.gray
-    let color2 = Color.white
-    var body: some View {
-        ZStack {
-            Circle()
-                .trim(from: 0, to: 0.7)
-                .stroke( AngularGradient(gradient: .init(colors: [color1, color2]), center: .center), style: style)
-                .rotationEffect(Angle(degrees: animate ? 360 : 0))
-                .animation(Animation.linear(duration: 1.2).repeatForever(autoreverses: false), value: animate)
-        }.onAppear {
-            self.animate.toggle()
-        }
+struct LoadingSpinner: UIViewRepresentable {
+@Binding var animate: Bool
+    func makeUIView(context: UIViewRepresentableContext<LoadingSpinner>) -> UIActivityIndicatorView {
+        return UIActivityIndicatorView(style: .large)
+    }
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: UIViewRepresentableContext<LoadingSpinner>) {
+        uiView.startAnimating()
     }
 }
