@@ -11,9 +11,9 @@ struct ListTile: View, Identifiable {
     static var shared = ListTile()
     @StateObject var db = Database()
     var id = UUID()
-    @State var tileArr: [GoalView] = []
     var goalOrder: [String] = []
     var isDone = false
+    @State var tileArr: [GoalView] = []
     @State var wasTapped = true
     @State var pad = true
     @State var goalDrag: GoalView?

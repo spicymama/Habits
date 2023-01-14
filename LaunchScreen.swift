@@ -53,7 +53,9 @@ struct LaunchScreen: View {
                 else if defaults.value(forKey: "goToLogin") as! Int == 2 {
                     Auth.auth().signIn(withEmail: UserDefaults.standard.value(forKey: "email") as! String, password: UserDefaults.standard.value(forKey: "password") as! String) { authResult, error in
                         if (authResult != nil) {
-                            db.fetchForRefresh()
+                            db.fetchForRefresh {
+                                db.hideTiles = false
+                            }
                             self.goHome = true
                             print("Successfully signed in!")
                         } else {

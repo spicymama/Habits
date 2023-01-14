@@ -112,9 +112,9 @@ struct Home: View {
                 didDismiss()
             }
             .refreshable {
-                db.hideTiles = true
-                db.fetchForRefresh()
-                db.hideTiles = false
+                db.fetchForRefresh {
+                    db.hideTiles = false
+                }
             }
             .fullScreenCover(isPresented: goToNotifs) {
                 NotificationsView()
@@ -122,8 +122,9 @@ struct Home: View {
             .navigationBarBackButtonHidden()
     }
     func didDismiss() {
-        db.fetchForRefresh()
-        db.hideTiles = false
+        db.fetchForRefresh {
+            db.hideTiles = false
+        }
     }
 }
 

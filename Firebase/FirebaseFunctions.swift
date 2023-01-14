@@ -50,6 +50,9 @@ func createGoal(goal: Goal) {
                 newArr.append(goal.id)
                 UserDefaults.standard.set(newArr, forKey: "\(goal.category)Order")
             }
+            Database().fetchForRefresh {
+                Database().hideTiles = false
+            }
             print("Document successfully written!")
         }
     }
@@ -114,6 +117,9 @@ func updateGoal(goal: Goal) {
             LocalNotificationManager.shared.clearNotifsForUpdate(goal: goal)
             LocalNotificationManager.shared.setDailyNotifs(goal: goal)
             LocalNotificationManager.shared.setScheduledNotifs(goal: goal)
+            localDB.fetchForRefresh {
+                localDB.hideTiles = false
+            }
             print("Document successfully updated!")
         }
     }
@@ -265,6 +271,13 @@ func deleteGoal(goal: Goal) {
         }
       }
     EditHabit.editGoal = false
+    if goal.category != "" {
+        guard let listOrder = UserDefaults.standard.value(forKey: "\(goal.category)Order") as? [String] else { return }
+        var newOrder = listOrder
+        guard let index = newOrder.firstIndex(of: goal.id) else { return }
+        newOrder.remove(at: index)
+        UserDefaults.standard.set(newOrder, forKey: "\(goal.category)Order")
+    }
 }
 
 

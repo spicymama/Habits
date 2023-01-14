@@ -60,7 +60,9 @@ func fetchNotifs() {
     let notifsArr = UNUserNotificationCenter.current()
   //  let dispatchGroup = DispatchGroup()
   //  dispatchGroup.enter()
-    Database().fetchForRefresh()
+    Database().fetchForRefresh {
+        Database().hideTiles = false
+    }
     notifsArr.getDeliveredNotifications { notifs in
         for notif in notifs {
             let goalID = notif.request.content.userInfo["goalUID"]

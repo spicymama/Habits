@@ -76,7 +76,7 @@ struct GoalView: View, Identifiable, Equatable {
             .frame(maxWidth: UIScreen.main.bounds.width - 70, alignment: .leading)
             .padding(.bottom, 10)
             .accentColor(DisplayPreferences().accentColor)
-                ZStack {
+            db.hideTiles ? nil : ZStack {
                     RoundedRectangle(cornerRadius: 15, style: .continuous)
                         .stroke(DisplayPreferences().foregroundColor, lineWidth: 1.5)
                         .frame(maxWidth: UIScreen.main.bounds.width - 60, maxHeight: 500, alignment: .center)
@@ -155,7 +155,9 @@ struct GoalView: View, Identifiable, Equatable {
             self.deleteTap ?
             Button {
                 deleteGoal(goal: self.currentGoal)
-                db.fetchForRefresh()
+                db.fetchForRefresh {
+                    db.hideTiles = false
+                }
             } label: {
                 Text("Confirm Delete")
                 Image(systemName: "")

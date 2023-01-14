@@ -235,14 +235,11 @@ struct EditHabit: View {
     }
     
     func update() {
-        db.hideTiles = true
         updateGoal(goal: currentGoal())
         EditHabit.editGoal = false
-        db.hideTiles = false
     }
     
     func create() {
-        db.hideTiles = true
         if self.endDate <= Date.now {
             self.endDate = Date.distantFuture
         }
@@ -250,7 +247,6 @@ struct EditHabit: View {
         LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
         LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
         EditHabit.editGoal = false
-        db.hideTiles = false
     }
     
     func checkRequiredFields()-> Bool {
