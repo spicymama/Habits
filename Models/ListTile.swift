@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ListTile: View, Identifiable {
     static var shared = ListTile()
-    @StateObject var db = Database()
     var id = UUID()
     var goalOrder: [String] = []
     var isDone = false
@@ -36,7 +35,7 @@ struct ListTile: View, Identifiable {
                         .padding(.top, 25)
                         .foregroundColor(DisplayPreferences().foregroundColor)
                         
-                db.hideTiles ? nil : ForEach(tileArr, id: \.id) { tile in
+               ForEach(tileArr, id: \.id) { tile in
                     self.wasTapped ? VStack {
                         HStack {
                             Image(systemName: "circle")

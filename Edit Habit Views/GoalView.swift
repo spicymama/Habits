@@ -62,7 +62,9 @@ struct GoalView: View, Identifiable, Equatable {
                     isEditing = editing
                     if isEditing == false {
                         currentGoal.prog = self.prog
-                        updateGoal(goal: currentGoal)
+                        updateGoal(goal: currentGoal) {
+                            
+                        }
                     }
                 }
                 ).allowsHitTesting(currentGoal.progressTracker == "3" ? true : false)
@@ -87,7 +89,9 @@ struct GoalView: View, Identifiable, Equatable {
                         .tint(DisplayPreferences().accentColor)
                         .onSubmit {
                             currentGoal.selfNotes = self.notes
-                            updateGoal(goal: currentGoal)
+                            updateGoal(goal: currentGoal) {
+                                
+                            }
                         }
                 }.padding(.vertical)
             self.isDone ? nil : HStack {
@@ -104,7 +108,7 @@ struct GoalView: View, Identifiable, Equatable {
                         currentGoal.badCheckins -= 1
                     }
                     self.prog = (Double(currentGoal.goodCheckins) / Double(currentGoal.goodCheckinGoal)) * 100.0
-                    updateGoal(goal: currentGoal)
+                    updateGoal(goal: currentGoal) {}
                 } label: {
                     Image(systemName: self.thumbsDownTap ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                         .font(.system(size: 30))
@@ -126,7 +130,7 @@ struct GoalView: View, Identifiable, Equatable {
                         currentGoal.goodCheckins -= 1
                     }
                     self.prog = (Double(currentGoal.goodCheckins) / Double(currentGoal.goodCheckinGoal)) * 100.0
-                    updateGoal(goal: currentGoal)
+                    updateGoal(goal: currentGoal) {}
                 } label: {
                     Image(systemName: self.thumbsUpTap ? "hand.thumbsup.fill" : "hand.thumbsup")
                         .font(.system(size: 30))
@@ -136,6 +140,7 @@ struct GoalView: View, Identifiable, Equatable {
                 .padding(.bottom, 20) : nil
             Button {
                 EditHabit.shared.title = currentGoal.title
+                EditHabit.selectedCat = currentGoal.category
                 self.editGoalTap = true
                 EditHabit.editGoal = true
                 db.hideTiles = true
@@ -154,9 +159,10 @@ struct GoalView: View, Identifiable, Equatable {
             
             self.deleteTap ?
             Button {
-                deleteGoal(goal: self.currentGoal)
-                db.fetchForRefresh {
-                    db.hideTiles = false
+                deleteGoal(goal: self.currentGoal) {
+                    db.fetchForRefresh {
+                        db.hideTiles = false
+                    }
                 }
             } label: {
                 Text("Confirm Delete")

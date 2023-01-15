@@ -101,8 +101,9 @@ struct NotificationBox: View, Identifiable {
         ).frame(maxWidth: UIScreen.main.bounds.width - 60)
         .onDisappear {
             if self.thumbsUpTap == true || self.thumbsDownTap == true {
-                updateGoal(goal: self.goal)
-                removeSeenNotif()
+                updateGoal(goal: self.goal) {
+                    removeSeenNotif()
+                }
             }
         }.onAppear {
             getNotifDate()

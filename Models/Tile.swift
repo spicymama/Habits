@@ -17,7 +17,7 @@ struct Tile: View, Equatable, Identifiable {
             goalTile.padding(.vertical, 15)
         }
         if listTile != nil {
-            listTile.padding(.vertical, 15)
+            Database().hideTiles ? nil : listTile.padding(.vertical, 15)
         }
         if goalView != nil {
             goalView?.padding(.vertical, 15)

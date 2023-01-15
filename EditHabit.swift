@@ -204,7 +204,11 @@ struct EditHabit: View {
                 .padding(.top, 30)
                 EditHabit.editGoal ?
                 Button {
-                    deleteGoal(goal: currentGoal())
+                    deleteGoal(goal: currentGoal()) {
+                        db.fetchForRefresh {
+                            db.hideTiles = false
+                        }
+                    }
                     self.category = ""
                     self.notes = ""
                     EditHabit.selectedCat = ""
@@ -235,18 +239,28 @@ struct EditHabit: View {
     }
     
     func update() {
-        updateGoal(goal: currentGoal())
-        EditHabit.editGoal = false
+        db.hideTiles = true
+        updateGoal(goal: currentGoal()) {
+            EditHabit.editGoal = false
+            db.fetchForRefresh {
+                db.hideTiles = false
+            }
+        }
     }
     
     func create() {
         if self.endDate <= Date.now {
             self.endDate = Date.distantFuture
         }
-        createGoal(goal: currentGoal())
-        LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
-        LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
-        EditHabit.editGoal = false
+        db.hideTiles = true
+        createGoal(goal: currentGoal()) {
+            LocalNotificationManager.shared.setDailyNotifs(goal: currentGoal())
+            LocalNotificationManager.shared.setScheduledNotifs(goal: currentGoal())
+            EditHabit.editGoal = false
+            db.fetchForRefresh {
+                db.hideTiles = false
+            }
+        }
     }
     
     func checkRequiredFields()-> Bool {

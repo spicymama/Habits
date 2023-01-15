@@ -14,8 +14,8 @@ import SwiftUI
 class FirestoreManager: ObservableObject {
     @Published var goal: Goal = Goal(id: "", listID: "", category: "", title: "", dateCreated: Date.now, endDate: Date.distantFuture, goodCheckins: 0, badCheckins: 0, goodCheckinGoal: 0, monNotifs: [], tusNotifs: [], wedNotifs: [], thursNotifs: [], friNotifs: [], satNotifs: [], sunNotifs: [], scheduledNotifs: [Date()], progressTracker: "", selfNotes: "", prog: 0.0)
 }
-func createGoal(goal: Goal) {
-    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+func createGoal(goal: Goal, completion: @escaping () -> ()) {
+    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return completion() }
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     let goalData: [String : Any] = [
@@ -55,6 +55,7 @@ func createGoal(goal: Goal) {
             }
             print("Document successfully written!")
         }
+        completion()
     }
 }
 
@@ -78,9 +79,9 @@ func createUser(user: User) {
     }
 }
 
-func updateGoal(goal: Goal) {
+func updateGoal(goal: Goal, completion: @escaping () -> ()) {
     @ObservedObject var localDB = Database()
-    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return completion() }
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     let progress = calculateProg(tracker: goal.progressTracker, goodCheckinGoal: goal.goodCheckinGoal, goodCheckins: goal.goodCheckins, prog: goal.prog)
@@ -122,6 +123,7 @@ func updateGoal(goal: Goal) {
             }
             print("Document successfully updated!")
         }
+        completion()
     }
 }
 
@@ -239,7 +241,7 @@ func fetchAllGoals(completion: @escaping ([Goal]) -> Void) {
     }
 }
 
-func deleteGoal(goal: Goal) {
+func deleteGoal(goal: Goal, completion: @escaping () -> ()) {
     @ObservedObject var localDB = Database()
     let notifsArr = UNUserNotificationCenter.current()
     notifsArr.getDeliveredNotifications { notifs in
@@ -259,7 +261,7 @@ func deleteGoal(goal: Goal) {
             }
         }
     }
-    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    guard let currentUser = UserDefaults.standard.value(forKey: "userID") as? String else { return completion() }
     let db = Firestore.firestore()
     let docRef = db.collection("User").document(currentUser).collection("Goals").document(goal.id)
     docRef.delete() { err in
@@ -269,6 +271,7 @@ func deleteGoal(goal: Goal) {
         else {
           print("Document successfully removed!")
         }
+        completion()
       }
     EditHabit.editGoal = false
     if goal.category != "" {

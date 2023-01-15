@@ -24,8 +24,8 @@ class Database: ObservableObject {
                 self.goalArr = goals
                 self.tileArr = []
                 self.doneTileArr = []
-                let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
-                let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
+               // let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
+               // let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
                 self.sortGoals {
                     self.sortListTiles {
                         self.orderTiles {
