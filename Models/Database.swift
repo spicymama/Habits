@@ -24,8 +24,6 @@ class Database: ObservableObject {
                 self.goalArr = goals
                 self.tileArr = []
                 self.doneTileArr = []
-               // let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
-               // let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
                 self.sortGoals {
                     self.sortListTiles {
                         self.orderTiles {
@@ -41,7 +39,6 @@ class Database: ObservableObject {
         print("GOALS: \(goals)")
         var tileArr: [GoalView] = []
         if let cat = goals.first?.category {
-        //    UserDefaults.standard.removeObject(forKey: "\(cat)Order")
             if let listOrder = UserDefaults.standard.value(forKey: "\(cat)Order") as? [String] {
                 print("LIST ORDER: \(listOrder)")
                 if listOrder == [""] || listOrder == [] {
@@ -79,7 +76,6 @@ func sortGoals(completion: @escaping () -> ()) {
     self.catArr = []
     self.tiles = []
     self.doneTiles = []
-    //  UserDefaults.standard.removeObject(forKey: "tileOrder")
     let tileOrder = UserDefaults.standard.value(forKey: "tileOrder") as? [String] ?? []
     let doneTileOrder = UserDefaults.standard.value(forKey: "doneTileOrder") as? [String] ?? []
     

@@ -83,8 +83,9 @@ struct LoginView: View {
             .background(prefs.backgroundColor)
             .animation(.easeInOut, value: self.createOrLogin)
             .navigationBarBackButtonHidden()
-        }.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        }.frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
             .background(prefs.backgroundColor)
+            .padding(.top, 25)
     }
     func checkFields() {
         if self.email != "" {

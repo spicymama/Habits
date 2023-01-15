@@ -38,7 +38,6 @@ struct LaunchScreen: View {
             }
             .onAppear {
                 let defaults = UserDefaults.standard
-                // defaults.removeObject(forKey: "goToLogin")
                 if defaults.value(forKey: "goToLogin") == nil {
                     defaults.set(1, forKey: "goToLogin")
                     self.goToLogin = true

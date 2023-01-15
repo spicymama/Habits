@@ -11,7 +11,6 @@ struct NotificationBox: View, Identifiable {
     var id: UUID
     var goal: Goal = Goal.placeholderGoal
     @ObservedObject var prefs = DisplayPreferences()
-   // @ObservedObject var db = Database()
     @State var thumbsUpTap = false
     @State var thumbsDownTap = false
     @State var notifDate = ""

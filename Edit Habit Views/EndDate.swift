@@ -32,7 +32,6 @@ struct EndDate: View {
                 self.tap ? nil :  DatePicker(selection: self.$date) {
                     Image(systemName: "calendar")
                 }.labelsHidden()
-                    .colorScheme(.dark)
                     .tint(prefs.accentColor)
                     .overlay(
                     RoundedRectangle(cornerRadius: 10)

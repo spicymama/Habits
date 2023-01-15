@@ -15,8 +15,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     var categoryArr: [String] = []
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-     // UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-    //  UNUserNotificationCenter.current().removeAllDeliveredNotifications()
       fetchNotifs()
     return true
   }
@@ -47,7 +45,6 @@ struct HabitsApp: App {
        }
     var body: some Scene {
         WindowGroup {
-           // Home()
             LaunchScreen()
                 .environmentObject(firestoreManager)
                 .environmentObject(db)
@@ -58,8 +55,6 @@ struct HabitsApp: App {
 
 func fetchNotifs() {
     let notifsArr = UNUserNotificationCenter.current()
-  //  let dispatchGroup = DispatchGroup()
-  //  dispatchGroup.enter()
     Database().fetchForRefresh {
         Database().hideTiles = false
     }
@@ -75,7 +70,6 @@ func fetchNotifs() {
             }
         }
     }
-   // dispatchGroup.leave()
 }
 
 
