@@ -102,6 +102,7 @@ struct ProgressTracker: View {
                     .foregroundColor(prefs.foregroundColor)
                     .padding(.horizontal, 15)
             }.frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: 40, alignment: .bottomTrailing)
+                .padding(.top, -5)
                 .onTapGesture {
                     self.op1Tap = false
                     self.op2Tap = false

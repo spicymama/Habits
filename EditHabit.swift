@@ -148,7 +148,7 @@ struct EditHabit: View {
                     }
                     VStack {
                         self.progressTrackerTap ? nil : ProgressTracker(goodcheckinGoal: self.$goodcheckinGoal, selectedOp: self.$selectedTracker, needCheckinGoal: self.$needCheckinGoal)
-                            .frame(height: UIScreen.main.bounds.height / 4)
+                            .frame(height: UIScreen.main.bounds.height / 6.3)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 15)
                                     .stroke(self.needTracker ? .red : .clear, lineWidth: 2)
