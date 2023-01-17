@@ -19,7 +19,7 @@ struct Category: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Category")
+                Text("Add to List")
                 Image(systemName: "list.clipboard")
             }
             .foregroundColor(prefs.foregroundColor)
