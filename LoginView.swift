@@ -34,16 +34,16 @@ struct LoginView: View {
             VStack {
                 Text(self.createOrLogin ? "Create Account" : "User Login")
                     .font(.system(size: prefs.titleFontSize))
-                
-                TextField("Email:", text: self.$email)
-                    .padding(.vertical, 20)
-                    .padding(.leading, 20)
-                    .font(.system(size: prefs.fontSize))
-                    .textInputAutocapitalization(.never)
-                SecureTextFeild(text: self.$password, placeholder: "Password:")
+                TextField("", text: self.$email)
+                    .modifier(PlaceholderStyle(showPlaceHolder: email.isEmpty, placeholder: "Email"))
+                        .padding(.vertical, 20)
+                        .padding(.leading, 20)
+                        .font(.system(size: prefs.fontSize))
+                        .textInputAutocapitalization(.never)
+                SecureTextFeild(text: self.$password, placeholder: "Password")
                     .padding(.vertical, self.createOrLogin ? 0 : 20)
                     .padding(.leading, 20)
-                self.createOrLogin ?  SecureTextFeild(text: self.$confirmPassword, placeholder: "Confirm Password:")
+                self.createOrLogin ?  SecureTextFeild(text: self.$confirmPassword, placeholder: "Confirm Password")
                     .padding(.leading, 20) : nil
                 
             }.frame(maxWidth: UIScreen.main.bounds.width - 80, maxHeight: 250, alignment: .leading)

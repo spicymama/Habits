@@ -18,14 +18,16 @@ struct SecureTextFeild: View {
     var body: some View {
             HStack {
                 ZStack(alignment: .trailing) {
-                    TextField(placeholder, text: $text)
+                    TextField("", text: $text)
+                        .modifier(PlaceholderStyle(showPlaceHolder: text.isEmpty, placeholder: placeholder))
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .textContentType(.password)
                         .font(.system(size: prefs.fontSize))
                         .focused($focus1)
                         .opacity(showPassword ? 1 : 0)
-                    SecureField(placeholder, text: $text)
+                    SecureField("", text: $text)
+                        .modifier(PlaceholderStyle(showPlaceHolder: text.isEmpty, placeholder: placeholder))
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .textContentType(.password)
